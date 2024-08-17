@@ -23,8 +23,14 @@ public:
 	ABinggyPlayerState();
 	virtual void OnRep_Score() override;
 	void AddToScore(float ScoreToAdd);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	// Getter
+	FORCEINLINE int32 GetPlayerLevel() { return Level; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -36,4 +42,10 @@ protected:
 private:
 	ABinggyPlayerController* BinggyController;
 	ABinggyCharacter* BinggyCharacter;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_Level)
+	int32 Level = 1;
+
+	UFUNCTION()
+	void OnRep_Level(int32 OldLevel);
 };

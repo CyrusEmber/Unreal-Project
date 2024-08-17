@@ -59,6 +59,9 @@ public:
 	// AbilitySystem
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+
+	// CombatInterface
+	virtual int32 GetPlayerLevel() override;
 	
 
 protected:
@@ -79,6 +82,8 @@ protected:
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser);
 	void UpdateHUDHealth();
+
+	virtual void InitAbilityActorInfo() override;
 
 	
 
@@ -139,7 +144,7 @@ private:
 	float ElimDelay = 4.f;
 
 	void ElimTimerFinished();
-	void InitAbilityActorInfo();
+	
 
 
 public:

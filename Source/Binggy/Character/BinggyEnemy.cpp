@@ -16,8 +16,19 @@ ABinggyEnemy::ABinggyEnemy()
 	AttributeSet = CreateDefaultSubobject<UBinggyAttributeSet>("AttributeSet");
 }
 
+int32 ABinggyEnemy::GetPlayerLevel()
+{
+	return Level;
+}
+
 void ABinggyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
+}
+
+void ABinggyEnemy::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }

@@ -9,6 +9,8 @@
 /**
  * One way relationshipt with widget controller
  */
+class UBinggyWidgetController;
+
 UCLASS()
 class BINGGY_API UBinggyUserWidget : public UUserWidget
 {

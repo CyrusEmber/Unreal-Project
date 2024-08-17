@@ -3,6 +3,7 @@
 
 #include "BinggyCharacterBase.h"
 #include "Abilities/GameplayAbility.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 ABinggyCharacterBase::ABinggyCharacterBase()
@@ -21,6 +22,32 @@ UAbilitySystemComponent* ABinggyCharacterBase::GetAbilitySystemComponent() const
 void ABinggyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
+
+void ABinggyCharacterBase::InitAbilityActorInfo()
+{
+}
+
+void ABinggyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float level) const
+{
+	check(DefaultAttributes);
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultAttributes, level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void ABinggyCharacterBase::InitializeDefaultAttributes() const
+{
+	// TODO: Placeholder
+	ApplyEffectToSelf(DefaultPrimaryAttributes);
+	ApplyEffectToSelf(DefaultSecondaryAttributes);
+	ApplyEffectToSelf(DefaultVitalAttributes);
+}
+
+void ABinggyCharacterBase::InitializeVitalAttributs() const
+{
 	
 }
 

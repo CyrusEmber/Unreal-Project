@@ -20,6 +20,7 @@
 #include "Binggy/Binggy.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/GameMode/BinggyGameMode.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "TimerManager.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
 #include "AbilitySystemComponent.h"
@@ -173,11 +174,19 @@ void ABinggyCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+int32 ABinggyCharacter::GetPlayerLevel()
+{
+	ABinggyPlayerState* BinggyPlayerState = GetPlayerState<ABinggyPlayerState>();
+	return BinggyPlayerState->GetPlayerLevel();
+}
+
 void ABinggyCharacter::InitAbilityActorInfo()
 {
 	ABinggyPlayerState* BinggyPlayerState = GetPlayerState<ABinggyPlayerState>();
-	//check(BinggyPlayerState);
+	check(BinggyPlayerState);
 	BinggyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BinggyPlayerState, this);
+	Cast<UBinggyAbilitySystemComponent>(BinggyPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
+
 	AbilitySystemComponent = BinggyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = BinggyPlayerState->GetAttributeSet();
 	BinggyPlayerController = BinggyPlayerController == nullptr ? Cast<ABinggyPlayerController>(Controller) : BinggyPlayerController;
@@ -186,6 +195,8 @@ void ABinggyCharacter::InitAbilityActorInfo()
 			BinggyHUD->InitOverlay(BinggyPlayerController, BinggyPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	InitializeDefaultAttributes();
 }
 
 void ABinggyCharacter::MulticastElimination_Implementation()

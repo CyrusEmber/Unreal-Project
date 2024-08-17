@@ -4,14 +4,17 @@
  
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "Binggy/Interface/CombatInterface.h"
 #include "GameFramework/Character.h"
 #include "BinggyCharacterBase.generated.h"
 
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
+
 UCLASS(Abstract)
-class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystemInterface
+class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -22,10 +25,25 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void InitAbilityActorInfo();
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	// Set after primary attributes
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float level = 1) const;
+	void InitializeDefaultAttributes() const;
+	void InitializeVitalAttributs() const;
 
 
 public:	

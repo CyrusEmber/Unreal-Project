@@ -7,11 +7,12 @@
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameFramework/Character.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
 {
-	InitHealth(75.f);
-	InitMaxHealth(150.f);
+	InitHealth(1.f);
+	//InitMaxHealth(150.f);
 }
 
 void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -47,6 +48,18 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	FEffectProperties Props;
 	SetEffectProperty(Data, Props);
 
+
+	// Ensure Health and Mana do not go below 0 or above their max values
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %f"), GetHealth()));
+		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
+	}
+
 	
 }
 
@@ -76,18 +89,6 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 
-
-	// Ensure Health and Mana do not go below 0 or above their max values
-	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %f"), GetHealth()));
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-	}
-	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
-	{
-		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
-	}
-
 }
 
 void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldHealth) const
@@ -108,6 +109,18 @@ void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldMana) const
 void UBinggyAttributeSet::OnRep_MaxMana(FGameplayAttributeData& OldMaxMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxMana, OldMaxMana);
+}
+
+void UBinggyAttributeSet::OnRep_Strength(FGameplayAttributeData& OldMaxMana) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_Intelligence(FGameplayAttributeData& OldMaxMana) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const
+{
 }
 
 

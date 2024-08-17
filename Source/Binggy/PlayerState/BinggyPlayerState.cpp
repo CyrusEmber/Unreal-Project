@@ -7,6 +7,7 @@
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyAttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "Net/UnrealNetwork.h"
 
 ABinggyPlayerState::ABinggyPlayerState()
 {
@@ -45,6 +46,13 @@ void ABinggyPlayerState::AddToScore(float ScoreToAdd)
 	}
 }
 
+void ABinggyPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABinggyPlayerState, Level);
+}
+
 UAbilitySystemComponent* ABinggyPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -54,4 +62,8 @@ void ABinggyPlayerState::BeginPlay()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
 	//AddToScore(0);
+}
+
+void ABinggyPlayerState::OnRep_Level(int32 OldLevel)
+{
 }
