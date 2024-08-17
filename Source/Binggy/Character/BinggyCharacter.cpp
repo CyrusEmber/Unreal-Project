@@ -180,6 +180,7 @@ int32 ABinggyCharacter::GetPlayerLevel()
 	return BinggyPlayerState->GetPlayerLevel();
 }
 
+// TODO: Potentially check the usage of ASC or AS
 void ABinggyCharacter::InitAbilityActorInfo()
 {
 	ABinggyPlayerState* BinggyPlayerState = GetPlayerState<ABinggyPlayerState>();
@@ -192,7 +193,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	BinggyPlayerController = BinggyPlayerController == nullptr ? Cast<ABinggyPlayerController>(Controller) : BinggyPlayerController;
 	if (BinggyPlayerController) {
 		if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
-			BinggyHUD->InitOverlay(BinggyPlayerController, BinggyPlayerState, AbilitySystemComponent, AttributeSet);
+			BinggyHUD->InitOverlay(BinggyPlayerController);
 		}
 	}
 

@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "CharacterOverlay.h"
 #include "Binggy/UI/Widget/BinggyUserWidget.h"
+#include "Binggy/UI/WidgetController/AttributeMenuWidgetController.h"
 #include "Binggy/UI/WidgetController/OverlayWidgetController.h"
 
 
@@ -66,25 +67,24 @@ void ABinggyHUD::DrawHUD()
 
 }
 
-
-UOverlayWidgetController* ABinggyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
+UOverlayWidgetController* ABinggyHUD::GetOverlayWidgetController(APlayerController* PC)
 {
-	if (OverlayWidgetController == nullptr) {
-		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
-		OverlayWidgetController->SetWidgetControllerParams(WCParams);		
-	}
-	return OverlayWidgetController;
+	return GetWidgetController<UOverlayWidgetController>(OverlayWidgetController, OverlayWidgetControllerClass, PC);
 }
 
-void ABinggyHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+UAttributeMenuWidgetController* ABinggyHUD::GetAttributeMenuController(APlayerController* PC)
+{
+	return GetWidgetController<UAttributeMenuWidgetController>(AttributeMenuWidgetController, AttributeMenuWidgetControllerClass, PC);
+}
+
+void ABinggyHUD::InitOverlay(APlayerController* PC)
 {
 	checkf(OverlayWidgetClass, TEXT("CharacterOverlayClass not set"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass not set"));
 	OverlayWidget = CreateWidget<UBinggyUserWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget->AddToViewport();
 
-	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	OverlayWidgetController = GetOverlayWidgetController(WidgetControllerParams);
+	OverlayWidgetController = GetOverlayWidgetController(PC);
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
 	OverlayWidgetController->BroadcastInitialValue();
 	// Could there be duplicated callbacks added?

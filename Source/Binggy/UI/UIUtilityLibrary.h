@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "WidgetController/OverlayWidgetController.h"
 #include "UIUtilityLibrary.generated.h"
 
+class UOverlayWidgetController;
+class UAttributeMenuWidgetController;
 /**
  * 
  */
@@ -19,5 +20,8 @@ public:
 	// Called from a widget with a player controller
 	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
 	static UOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
+	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 	
 };

@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoWidgetSigniture, FBing
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class BINGGY_API UAttributeMenuWidgetController : public UBinggyWidgetController
 {
 	GENERATED_BODY()

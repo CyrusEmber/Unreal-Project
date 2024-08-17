@@ -5,7 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "BinggyHUD.generated.h"
+
+class UAttributeMenuWidgetController;
 class UTexture2D;
+class UCharacterOverlay;
+class UBinggyUserWidget;
+class UOverlayWidgetController;
+class UAbilitySystemComponent;
+class UAttributeSet;
+
 USTRUCT(BlueprintType)
 struct FHUDPackage {
 	GENERATED_BODY()
@@ -21,12 +29,7 @@ public:
 /**
  * 
  */
-class UCharacterOverlay;
-class UBinggyUserWidget;
-class UOverlayWidgetController;
-struct FWidgetControllerParams;
-class UAbilitySystemComponent;
-class UAttributeSet;
+
 UCLASS()
 class BINGGY_API ABinggyHUD : public AHUD
 {
@@ -35,18 +38,18 @@ class BINGGY_API ABinggyHUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 	
-	UPROPERTY()
-	TObjectPtr<UBinggyUserWidget> OverlayWidget;
 
-	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	/* Get Widget Controller if it is not set yet, set the widget controller */
+	UOverlayWidgetController* GetOverlayWidgetController(APlayerController* PC);
+	UAttributeMenuWidgetController* GetAttributeMenuController(APlayerController* PC);
 
 	//UCharacterOverlay* CharacterOverlay;
 
-	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void InitOverlay(APlayerController* PC);
 
 protected:
 	virtual void BeginPlay() override;
-	void AddOverlayWidget();
+	/*void AddOverlayWidget();*/
 
 private:
 	FHUDPackage HUDPackage;
@@ -57,15 +60,37 @@ private:
 
 	//UPROPERTY(EditAnywhere, Category = "Player Stats")
 	//TSubclassOf<UUserWidget> CharacterOverlayClass;
+	
+	// Set WidgetController
+	UPROPERTY()
+	TObjectPtr<UBinggyUserWidget> OverlayWidget;
 
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	TSubclassOf<UBinggyUserWidget> OverlayWidgetClass;
-
+	
 	UPROPERTY()
 	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
-
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeMenuWidgetController> AttributeMenuWidgetController;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
+
+
+	// Template function
+	// TODO: Is it good practice to use template function?
+	template <typename T>
+	T* GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass, APlayerController* PC)
+	{
+		check(WidgetControllerClass);
+		if (WidgetController == nullptr) {
+			WidgetController = NewObject<T>(this, WidgetControllerClass);
+			WidgetController->SetWidgetControllerParams(PC);
+		}
+		return WidgetController;
+	}
 
 
 public:

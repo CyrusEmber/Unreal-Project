@@ -10,7 +10,7 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 
-USTRUCT(BlueprintType)
+/*USTRUCT(BlueprintType)
 struct FWidgetControllerParams {
 	GENERATED_BODY()
 
@@ -26,7 +26,7 @@ struct FWidgetControllerParams {
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAttributeSet> AttributeSet;
-};
+};*/
 
 /**
  * 
@@ -38,7 +38,7 @@ class BINGGY_API UBinggyWidgetController : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetControllerParams(const FWidgetControllerParams WCParams);
+	void SetWidgetControllerParams(APlayerController* PC);
 	virtual void BroadcastInitialValue();
 	virtual void BindCallbacksToDependencies();
 

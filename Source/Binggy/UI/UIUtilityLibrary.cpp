@@ -9,16 +9,23 @@
 
 UOverlayWidgetController* UUIUtilityLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
-	// TODO: Fix the repetition, just pass in the PC?
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
 	{
 		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PC->GetHUD()))
 		{
-			ABinggyPlayerState* PS = PC->GetPlayerState<ABinggyPlayerState>();
-			UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
-			UAttributeSet* AS = PS->GetAttributeSet();
-			const FWidgetControllerParams WidgetParams = FWidgetControllerParams(PC, PS, ASC, AS);
-			return HUD->GetOverlayWidgetController(WidgetParams);
+			return HUD->GetOverlayWidgetController(PC);
+		}
+	}
+	return nullptr;
+}
+
+UAttributeMenuWidgetController* UUIUtilityLibrary::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
+{
+	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	{
+		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PC->GetHUD()))
+		{
+			return HUD->GetAttributeMenuController(PC);
 		}
 	}
 	return nullptr;

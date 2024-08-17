@@ -3,15 +3,18 @@
 
 #include "BinggyWidgetController.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/PlayerState/BinggyPlayerState.h"
 //#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
 //#include "GameFramework/PlayerController.h"
 
-void UBinggyWidgetController::SetWidgetControllerParams(const FWidgetControllerParams WCParams)
+void UBinggyWidgetController::SetWidgetControllerParams(APlayerController* PC)
 {
-	PlayerController = WCParams.PlayerController;
-	PlayerState = WCParams.PlayerState;
-	AbilitySystemComponent = WCParams.AbilitySystemComponent;
-	AttributeSet = WCParams.AttributeSet;
+	PlayerController = PC;
+	PlayerState = PC->GetPlayerState<ABinggyPlayerState>();
+	// TODO: Potential Fix on the member variable
+	ABinggyPlayerState* PS = Cast<ABinggyPlayerState>(PlayerState);
+	AbilitySystemComponent = PS->GetAbilitySystemComponent();
+	AttributeSet = PS->GetAttributeSet();
 }
 
 void UBinggyWidgetController::BroadcastInitialValue()
