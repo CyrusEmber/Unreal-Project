@@ -8,7 +8,7 @@
 #include "AttributeMenuWidgetController.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoWidgetSigniture, FBinggyAttributeInfo, AttributeInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSigniture, const FBinggyAttributeInfo&, AttributeInfo);
 /**
  * 
  */
@@ -22,12 +22,13 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FAttributeInfoWidgetSigniture OnAttributeChanged;
+	FAttributeInfoSigniture AttributeInfoDelegate;
 
 protected:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Wiget Data")
-	TObjectPtr<UDataAsset> AttributeMenuWidgetDataAsset;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAttributeInfo> AttributeInfoArray;
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Wiget Data")
+	TObjectPtr<UDataAsset> AttributeMenuWidgetDataAsset;*/
 	
 	
 };

@@ -39,6 +39,7 @@ class BINGGY_API UBinggyWidgetController : public UObject
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(APlayerController* PC);
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValue();
 	virtual void BindCallbacksToDependencies();
 
