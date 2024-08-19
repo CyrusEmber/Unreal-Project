@@ -7,12 +7,28 @@
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BinggyGameplayTags.h"
 #include "GameFramework/Character.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
 {
-	InitHealth(1.f);
-	//InitMaxHealth(150.f);
+	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
+	/* Primary */
+	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
+
+	/* Secondary */
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_Armor, GetArmorAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_HealthGeneration, GetHealthGenerationAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaGeneration, GetManaGenerationAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalDamage, GetCriticalDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalChance, GetCriticalChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_PhysicalDamage, GetPhysicalDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MagicalDamage, GetMagicalDamageAttribute);
 }
 
 void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -120,6 +136,14 @@ void UBinggyAttributeSet::OnRep_Intelligence(FGameplayAttributeData& OldMaxMana)
 }
 
 void UBinggyAttributeSet::OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_HealthGeneration(FGameplayAttributeData& OldValue) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_ManaGeneration(FGameplayAttributeData& OldValue) const
 {
 }
 

@@ -6,7 +6,7 @@
 #include "GameplayTagContainer.h"
 
 /**
- * Singleton 
+ * Singleton class that stores all the gameplay tags
  */
 struct  FBinggyGameplayTags
 {
@@ -24,10 +24,13 @@ struct  FBinggyGameplayTags
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
-	FGameplayTag Attributes_Secondary_CriticalDamage;
-	FGameplayTag Attributes_Secondary_CriticalChance;
 	FGameplayTag Attributes_Secondary_HealthGeneration;
 	FGameplayTag Attributes_Secondary_ManaGeneration;
+	
+	FGameplayTag Attributes_Secondary_CriticalDamage;
+	FGameplayTag Attributes_Secondary_CriticalChance;
+	FGameplayTag Attributes_Secondary_PhysicalDamage;
+	FGameplayTag Attributes_Secondary_MagicalDamage;
 
 	static FBinggyGameplayTags GameplayTags;
 

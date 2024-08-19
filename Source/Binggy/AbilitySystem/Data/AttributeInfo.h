@@ -30,9 +30,9 @@ class BINGGY_API UAttributeInfo : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	// Set with data asset
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "AttributeName"))
 	TArray<FBinggyAttributeInfo> AttributeInfoArray;
 
-	FBinggyAttributeInfo GetAttributeInfoByTag(FGameplayTag AttributeTag, bool bLogNotFound=true);
+	FBinggyAttributeInfo GetAttributeInfoByTag(FGameplayTag AttributeTag, bool bLogNotFound=false);
 };

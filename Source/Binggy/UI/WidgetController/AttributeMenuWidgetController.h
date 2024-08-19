@@ -8,6 +8,7 @@
 #include "AttributeMenuWidgetController.generated.h"
 
 
+struct FGameplayAttribute;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSigniture, const FBinggyAttributeInfo&, AttributeInfo);
 /**
  * 
@@ -29,6 +30,9 @@ protected:
 	TObjectPtr<UAttributeInfo> AttributeInfoArray;
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Wiget Data")
 	TObjectPtr<UDataAsset> AttributeMenuWidgetDataAsset;*/
+
+private:
+	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
 	
 	
 };

@@ -25,12 +25,18 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 		FName("Attributes.Secondary.MaxHealth"));
 	GameplayTags.Attributes_Secondary_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Secondary.MaxMana"));
-	GameplayTags.Attributes_Secondary_CriticalDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.CriticalDamage"));
-	GameplayTags.Attributes_Secondary_CriticalChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Secondary.CriticalChance"));
 	GameplayTags.Attributes_Secondary_HealthGeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Secondary.HealthGeneration"));
 	GameplayTags.Attributes_Secondary_ManaGeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Secondary.ManaGeneration"));
+
+	GameplayTags.Attributes_Secondary_CriticalDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Secondary.CriticalDamage"));
+	GameplayTags.Attributes_Secondary_CriticalChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Secondary.CriticalChance"));
+	GameplayTags.Attributes_Secondary_PhysicalDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Secondary.PhysicalDamage"));
+	GameplayTags.Attributes_Secondary_MagicalDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Secondary.MagicalDamage"));
+	
 }

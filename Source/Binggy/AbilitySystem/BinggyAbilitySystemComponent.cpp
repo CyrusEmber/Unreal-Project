@@ -13,7 +13,6 @@ void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* Abili
 	GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, FString("Effect Applied"));
 	FGameplayTagContainer AssetTags;
 	
-	GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, AssetTags.ToString());
 	EffectSpec.GetAllAssetTags(AssetTags);
 
 	EffectAssetTags.Broadcast(AssetTags);
