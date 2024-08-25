@@ -128,13 +128,6 @@ void ABinggyCharacter::AimEnd()
 void ABinggyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	/*if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}*/
 
 	UpdateHUDHealth();
 
@@ -147,7 +140,6 @@ void ABinggyCharacter::BeginPlay()
 void ABinggyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	/*AimOffset(DeltaTime);*/
 }
 
 void ABinggyCharacter::PostInitializeComponents()
@@ -282,20 +274,6 @@ void ABinggyCharacter::ElimTimerFinished()
 	}
 }
 
-/*void ABinggyCharacter::AbilityInputTagPressed(FGameplayTag InputTag)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, *InputTag.ToString());
-}
-
-void ABinggyCharacter::AbilityInputTagHeld(FGameplayTag InputTag)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, *InputTag.ToString());
-}
-
-void ABinggyCharacter::AbilityInputTagReleased(FGameplayTag InputTag)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, *InputTag.ToString());
-}*/
 
 void ABinggyCharacter::PlayHitReactMontage()
 {
@@ -309,86 +287,6 @@ void ABinggyCharacter::PlayHitReactMontage()
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
-
-void ABinggyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	// Set up action bindings
-	/*if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABinggyCharacter::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABinggyCharacter::Look);
-		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ABinggyCharacter::EquipPressed);
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ABinggyCharacter::CrouchPressed);
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABinggyCharacter::Aim);
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABinggyCharacter::StopAiming);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABinggyCharacter::Fire);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABinggyCharacter::StopFiring);
-	}
-
-	// TODO: Refactoring
-	UBinggyInputComponent* BinggyInputComponent = Cast<UBinggyInputComponent>(PlayerInputComponent);
-	if (BinggyInputComponent)
-	{
-		BinggyInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
-	}*/
-	//else
-	//{
-	//	UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	//}
-}
-
-/*void ABinggyCharacter::Move(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
-	}
-}
-
-void ABinggyCharacter::Look(const FInputActionValue& Value)
-{
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(0.2 * LookAxisVector.X);
-		AddControllerPitchInput(0.2 * LookAxisVector.Y);
-	}
-}
-
-// Equip the weapon on server if on clients
-void ABinggyCharacter::EquipPressed(const FInputActionValue& Value)
-{
-	if (OverlappingWeapon) {
-		if (HasAuthority()) {
-			Combat->EquipWeapon(OverlappingWeapon);
-		}
-		else {
-			ServerEquip();
-		}
-	}
-}*/
 
 // TODO
 void ABinggyCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
@@ -407,74 +305,6 @@ void ABinggyCharacter::ServerEquip_Implementation()
 		Combat->EquipWeapon(OverlappingWeapon);
 	}
 }
-
-/*void ABinggyCharacter::CrouchPressed(const FInputActionValue& Value)
-{
-	if (bIsCrouched) {
-		UnCrouch();
-	}
-	else {
-		Crouch();
-	}
-}
-
-void ABinggyCharacter::Aim(const FInputActionValue& Value)
-{
-	if (Combat) {
-		Combat->SetAiming(true);
-	}
-}
-
-void ABinggyCharacter::StopAiming(const FInputActionValue& Value)
-{
-	if (Combat) {
-		Combat->SetAiming(false);
-	}
-}
-
-void ABinggyCharacter::Fire(const FInputActionValue& Value)
-{
-	if (Combat) {
-		Combat->FirePressed(true);
-	}
-}
-
-void ABinggyCharacter::StopFiring(const FInputActionValue& Value)
-{
-	if (Combat) {
-		Combat->FirePressed(false);
-	}
-}
-
-void ABinggyCharacter::AimOffset(float DeltaTime)
-{
-	if (Combat && Combat->EquippedWeapon == nullptr) {
-		return;
-	}
-	 
-	FVector Velocity = GetVelocity();
-	Velocity.Z = 0.f;
-	float Speed = Velocity.Size();
-
-	bool bIsInAir = GetCharacterMovement()->IsFalling();
-
-	if (Speed == 0.f && !bIsInAir) {
-		FRotator CurrretAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
-		FRotator DeltaAimRotation = UKismetMathLibrary::NormalizedDeltaRotator(CurrretAimRotation, GetActorRotation());
-		AO_Yaw = DeltaAimRotation.Yaw;
-		bUseControllerRotationYaw = false;
-	}
-	// Could potentially be problematic because the base aim rotation not the character rotation
-	if (Speed != 0.f || bIsInAir) {
-		AO_Yaw = 0.f;
-		bUseControllerRotationYaw = true;
-	}
-	// Its being compressed when sending to the network
-	AO_Pitch = GetBaseAimRotation().Pitch;
-	if (AO_Pitch > 90.f && !IsLocallyControlled()) {
-		AO_Pitch = AO_Pitch - 360.f;
-	}
-}*/
 
 // Only on server
 void ABinggyCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
