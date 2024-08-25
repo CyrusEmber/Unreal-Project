@@ -3,9 +3,32 @@
 
 #include "BinggyAbilitySystemComponent.h"
 
+#include "Abilities/BinggyGameplayAbility.h"
+
 void UBinggyAbilitySystemComponent::AbilityActorInfoSet()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UBinggyAbilitySystemComponent::AffectApplied);
+}
+
+void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
+{
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		if (const UBinggyGameplayAbility* BinggyAbility = Cast<UBinggyGameplayAbility>(AbilitySpec.Ability))
+		{
+			AbilitySpec.DynamicAbilityTags.AddTag(BinggyAbility->StartUpInputTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+}
+
+void UBinggyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
 }
 
 void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle GameplayEffectHandle)
@@ -16,6 +39,6 @@ void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* Abili
 	EffectSpec.GetAllAssetTags(AssetTags);
 
 	EffectAssetTags.Broadcast(AssetTags);
-
-
 }
+
+

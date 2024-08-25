@@ -26,7 +26,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	
+
+public:
 	void SetAiming(bool bAiming);
 	UFUNCTION(Server, Reliable)
 	void ServerSetAiming(bool bAiming);
@@ -48,7 +49,8 @@ protected:
 
 	void SetHUDCrosshairs(float DeltaTime);
 
-private:
+	// FIXME public
+public:
 	ABinggyCharacter* Character;
 	ABinggyPlayerController* Controller;
 	ABinggyHUD* HUD;

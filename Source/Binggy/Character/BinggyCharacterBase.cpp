@@ -2,8 +2,8 @@
 
 
 #include "BinggyCharacterBase.h"
-#include "Abilities/GameplayAbility.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 
 // Sets default values
 ABinggyCharacterBase::ABinggyCharacterBase()
@@ -49,6 +49,16 @@ void ABinggyCharacterBase::InitializeDefaultAttributes() const
 void ABinggyCharacterBase::InitializeVitalAttributs() const
 {
 	
+}
+
+void ABinggyCharacterBase::AddCharacterAbilities()
+{
+	if (!HasAuthority())
+	{
+		return;
+	}
+	UBinggyAbilitySystemComponent* BinggyASC = CastChecked<UBinggyAbilitySystemComponent>(AbilitySystemComponent);
+	BinggyASC->AddCharacterAbilities(StartupAbilities);
 }
 
 // Called every frame

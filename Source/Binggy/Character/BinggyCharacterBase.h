@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class UGameplayAbility;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -44,6 +45,12 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float level = 1) const;
 	void InitializeDefaultAttributes() const;
 	void InitializeVitalAttributs() const;
+
+	void AddCharacterAbilities();
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 
 public:	

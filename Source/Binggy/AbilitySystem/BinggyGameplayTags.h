@@ -32,6 +32,15 @@ struct  FBinggyGameplayTags
 	FGameplayTag Attributes_Secondary_PhysicalDamage;
 	FGameplayTag Attributes_Secondary_MagicalDamage;
 
+	/* InputTag */
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_1;
+	FGameplayTag InputTag_2;
+	FGameplayTag InputTag_3;
+	FGameplayTag InputTag_4;
+	
+
 	static FBinggyGameplayTags GameplayTags;
 
 };

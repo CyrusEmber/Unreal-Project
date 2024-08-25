@@ -9,6 +9,9 @@
 #include "BinggyCharacter.generated.h"
 
 
+class UBinggyAbilitySystemComponent;
+struct FGameplayTag;
+class UBinggyInputConfig;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -26,7 +29,7 @@ class BINGGY_API ABinggyCharacter : public ABinggyCharacterBase
 	GENERATED_BODY()
 
 	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
@@ -41,7 +44,7 @@ class BINGGY_API ABinggyCharacter : public ABinggyCharacterBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* FireAction;
+	UInputAction* FireAction;*/
 
 public:
 	ABinggyCharacter();
@@ -62,6 +65,18 @@ public:
 
 	// CombatInterface
 	virtual int32 GetPlayerLevel() override;
+
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
+	class AWeapon* OverlappingWeapon;
+
+	void EquipOverlappingWeapon();
+
+	void FireStart();
+	void FireEnd();
+
+	void AimStart();
+	void AimEnd();
+	
 	
 
 protected:
@@ -70,7 +85,7 @@ protected:
 	
 
 	// Inputs
-	void Move(const FInputActionValue& Value);
+	/*void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void EquipPressed(const FInputActionValue& Value);
 	void CrouchPressed(const FInputActionValue& Value);
@@ -78,7 +93,7 @@ protected:
 	void StopAiming(const FInputActionValue& Value);
 	void Fire(const FInputActionValue& Value);
 	void StopFiring(const FInputActionValue& Value);
-	void AimOffset(float DeltaTime);
+	void AimOffset(float DeltaTime);*/
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser);
 	void UpdateHUDHealth();
@@ -97,8 +112,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* OverheadWidget;
 
-	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
-	class AWeapon* OverlappingWeapon;
+
 
 	UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
@@ -144,6 +158,17 @@ private:
 	float ElimDelay = 4.f;
 
 	void ElimTimerFinished();
+	
+	// Input
+	/*void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UBinggyInputConfig> InputConfig;*/
+
+	/*UPROPERTY()
+	TObjectPtr<UBinggyAbilitySystemComponent> BinggyAbilitySystemComponent;*/
 	
 
 

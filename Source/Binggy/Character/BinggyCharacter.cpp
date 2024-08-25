@@ -8,15 +8,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Binggy/Weapon/Weapon.h"
 #include "Binggy/BinggyComponent/CombatComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "BinggyAnimInstance.h"
 #include "Binggy/Binggy.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/GameMode/BinggyGameMode.h"
@@ -89,16 +84,57 @@ void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME_CONDITION(ABinggyCharacter, OverlappingWeapon, COND_OwnerOnly);
 	DOREPLIFETIME(ABinggyCharacter, Health);
 }
+
+void ABinggyCharacter::EquipOverlappingWeapon()
+{
+	if (OverlappingWeapon) {
+		if (HasAuthority()) {
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
+		else {
+			ServerEquip();
+		}
+	}
+}
+
+void ABinggyCharacter::FireStart()
+{
+	if (Combat) {
+		Combat->FirePressed(true);
+	}
+}
+
+void ABinggyCharacter::FireEnd()
+{
+	if (Combat) {
+		Combat->FirePressed(false);
+	}
+}
+
+void ABinggyCharacter::AimStart()
+{
+	if (Combat) {
+		Combat->SetAiming(true);
+	}
+}
+
+void ABinggyCharacter::AimEnd()
+{
+	if (Combat) {
+		Combat->SetAiming(false);
+	}
+}
+
 void ABinggyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	/*if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
-	}
+	}*/
 
 	UpdateHUDHealth();
 
@@ -111,7 +147,7 @@ void ABinggyCharacter::BeginPlay()
 void ABinggyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AimOffset(DeltaTime);
+	/*AimOffset(DeltaTime);*/
 }
 
 void ABinggyCharacter::PostInitializeComponents()
@@ -165,6 +201,7 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	// Init ability actor info for the server
 	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void ABinggyCharacter::OnRep_PlayerState()
@@ -245,6 +282,21 @@ void ABinggyCharacter::ElimTimerFinished()
 	}
 }
 
+/*void ABinggyCharacter::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, *InputTag.ToString());
+}
+
+void ABinggyCharacter::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, *InputTag.ToString());
+}
+
+void ABinggyCharacter::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, *InputTag.ToString());
+}*/
+
 void ABinggyCharacter::PlayHitReactMontage()
 {
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
@@ -261,7 +313,7 @@ void ABinggyCharacter::PlayHitReactMontage()
 void ABinggyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
+	/*if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
@@ -276,13 +328,20 @@ void ABinggyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABinggyCharacter::Fire);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABinggyCharacter::StopFiring);
 	}
+
+	// TODO: Refactoring
+	UBinggyInputComponent* BinggyInputComponent = Cast<UBinggyInputComponent>(PlayerInputComponent);
+	if (BinggyInputComponent)
+	{
+		BinggyInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+	}*/
 	//else
 	//{
 	//	UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	//}
 }
 
-void ABinggyCharacter::Move(const FInputActionValue& Value)
+/*void ABinggyCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -298,7 +357,7 @@ void ABinggyCharacter::Move(const FInputActionValue& Value)
 
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
+		
 		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
@@ -329,8 +388,9 @@ void ABinggyCharacter::EquipPressed(const FInputActionValue& Value)
 			ServerEquip();
 		}
 	}
-}
+}*/
 
+// TODO
 void ABinggyCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if (OverlappingWeapon) {
@@ -348,7 +408,7 @@ void ABinggyCharacter::ServerEquip_Implementation()
 	}
 }
 
-void ABinggyCharacter::CrouchPressed(const FInputActionValue& Value)
+/*void ABinggyCharacter::CrouchPressed(const FInputActionValue& Value)
 {
 	if (bIsCrouched) {
 		UnCrouch();
@@ -414,7 +474,7 @@ void ABinggyCharacter::AimOffset(float DeltaTime)
 	if (AO_Pitch > 90.f && !IsLocallyControlled()) {
 		AO_Pitch = AO_Pitch - 360.f;
 	}
-}
+}*/
 
 // Only on server
 void ABinggyCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
