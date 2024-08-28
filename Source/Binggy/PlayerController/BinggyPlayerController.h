@@ -68,6 +68,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UBinggyInputConfig> InputConfig;
+
+	TObjectPtr<UBinggyAbilitySystemComponent> BinggyAbilitySystemComponent;
+
+	UBinggyAbilitySystemComponent* GetASC();
 	
 	// Inputs
 	void Jump(const FInputActionValue& Value);

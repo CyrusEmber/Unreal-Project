@@ -22,6 +22,7 @@ class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystem
 public:
 	ABinggyCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
@@ -47,6 +48,9 @@ protected:
 	void InitializeVitalAttributs() const;
 
 	void AddCharacterAbilities();
+
+	// Weapon
+	virtual FVector GetCombatSocketLocation();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")

@@ -97,8 +97,6 @@ public:
 	void FireTimerFinished();
 	
 	
-public:	
-	
 	
 
 		

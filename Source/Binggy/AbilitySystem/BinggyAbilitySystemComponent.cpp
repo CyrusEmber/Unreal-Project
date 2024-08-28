@@ -25,10 +25,36 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 
 void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	for (auto& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputPressed(AbilitySpec);
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+	}
 }
 
 void UBinggyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
 {
+	if (!InputTag.IsValid())
+	{
+		return;
+	}
+	for (auto& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+		}
+	}
 }
 
 void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle GameplayEffectHandle)

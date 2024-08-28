@@ -82,7 +82,6 @@ void UCombatComponent::FirePressed(bool bPressed)
 
 void UCombatComponent::Fire()
 {
-
 	if (bCanFire && EquippedWeapon) {
 		bCanFire = false;
 		FHitResult HitResult;
@@ -161,6 +160,7 @@ void UCombatComponent::OnRep_EquippedWeapon()
 	if (EquippedWeapon && Character) {
 		// Ensure that for clients the physical attributes are set correctly
 		EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+		// TODO Should not hard code it
 		const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket"));
 		if (HandSocket) {
 			HandSocket->AttachActor(EquippedWeapon, Character->GetMesh());

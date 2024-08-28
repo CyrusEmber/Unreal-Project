@@ -61,6 +61,11 @@ void ABinggyCharacterBase::AddCharacterAbilities()
 	BinggyASC->AddCharacterAbilities(StartupAbilities);
 }
 
+FVector ABinggyCharacterBase::GetCombatSocketLocation()
+{
+	return ICombatInterface::GetCombatSocketLocation();
+}
+
 // Called every frame
 void ABinggyCharacterBase::Tick(float DeltaTime)
 {

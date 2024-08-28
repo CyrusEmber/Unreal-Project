@@ -3,8 +3,10 @@
 
 #include "BinggyPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/BinggyComponent/CombatComponent.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Binggy/Character/BinggyCharacter.h"
@@ -119,17 +121,28 @@ void ABinggyPlayerController::SetHUDScore(float Score)
 
 void ABinggyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, *InputTag.ToString());
+	// GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, *InputTag.ToString());
 }
 
 void ABinggyPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, *InputTag.ToString());
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagHeld(InputTag);
 }
 
 void ABinggyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, *InputTag.ToString());
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagReleased(InputTag);
+}
+
+UBinggyAbilitySystemComponent* ABinggyPlayerController::GetASC()
+{
+	if (BinggyAbilitySystemComponent == nullptr)
+	{
+		BinggyAbilitySystemComponent = Cast<UBinggyAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return BinggyAbilitySystemComponent;
 }
 
 void ABinggyPlayerController::Jump(const FInputActionValue& Value)

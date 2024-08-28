@@ -9,6 +9,7 @@
 #include "BinggyCharacter.generated.h"
 
 
+class AWeapon;
 class UBinggyAbilitySystemComponent;
 struct FGameplayTag;
 class UBinggyInputConfig;
@@ -48,7 +49,7 @@ public:
 	virtual int32 GetPlayerLevel() override;
 
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
-	class AWeapon* OverlappingWeapon;
+	AWeapon* OverlappingWeapon;
 
 	void EquipOverlappingWeapon();
 
@@ -140,4 +141,5 @@ public:
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+	FORCEINLINE UCombatComponent* GetCombatComponent() const { return Combat; }
 };
