@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "BinggyCharacterBase.h"
+#include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
+enum class ECharacterClass : uint8;
 /**
  * 
  */
@@ -24,8 +26,15 @@ protected:
 
 	virtual void InitAbilityActorInfo() override;
 
+	virtual void InitializeDefaultAttributes() const override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Defaults")
 	int32 Level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Elementalist;
+
+	
 
 private:
 

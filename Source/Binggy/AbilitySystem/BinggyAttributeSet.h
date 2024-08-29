@@ -83,7 +83,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Mana);
+
 	
+	/** IDK attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MaxHealth);
@@ -96,6 +98,7 @@ public:
 	FGameplayAttributeData MenaRegeneration;
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MenaRegeneration);
 
+	
 	/* Secondary attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Attributes")
 	FGameplayAttributeData PhysicalDamage;
@@ -111,6 +114,7 @@ public:
 	FGameplayAttributeData CriticalChance;
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalChance);
 
+	
 	/* Protection Attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthGeneration, Category = "Attributes")
 	FGameplayAttributeData HealthGeneration;
@@ -122,6 +126,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaGeneration, Category = "Attributes")
 	FGameplayAttributeData Armor;
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Armor);
+
+	
+	/* Meta Attributes */
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, IncomingDamage);
 
 	
 	/** Defining Rep Notify functions */

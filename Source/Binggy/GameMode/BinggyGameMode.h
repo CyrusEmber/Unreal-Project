@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameMode.h"
+#include "BinggyGameModeBase.h"
 #include "BinggyGameMode.generated.h"
 
 /**
@@ -13,7 +13,7 @@ class ABinggyCharacter;
 class ABinggyPlayerController;
 class ACharacter;
 UCLASS()
-class BINGGY_API ABinggyGameMode : public AGameMode
+class BINGGY_API ABinggyGameMode : public ABinggyGameModeBase
 {
 	GENERATED_BODY()
 	

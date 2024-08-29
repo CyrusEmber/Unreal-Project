@@ -2,6 +2,8 @@
 
 
 #include "BinggyEnemy.h"
+
+#include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyAttributeSet.h"
 
@@ -31,4 +33,9 @@ void ABinggyEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+}
+
+void ABinggyEnemy::InitializeDefaultAttributes() const
+{
+	UUtilityLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

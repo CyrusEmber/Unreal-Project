@@ -3,16 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "UIUtilityLibrary.generated.h"
+#include "UtilityLibrary.generated.h"
 
+enum class ECharacterClass : uint8;
+class UAbilitySystemComponent;
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
 /**
  * 
  */
 UCLASS()
-class BINGGY_API UUIUtilityLibrary : public UBlueprintFunctionLibrary
+class BINGGY_API UUtilityLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -24,4 +27,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
 	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 	
+	UFUNCTION(BlueprintCallable, Category = "UILibrary|CharacterAttributesDefault")
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+
+private:
+	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);
 };

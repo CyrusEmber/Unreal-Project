@@ -46,11 +46,6 @@ void ABinggyCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttributes);
 }
 
-void ABinggyCharacterBase::InitializeVitalAttributs() const
-{
-	
-}
-
 void ABinggyCharacterBase::AddCharacterAbilities()
 {
 	if (!HasAuthority())
