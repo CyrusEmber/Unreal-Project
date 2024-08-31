@@ -15,6 +15,7 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other
 		}
 	}
 	
-
-	Super::OnHit(OverlappedComp, OtherActor, OtherComp, NormalImpluse, HitResult);
+	// Destroy
+	Destroy();
+	// Super::OnHit(OverlappedComp, OtherActor, OtherComp, NormalImpluse, HitResult);
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -18,7 +19,10 @@ class BINGGY_API AProjectile : public AActor
 public:	
 	AProjectile();
 	virtual void Tick(float DeltaTime) override;
+	// Play sound and impact animation
 	virtual void Destroyed() override;
+	void SetDamageEffectSpecHandleByDefault();
+	
 
 protected:
 	virtual void BeginPlay() override;
@@ -28,6 +32,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 0.f;
+
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn=true))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 
 private:

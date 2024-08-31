@@ -60,6 +60,7 @@ void AProjectile::Tick(float DeltaTime)
 
 }
 
+
 void AProjectile::Destroyed()
 {
 	Super::Destroyed();
@@ -70,4 +71,9 @@ void AProjectile::Destroyed()
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 	}
 }
+
+ void AProjectile::SetDamageEffectSpecHandleByDefault()
+ {
+	
+ }
 

@@ -19,6 +19,9 @@ protected:
 	// Handle is like a pointer
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spells")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
 	TSubclassOf<AProjectile> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

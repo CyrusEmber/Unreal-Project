@@ -25,7 +25,7 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 			SpawnParams.Owner = GetOwner();
 			SpawnParams.Instigator = InstigatorPawn;
 			if (World) {
-				World->SpawnActor<AProjectile>(ProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
+				AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
 			}
 		}
 	}
