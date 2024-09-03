@@ -11,7 +11,7 @@
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Binggy/Weapon/Weapon.h"
-#include "Binggy/BinggyComponent/CombatComponent.h"
+#include "Binggy/Character/Component/CombatComponent.h"
 #include "Binggy/Binggy.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/GameMode/BinggyGameMode.h"

@@ -26,6 +26,9 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
+	// virtual void OnAbilitySystemInitialized();
+	// virtual void OnAbilitySystemUninitialized();
+	
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();
 	UPROPERTY()

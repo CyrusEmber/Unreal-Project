@@ -7,7 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/BinggyComponent/CombatComponent.h"
+#include "Binggy/Character/Component/CombatComponent.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"

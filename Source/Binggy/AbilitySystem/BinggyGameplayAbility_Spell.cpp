@@ -6,7 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "BinggyGameplayTags.h"
-#include "Binggy/BinggyComponent/CombatComponent.h"
+#include "Binggy/Character/Component/CombatComponent.h"
 #include "Binggy/Character/BinggyCharacter.h"
 
 void UBinggyGameplayAbility_Spell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

@@ -5,7 +5,7 @@
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 

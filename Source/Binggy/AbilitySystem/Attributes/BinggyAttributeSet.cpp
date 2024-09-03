@@ -7,7 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "GameFramework/Character.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()

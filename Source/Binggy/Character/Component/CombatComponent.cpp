@@ -6,7 +6,6 @@
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Engine/SkeletalMeshSocket.h"
-#include "Components/SphereComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"

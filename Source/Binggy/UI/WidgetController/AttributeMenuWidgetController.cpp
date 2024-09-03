@@ -4,7 +4,7 @@
 #include "AttributeMenuWidgetController.h"
 
 
-#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 
 
 void UAttributeMenuWidgetController::BroadcastInitialValue()

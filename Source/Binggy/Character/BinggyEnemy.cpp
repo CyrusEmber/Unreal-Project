@@ -5,7 +5,7 @@
 
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 
 
 ABinggyEnemy::ABinggyEnemy()
