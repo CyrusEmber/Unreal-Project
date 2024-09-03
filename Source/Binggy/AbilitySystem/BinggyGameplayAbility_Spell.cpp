@@ -30,10 +30,9 @@ void UBinggyGameplayAbility_Spell::ActivateAbility(const FGameplayAbilitySpecHan
 	
 	// Projectile->DamageEffectSpecHandle = SpecHandle;
 
-	if (ABinggyCharacter* BinggyCharacter = GetBinggyCharacterFromActorInfo())
-	{
-		FireSpell();
-	}
+
+	FireSpell();
+	
 }
 
 void UBinggyGameplayAbility_Spell::FireSpell()
