@@ -24,4 +24,19 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	// Combat 
+	// Automatic fire
+
+	FTimerHandle FireTimer;
+
+	bool bCanFire = true;
+
+	void FireSpell();
+	void StartFireTimer();
+	void FireTimerFinished();
+
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
+	// Refactor into weapon specific variable, such as character->EquippedWeapon
+	float FireDelay = 0.1f;
 };

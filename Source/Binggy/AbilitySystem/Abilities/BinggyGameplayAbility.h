@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "BinggyGameplayAbility.generated.h"
 
+class ABinggyCharacter;
 /**
  * 
  */
@@ -17,4 +18,9 @@ class BINGGY_API UBinggyGameplayAbility : public UGameplayAbility
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartUpInputTag;
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	ABinggyCharacter* GetBinggyCharacterFromActorInfo() const;
+protected:
+	
 };

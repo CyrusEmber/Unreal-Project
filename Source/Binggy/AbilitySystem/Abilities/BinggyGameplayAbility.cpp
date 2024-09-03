@@ -3,3 +3,9 @@
 
 #include "BinggyGameplayAbility.h"
 
+#include "Binggy/Character/BinggyCharacter.h"
+
+ABinggyCharacter* UBinggyGameplayAbility::GetBinggyCharacterFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<ABinggyCharacter>(CurrentActorInfo->PlayerController.Get()) : nullptr);
+}
