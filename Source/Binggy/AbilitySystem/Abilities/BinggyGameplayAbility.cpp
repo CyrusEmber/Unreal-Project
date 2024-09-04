@@ -7,5 +7,5 @@
 
 ABinggyCharacter* UBinggyGameplayAbility::GetBinggyCharacterFromActorInfo() const
 {
-	return (CurrentActorInfo ? Cast<ABinggyCharacter>(CurrentActorInfo->PlayerController.Get()) : nullptr);
+	return (CurrentActorInfo ? Cast<ABinggyCharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr);
 }

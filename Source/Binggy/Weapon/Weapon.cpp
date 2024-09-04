@@ -160,6 +160,10 @@ void AWeapon::Fire(const FVector& HitTarget)
 	}
 }
 
+void AWeapon::FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle)
+{
+}
+
 void AWeapon::Drop()
 {
 	SetWeaponState(EWeaponState::EWS_Dropped);

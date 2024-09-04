@@ -52,6 +52,9 @@ void UBinggyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& 
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
+			// TODO: OtherWay
+			CancelAbilityHandle(AbilitySpec.Handle);
+
 			AbilitySpecInputReleased(AbilitySpec);
 		}
 	}

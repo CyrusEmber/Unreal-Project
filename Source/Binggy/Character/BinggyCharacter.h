@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h" 
 #include "BinggyCharacterBase.h"
 #include "BinggyCharacter.generated.h"
 

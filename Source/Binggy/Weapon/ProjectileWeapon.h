@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "ProjectileWeapon.generated.h"
 
+struct FGameplayEffectSpecHandle;
 /**
  * 
  */
@@ -17,6 +18,9 @@ class BINGGY_API AProjectileWeapon : public AWeapon
 
 public:
 	virtual void Fire(const FVector& HitTarget) override;
+
+	// TODO: Make it virtual
+	virtual void FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle) override;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Projectile Weapon")

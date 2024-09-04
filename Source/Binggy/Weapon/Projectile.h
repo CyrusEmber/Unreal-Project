@@ -21,7 +21,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	// Play sound and impact animation
 	virtual void Destroyed() override;
+	// TODO: set the function and make spec handle protected
 	void SetDamageEffectSpecHandleByDefault();
+	
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn=true))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 	
 
 protected:
@@ -33,8 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Damage = 0.f;
 
-	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn=true))
-	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
 
 
 private:

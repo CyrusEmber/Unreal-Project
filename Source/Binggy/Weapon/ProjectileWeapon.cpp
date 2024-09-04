@@ -32,3 +32,31 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 
 	
 }
+
+void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle)
+{
+	Super::Fire(HitTarget);
+	if (!HasAuthority()) {
+		return;
+	}
+	APawn* InstigatorPawn = Cast<APawn>(GetOwner());
+	const USkeletalMeshSocket* MuzzleSocket = GetWeaponMesh()->GetSocketByName(FName("MuzzleFlash"));
+	if (MuzzleSocket) {
+		FTransform SocketTransform = MuzzleSocket->GetSocketTransform(GetWeaponMesh());
+		// From muzzle to hit location from trace result
+		FVector ToTarget = HitTarget - SocketTransform.GetLocation();
+		FRotator ToTargetRotation = ToTarget.Rotation();
+		if (ProjectileClass && InstigatorPawn) {
+			UWorld* World = GetWorld(); 
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = GetOwner();
+			SpawnParams.Instigator = InstigatorPawn;
+			if (World) {
+				// TODO: Defered Spawn?
+				AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
+				
+				Projectile->DamageEffectSpecHandle = ProjectileDamageSpecHandle;
+			}
+		}
+	}
+}

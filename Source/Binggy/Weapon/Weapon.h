@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+struct FGameplayEffectSpecHandle;
+
 UENUM(BlueprintType)
 enum class EWeaponState : uint8 {
 	EWS_Initial UMETA(DisplayName = "Initial State"),
@@ -31,6 +33,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
+	virtual void FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle);
 	virtual void Drop();
 
 	// Texture for the weapon crosshairs

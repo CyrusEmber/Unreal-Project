@@ -5,7 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 // #include "Binggy/Character/Component/CombatComponent.h"
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/Character/Component/CombatComponent.h"
@@ -26,16 +26,16 @@ void UBinggyGameplayAbility_Spell::ActivateAbility(const FGameplayAbilitySpecHan
 	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 
 	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 50.f);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 15.f);
 	
 	// Projectile->DamageEffectSpecHandle = SpecHandle;
 
 
-	FireSpell();
+	FireSpell(SpecHandle);
 	
 }
 
-void UBinggyGameplayAbility_Spell::FireSpell()
+void UBinggyGameplayAbility_Spell::FireSpell(const FGameplayEffectSpecHandle& SpecHandle)
 {
 	if (bCanFire)
 	{
@@ -44,8 +44,9 @@ void UBinggyGameplayAbility_Spell::FireSpell()
 		TraceUnderCrosshairs(HitResult);
 		if (ABinggyCharacter* BinggyCharacter = GetBinggyCharacterFromActorInfo()) {
 			BinggyCharacter->PlayFiringMontage(false);
-			BinggyCharacter->GetCombatComponent()->EquippedWeapon->Fire(HitResult.ImpactPoint);
+			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(HitResult.ImpactPoint, SpecHandle);
 		}
+		StartFireTimer();
 	}
 
 

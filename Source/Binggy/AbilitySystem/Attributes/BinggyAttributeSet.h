@@ -62,77 +62,80 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+	/** Attributes Accessors */
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Strength);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Intelligence);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Vigor);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MaxMana);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, HealthRegeneration);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, ManaRegeneration);
 
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, PhysicalDamage);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MagicalDamage);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalDamage);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalChance);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Armor);
+
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, IncomingDamage);
 
 	/** Primary Attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
 	FGameplayAttributeData Strength;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Strength);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Intelligence, Category = "Primary Attributes")
 	FGameplayAttributeData Intelligence;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Intelligence);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Vigor, Category = "Primary Attributes")
 	FGameplayAttributeData Vigor;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Vigor);
 
 
 	/** Vital attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category="Attributes")
 	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Health);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Mana);
-
 	
-	/** IDK attributes */
+	/** Resource attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Attributes")
 	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MaxHealth);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Attributes")
 	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MaxMana);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Attributes")
 	FGameplayAttributeData HealthRegeneration;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, HealthRegeneration);
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Attributes")
-	FGameplayAttributeData MenaRegeneration;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MenaRegeneration);
-
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Attributes")
+	FGameplayAttributeData ManaRegeneration;
+	
 	
 	/* Secondary attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Attributes")
 	FGameplayAttributeData PhysicalDamage;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, PhysicalDamage);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Attributes")
 	FGameplayAttributeData MagicalDamage;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, MagicalDamage);
-	
+		
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData CriticalDamage;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalDamage);
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Attributes")
 	FGameplayAttributeData CriticalChance;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalChance);
-
+	
 	
 	/* Protection Attributes */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthGeneration, Category = "Attributes")
-	FGameplayAttributeData HealthGeneration;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, HealthGeneration);
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaGeneration, Category = "Attributes")
-	FGameplayAttributeData ManaGeneration;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, ManaGeneration);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaGeneration, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Attributes")
 	FGameplayAttributeData Armor;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Armor);
-
+	
 	
 	/* Meta Attributes */
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData IncomingDamage;
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, IncomingDamage);
-
+	
 	
 	/** Defining Rep Notify functions */
 	UFUNCTION()
@@ -151,9 +154,9 @@ public:
 	void OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const;
 
 	UFUNCTION()
-	void OnRep_HealthGeneration(FGameplayAttributeData& OldValue) const;
+	void OnRep_HealthRegeneration(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_ManaGeneration(FGameplayAttributeData& OldValue) const;
+	void OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const;
 
 private:
 	void SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);

@@ -22,8 +22,8 @@ UBinggyAttributeSet::UBinggyAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_Armor, GetArmorAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_HealthGeneration, GetHealthGenerationAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaGeneration, GetManaGenerationAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_HealthGeneration, GetHealthRegenerationAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaGeneration, GetManaRegenerationAttribute);
 
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalDamage, GetCriticalDamageAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalChance, GetCriticalChanceAttribute);
@@ -83,7 +83,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		{
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(),GetHealth()));
 			const bool bFatal = NewHealth <= 0.f;
 		}
 	}
@@ -151,11 +151,11 @@ void UBinggyAttributeSet::OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const
 {
 }
 
-void UBinggyAttributeSet::OnRep_HealthGeneration(FGameplayAttributeData& OldValue) const
+void UBinggyAttributeSet::OnRep_HealthRegeneration(FGameplayAttributeData& OldValue) const
 {
 }
 
-void UBinggyAttributeSet::OnRep_ManaGeneration(FGameplayAttributeData& OldValue) const
+void UBinggyAttributeSet::OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const
 {
 }
 

@@ -32,7 +32,7 @@ protected:
 
 	bool bCanFire = true;
 
-	void FireSpell();
+	void FireSpell(const FGameplayEffectSpecHandle& SpecHandle);
 	void StartFireTimer();
 	void FireTimerFinished();
 
