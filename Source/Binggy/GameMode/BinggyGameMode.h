@@ -21,7 +21,11 @@ public:
 	virtual void PlayerElimiated(ABinggyCharacter* ElimmedCharacter, ABinggyPlayerController* VictimController, ABinggyPlayerController* AttackerController);
 	virtual void RequestRespawn(ACharacter* ElimmedCharacter, AController* ElimmedController);
 
+	
+
 protected:
 	virtual void BeginPlay() override;
 	TArray<AActor*> PlayerStarts;
+
+	
 };

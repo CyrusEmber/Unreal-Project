@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+struct FGameplayTag;
 class UGameplayAbility;
 class UAbilitySystemComponent;
 class UAttributeSet;
@@ -24,6 +25,10 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
 protected:
 	// virtual void OnAbilitySystemInitialized();
@@ -61,6 +66,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
-
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 
 };

@@ -83,8 +83,17 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		{
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(),GetHealth()));
+			
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(),GetHealth()));
 			const bool bFatal = NewHealth <= 0.f;
+			
+
+			if (!bFatal)
+			{
+				FGameplayTagContainer TagContainer;
+	            TagContainer.AddTag(FBinggyGameplayTags::Get().Effects_HitReact);
+	            Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
 		}
 	}
 

@@ -38,7 +38,10 @@ void UUtilityLibrary::InitializeDefaultAttributes(const UObject* WorldContextObj
 	float Level, UAbilitySystemComponent* ASC)
 {
 	ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (BinggyGameMode == nullptr) return;
+	if (BinggyGameMode == nullptr)
+	{
+		return;
+	}
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
@@ -49,6 +52,25 @@ void UUtilityLibrary::InitializeDefaultAttributes(const UObject* WorldContextObj
 	ApplyAttributes(ASC, Level, AvatarActor, ClassDefaultInfo.PrimaryAttributes);
 	ApplyAttributes(ASC, Level, AvatarActor, CharacterClassInfo->SecondaryAttributes);
 	ApplyAttributes(ASC, Level, AvatarActor, CharacterClassInfo->VitalAttributes);
+}
+
+void UUtilityLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	check(ASC);
+	ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (BinggyGameMode == nullptr)
+	{
+		return;
+	}
+	check(BinggyGameMode);
+	UCharacterClassInfo* CharacterClassInfo = BinggyGameMode->CharacterClassInfo;
+	check(CharacterClassInfo);
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(AbilitySpec);
+	}
+	
 }
 
 void UUtilityLibrary::ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes)

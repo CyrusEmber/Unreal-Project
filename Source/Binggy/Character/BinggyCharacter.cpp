@@ -19,6 +19,8 @@
 #include "TimerManager.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/UtilityLibrary.h"
+#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 
 
@@ -135,6 +137,7 @@ void ABinggyCharacter::BeginPlay()
 	if (HasAuthority()) {
 		OnTakeAnyDamage.AddDynamic(this, &ThisClass::ReceiveDamage);
 	}
+	
 }
 
 void ABinggyCharacter::Tick(float DeltaTime)
@@ -191,9 +194,18 @@ void ABinggyCharacter::Elimination()
 void ABinggyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	// Init ability actor info for the server
+	// Init ability actor info for the server, set ability system component
 	InitAbilityActorInfo();
 	AddCharacterAbilities();
+	
+	// TODO: Refactoring
+	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		this, &ThisClass::HitReactTagChanged
+	);
+
+	// Fixme this is not working
+	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
+
 }
 
 void ABinggyCharacter::OnRep_PlayerState()
@@ -281,8 +293,8 @@ void ABinggyCharacter::PlayHitReactMontage()
 		return;
 	}
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && HitReactMontage) {
-		AnimInstance->Montage_Play(HitReactMontage);
+	if (AnimInstance && GetHitReactMontage()) {
+		AnimInstance->Montage_Play(GetHitReactMontage());
 		FName SectionName = FName("Default");
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}

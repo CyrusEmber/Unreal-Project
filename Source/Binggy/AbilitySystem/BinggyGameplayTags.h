@@ -41,6 +41,8 @@ struct  FBinggyGameplayTags
 	FGameplayTag InputTag_4;
 
 	FGameplayTag Damage;
+
+	FGameplayTag Effects_HitReact;
 	
 
 	static FBinggyGameplayTags GameplayTags;

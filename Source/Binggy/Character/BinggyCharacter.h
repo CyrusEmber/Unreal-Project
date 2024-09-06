@@ -100,8 +100,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* FireWeaponMontage;
-	UPROPERTY(EditAnywhere, Category = Combat)
-	UAnimMontage* HitReactMontage;
+	// FIXME
+	/*UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* HitReactMontage;*/
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ElimMontage;
 

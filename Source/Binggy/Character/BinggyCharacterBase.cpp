@@ -3,7 +3,9 @@
 
 #include "BinggyCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 
 // Sets default values
 ABinggyCharacterBase::ABinggyCharacterBase()
@@ -18,15 +20,27 @@ UAbilitySystemComponent* ABinggyCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+void ABinggyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	const bool bHitReact = NewCount > 0; 
+}
+
+UAnimMontage* ABinggyCharacterBase::GetHitReactMontage_Implementation()
+{
+	check(HitReactMontage);
+	return HitReactMontage;
+}
+
 // Called when the game starts or when spawned
 void ABinggyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ABinggyCharacterBase::InitAbilityActorInfo()
 {
+	
 }
 
 void ABinggyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float level) const

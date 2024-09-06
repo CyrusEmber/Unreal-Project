@@ -21,6 +21,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	ABinggyCharacter* GetBinggyCharacterFromActorInfo() const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	FScalableFloat Damage;
 protected:
 	
 };

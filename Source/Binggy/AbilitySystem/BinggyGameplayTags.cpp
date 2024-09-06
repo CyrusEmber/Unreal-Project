@@ -77,5 +77,10 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 		FName("Damage"),
 		FString("Damage")
 		);
+
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Effects_HitReact"),
+	FString("Tag grant when hit react")
+	);
 	
 }
