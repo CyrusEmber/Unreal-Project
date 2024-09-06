@@ -90,10 +90,11 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 			if (!bFatal)
 			{
-				FGameplayTagContainer TagContainer;
-	            TagContainer.AddTag(FBinggyGameplayTags::Get().Effects_HitReact);
-	            Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+				// TODO
 			}
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(FBinggyGameplayTags::Get().Effects_HitReact);
+			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 		}
 	}
 

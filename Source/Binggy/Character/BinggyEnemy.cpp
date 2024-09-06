@@ -6,6 +6,7 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "Components/WidgetComponent.h"
 
 
 ABinggyEnemy::ABinggyEnemy()
@@ -16,6 +17,9 @@ ABinggyEnemy::ABinggyEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UBinggyAttributeSet>("AttributeSet");
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 int32 ABinggyEnemy::GetPlayerLevel()
@@ -37,5 +41,5 @@ void ABinggyEnemy::InitAbilityActorInfo()
 
 void ABinggyEnemy::InitializeDefaultAttributes() const
 {
-	UUtilityLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	// UUtilityLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

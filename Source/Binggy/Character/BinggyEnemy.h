@@ -7,6 +7,7 @@
 #include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
+class UWidgetComponent;
 enum class ECharacterClass : uint8;
 /**
  * 
@@ -34,6 +35,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Defaults")
 	ECharacterClass CharacterClass = ECharacterClass::Elementalist;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
 	
 
 private:
