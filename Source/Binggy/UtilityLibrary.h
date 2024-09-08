@@ -24,14 +24,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
 	static UOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
 
-	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
+	UFUNCTION(BlueprintPure, Category = "UtilityLibrary|WidgetController")
 	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 	
-	UFUNCTION(BlueprintCallable, Category = "UILibrary|CharacterAttributesDefault")
+	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|CharacterAttributesDefault")
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
-	UFUNCTION(BlueprintCallable, Category="UILibrary|CharacterAttributesDefault")
+	UFUNCTION(BlueprintCallable, Category="UtilityLibrary|CharacterAttributesDefault")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
+	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);
+	
 private:
 	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);
 };

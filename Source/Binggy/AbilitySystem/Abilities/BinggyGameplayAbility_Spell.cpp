@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 // #include "Binggy/Character/Component/CombatComponent.h"
+#include "Binggy/UtilityLibrary.h"
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/Character/Component/CombatComponent.h"
 #include "Binggy/Weapon/Weapon.h"
@@ -41,7 +42,7 @@ void UBinggyGameplayAbility_Spell::FireSpell(const FGameplayEffectSpecHandle& Sp
 	{
 		bCanFire = false;
 		FHitResult HitResult;
-		TraceUnderCrosshairs(HitResult);
+		UUtilityLibrary::TraceUnderCrosshairByVisibility(HitResult, this);
 		if (ABinggyCharacter* BinggyCharacter = GetBinggyCharacterFromActorInfo()) {
 			BinggyCharacter->PlayFiringMontage(false);
 			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(HitResult.ImpactPoint, SpecHandle);
@@ -75,33 +76,3 @@ void UBinggyGameplayAbility_Spell::FireTimerFinished()
 	}*/
 }
 
-void UBinggyGameplayAbility_Spell::TraceUnderCrosshairs(FHitResult& TraceHitResult)
-{
-	FVector2D ViewportSize;
-	if (GEngine && GEngine->GameViewport) {
-		GEngine->GameViewport->GetViewportSize(ViewportSize);
-	}
-
-	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
-	FVector CrosshairWorldPosition;
-	FVector CrosshairWorldDirection;
-	bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
-		UGameplayStatics::GetPlayerController(this, 0),
-		CrosshairLocation,
-		CrosshairWorldPosition,
-		CrosshairWorldDirection
-	);
-	if (bScreenToWorld) {
-		FVector Start = CrosshairWorldPosition;
-		FVector End = Start + CrosshairWorldDirection * LINE_TRACE_LENGTH;
-
-		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECollisionChannel::ECC_Visibility);
-
-		if (!TraceHitResult.bBlockingHit) {
-			TraceHitResult.ImpactPoint = End;
-		}
-		//else {
-		//	DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
-		//}
-	}
-}

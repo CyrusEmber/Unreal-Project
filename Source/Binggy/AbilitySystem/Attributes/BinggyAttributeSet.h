@@ -15,7 +15,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
-
+// DECLARE_MULTICAST_DELEGATE_SixParams(FBinggyAttributeEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayEffectSpec* /*EffectSpec*/, float /*EffectMagnitude*/, float /*OldValue*/, float /*NewValue*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FBinggyAttributeEvent, float /*NewValue*/);
 USTRUCT()
 struct FEffectProperties
 {
@@ -113,17 +114,17 @@ public:
 	FGameplayAttributeData ManaRegeneration;
 	
 	
-	/* Secondary attributes */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Attributes")
+	/* Secondary attributes TODO */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData PhysicalDamage;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData MagicalDamage;
 		
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData CriticalDamage;
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Attributes")
 	FGameplayAttributeData CriticalChance;
 	
 	
@@ -158,8 +159,16 @@ public:
 	UFUNCTION()
 	void OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const;
 
+	// Delegate
+	mutable FBinggyAttributeEvent OnHealthChanged;
+
+	mutable FBinggyAttributeEvent OnMaxHealthChanged;
+
 private:
 	void SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
 
+	// Store the health before any changes 
+	float MaxHealthBeforeAttributeChange;
+	float HealthBeforeAttributeChange;
 
 };

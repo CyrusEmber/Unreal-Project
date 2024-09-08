@@ -7,6 +7,7 @@
 #include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
+class UBinggyHealthComponent;
 class UWidgetComponent;
 enum class ECharacterClass : uint8;
 /**
@@ -23,6 +24,9 @@ public:
 	virtual int32 GetPlayerLevel() override;
 
 protected:
+	virtual void OnAbilitySystemInitialized() override;
+	virtual void OnAbilitySystemUninitialized() override;
+	
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo() override;
@@ -40,6 +44,8 @@ protected:
 	
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBinggyHealthComponent> HealthComponent;
 
 	
 };

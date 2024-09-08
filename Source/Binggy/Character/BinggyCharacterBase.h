@@ -31,8 +31,8 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
 protected:
-	// virtual void OnAbilitySystemInitialized();
-	// virtual void OnAbilitySystemUninitialized();
+	virtual void OnAbilitySystemInitialized();
+	virtual void OnAbilitySystemUninitialized();
 	
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();

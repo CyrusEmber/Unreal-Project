@@ -31,6 +31,14 @@ UAnimMontage* ABinggyCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+void ABinggyCharacterBase::OnAbilitySystemInitialized()
+{
+}
+
+void ABinggyCharacterBase::OnAbilitySystemUninitialized()
+{
+}
+
 // Called when the game starts or when spawned
 void ABinggyCharacterBase::BeginPlay()
 {

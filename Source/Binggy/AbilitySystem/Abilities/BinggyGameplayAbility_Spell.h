@@ -35,8 +35,7 @@ protected:
 	void FireSpell(const FGameplayEffectSpecHandle& SpecHandle);
 	void StartFireTimer();
 	void FireTimerFinished();
-
-	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
+	
 	// Refactor into weapon specific variable, such as character->EquippedWeapon
 	float FireDelay = 0.1f;
 };

@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 
@@ -23,10 +24,11 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Enemy Health: %f"), TargetASC->GetSet<UBinggyAttributeSet>()->GetHealth()));
 		}
-		Destroy();
+		
 	}
-	
+	Destroy();
 	
 	// Destroy
 	// Destroy();

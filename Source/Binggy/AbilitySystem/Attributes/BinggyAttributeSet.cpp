@@ -29,6 +29,8 @@ UBinggyAttributeSet::UBinggyAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalChance, GetCriticalChanceAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_PhysicalDamage, GetPhysicalDamageAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MagicalDamage, GetMagicalDamageAttribute);
+	HealthBeforeAttributeChange = 0.f;
+	MaxHealthBeforeAttributeChange = 0.f;
 }
 
 void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -47,14 +49,17 @@ void UBinggyAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
-	if (Attribute == GetHealthAttribute())
+	/*if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
-	}
+	}*/
+
+	HealthBeforeAttributeChange = GetHealth();
+	MaxHealthBeforeAttributeChange = GetMaxHealth();
 
 }
 
@@ -84,7 +89,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(),GetHealth()));
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
 			const bool bFatal = NewHealth <= 0.f;
 			
 
@@ -97,8 +102,23 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 		}
 	}
-
+	// Normally Max health does not change
+	else if (Data.EvaluatedData.Attribute == GetMaxHealthAttribute())
+	{
+		// Clamp current health
+		if (GetHealth() > GetMaxHealth())
+		{
+			SetHealth(GetMaxHealth());
+		}
+		// Notify on any requested max health changes
+		OnMaxHealthChanged.Broadcast(GetMaxHealth());
+	}
 	
+	// If health has actually changed activate callbacks
+	if (GetHealth() != HealthBeforeAttributeChange)
+	{
+		OnHealthChanged.Broadcast(GetHealth());
+	}
 }
 
 void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
@@ -129,14 +149,19 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 
 }
 
-void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldHealth) const
+void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Health, OldHealth);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Health, OldValue);
+	const float CurrentHealth = GetHealth();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("On Rep Health Fired!")); 
+	OnHealthChanged.Broadcast(CurrentHealth);
 }
 
 void UBinggyAttributeSet::OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxHealth, OldMaxHealth);
+	const float CurrentMaxHealth = GetMaxHealth();
+	OnHealthChanged.Broadcast(CurrentMaxHealth);
 }
 
 void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldMana) const
