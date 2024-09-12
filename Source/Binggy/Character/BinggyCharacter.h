@@ -60,16 +60,11 @@ public:
 	void AimEnd();
 
 	virtual void Die() override;
-	
-	
+
 
 protected:
 	virtual void BeginPlay() override;
 	
-	UFUNCTION()
-	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser);
-	void UpdateHUDHealth();
-
 	virtual void InitAbilityActorInfo() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -113,27 +108,12 @@ private:
 
 	void PlayHitReactMontage();
 
-	// Player Health
-	UPROPERTY(EditAnywhere, Category="Player Stats")
-	float MaxHealth = 100.f;
-	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player Stats")
-	float Health = 100.f;
-
-	UFUNCTION()
-	void OnRep_Health();
-
-	ABinggyPlayerController* BinggyPlayerController;
-
+	// Elimination Need refactoring
 	bool bElimmed = false;
-
 	FTimerHandle ElimTimer;
-
 	UPROPERTY(EditDefaultsOnly)
 	float ElimDelay = 4.f;
-
 	void ElimTimerFinished();
-
-	
 
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -145,7 +125,6 @@ public:
 
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
-	FORCEINLINE float GetHealth() const { return Health; }
-	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+
 	FORCEINLINE UCombatComponent* GetCombatComponent() const { return CombatComponent; }
 };

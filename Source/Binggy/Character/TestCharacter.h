@@ -31,5 +31,6 @@ protected:
 	int32 Level = 1;
 
 private:
-	
+	UPROPERTY(VisibleAnywhere, Category = "PlayerState")
+	TObjectPtr<UBinggyAbilitySystemComponent> AbilitySystemComponent;
 };

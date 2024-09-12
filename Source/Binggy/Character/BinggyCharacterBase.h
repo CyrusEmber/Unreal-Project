@@ -9,6 +9,9 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class ABinggyPlayerState;
+class UBinggyAbilitySystemComponent;
+class ABinggyPlayerController;
 class UCombatComponent;
 class UBinggyHealthComponent;
 struct FGameplayTag;
@@ -25,6 +28,15 @@ class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystem
 
 public:
 	ABinggyCharacterBase();
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	ABinggyPlayerController* GetBinggyPlayerController() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	UBinggyAbilitySystemComponent* GetBinggyAbilitySystemComponent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	ABinggyPlayerState* GetBinggyPlayerState() const;
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
@@ -38,17 +50,25 @@ public:
 	virtual void Die() override;
 
 protected:
-	// Initialize the component when ability system component set
+	// Initialize the component when ability system component set, calls GetBinggyAbilitySystemComponent which will be overriden in AI controlled classes.
 	virtual void OnAbilitySystemInitialized();
 	virtual void OnAbilitySystemUninitialized();
-	
+
+	// Actor Interface?
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(AController* NewController) override;
+
+	// It is different for player and AI, since player store the ASC in player state
 	virtual void InitAbilityActorInfo();
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	// Save a copy of ASC and AS to the character
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	
+	// Attributes
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
@@ -59,23 +79,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
+	
+	// Apply any attribute effect to self
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float level = 1) const;
 	virtual void InitializeDefaultAttributes() const;
 
 	void AddCharacterAbilities();
 
-	// Weapon
-	virtual FVector GetCombatSocketLocation();
-
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// Common components of character
+	// Common components of character TODO: Move it into private section
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBinggyHealthComponent> HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCombatComponent> CombatComponent;
+
+	// Weapon
+	virtual FVector GetCombatSocketLocation();
 
 private:	
 	UPROPERTY(EditAnywhere, Category = "Abilities")

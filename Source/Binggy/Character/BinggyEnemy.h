@@ -22,15 +22,17 @@ public:
 	ABinggyEnemy();
 	// CombatInterface
 	virtual int32 GetPlayerLevel() override;
+	// For AI Controlled character, there is no player state thus directly return AbilitySystemComponent.
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
+	// Check parent class for more info
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
 	
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo() override;
-
 	virtual void InitializeDefaultAttributes() const override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Defaults")
@@ -44,6 +46,7 @@ protected:
 	
 
 private:
-
+	UPROPERTY(VisibleAnywhere, Category = "PlayerState")
+	TObjectPtr<UBinggyAbilitySystemComponent> AbilitySystemComponent;
 	
 };

@@ -45,7 +45,6 @@ class BINGGY_API ABinggyPlayerController : public APlayerController
 public:
 	ABinggyPlayerController();
 	
-	void SetHUDHealth(float CurrentHealth, float MaxHealth);
 	void SetHUDScore(float Score);
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void Tick(float DeltaTime) override;

@@ -91,7 +91,6 @@ void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABinggyCharacter, OverlappingWeapon, COND_OwnerOnly);
-	DOREPLIFETIME(ABinggyCharacter, Health);
 }
 
 void ABinggyCharacter::EquipOverlappingWeapon()
@@ -160,12 +159,6 @@ void ABinggyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UpdateHUDHealth();
-
-	// Damage is calculated on the server
-	if (HasAuthority()) {
-		OnTakeAnyDamage.AddDynamic(this, &ThisClass::ReceiveDamage);
-	}
     // Hide health bar for local user
 	if (IsLocallyControlled())
 	{
@@ -231,7 +224,9 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	// Init ability actor info for the server, set ability system component
 	InitAbilityActorInfo();
 	AddCharacterAbilities();
-	
+	UBinggyAbilitySystemComponent* AbilitySystemComponent = GetBinggyAbilitySystemComponent();
+	// Fixme this is not working
+	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
 	// TODO: Refactoring
 	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &ThisClass::HitReactTagChanged
@@ -240,10 +235,6 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_Death, EGameplayTagEventType::NewOrRemoved).AddUObject(
 	this, &ThisClass::DeathTagChanged
 	);
-
-	// Fixme this is not working
-	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
-
 }
 
 void ABinggyCharacter::OnRep_PlayerState()
@@ -262,15 +253,15 @@ int32 ABinggyCharacter::GetPlayerLevel()
 // TODO: Potentially check the usage of ASC or AS
 void ABinggyCharacter::InitAbilityActorInfo()
 {
-	ABinggyPlayerState* BinggyPlayerState = GetPlayerState<ABinggyPlayerState>();
+	ABinggyPlayerState* BinggyPlayerState = GetBinggyPlayerState();
 	check(BinggyPlayerState);
-	BinggyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BinggyPlayerState, this);
-	Cast<UBinggyAbilitySystemComponent>(BinggyPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
+	UBinggyAbilitySystemComponent* AbilitySystemComponent = GetBinggyAbilitySystemComponent();
+	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
+	AbilitySystemComponent->AbilityActorInfoSet();
 
-	AbilitySystemComponent = BinggyPlayerState->GetAbilitySystemComponent();
+	
 	AttributeSet = BinggyPlayerState->GetAttributeSet();
-	BinggyPlayerController = BinggyPlayerController == nullptr ? Cast<ABinggyPlayerController>(Controller) : BinggyPlayerController;
-	if (BinggyPlayerController) {
+	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
 		if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
 			BinggyHUD->InitOverlay(BinggyPlayerController);
 		}
@@ -279,7 +270,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	InitializeDefaultAttributes();
 
 	// Initialize the health component
-	HealthComponent->InitializeWithAbilitySystem(Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent));
+	HealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	// TODO: Refactor
 	/*if (GetController()->IsLocalPlayerController())
 	{
@@ -295,7 +286,7 @@ void ABinggyCharacter::MulticastElimination_Implementation()
 	GetCharacterMovement()->DisableMovement();
 	GetCharacterMovement()->StopMovementImmediately();
 
-	if (BinggyPlayerController) {
+	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
 		DisableInput(BinggyPlayerController);
 	}
 
@@ -361,41 +352,6 @@ void ABinggyCharacter::ServerEquip_Implementation()
 {
 	if (OverlappingWeapon && HasAuthority()) {
 		CombatComponent->EquipWeapon(OverlappingWeapon);
-	}
-}
-
-// Only on server
-void ABinggyCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser)
-{
-	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
-	PlayHitReactMontage();
-	UpdateHUDHealth();
-	if (Health == 0.f) {
-		ABinggyGameMode* BinggyGameMode = GetWorld()->GetAuthGameMode<ABinggyGameMode>();
-		if (BinggyGameMode) {
-
-			BinggyPlayerController = BinggyPlayerController == nullptr ? Cast<ABinggyPlayerController>(Controller) : BinggyPlayerController;
-			ABinggyPlayerController* AttackerPlayerController = Cast<ABinggyPlayerController>(InstigatorController);
-			// Check null in gamemode
-			BinggyGameMode->PlayerElimiated(this, BinggyPlayerController, AttackerPlayerController);
-		}
-		
-	}
-	
-}
-
-void ABinggyCharacter::OnRep_Health()
-{
-	PlayHitReactMontage();
-	UpdateHUDHealth();
-}
-
-
-void ABinggyCharacter::UpdateHUDHealth()
-{
-	BinggyPlayerController = BinggyPlayerController == nullptr ? Cast<ABinggyPlayerController>(Controller) : BinggyPlayerController;
-	if (BinggyPlayerController) {
-		BinggyPlayerController->SetHUDHealth(Health, MaxHealth);
 	}
 }
 

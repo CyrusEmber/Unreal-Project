@@ -6,7 +6,6 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Component/BinggyHealthComponent.h"
 #include "Components/WidgetComponent.h"
 
 
@@ -29,6 +28,12 @@ int32 ABinggyEnemy::GetPlayerLevel()
 	return Level;
 }
 
+UAbilitySystemComponent* ABinggyEnemy::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+// FIXME: TODO: Should enemy have player state?
 void ABinggyEnemy::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

@@ -46,10 +46,6 @@ void ABinggyPlayerController::OnPossess(APawn* InPawn)
 
 	ABinggyCharacter* BinggyCharacter = Cast<ABinggyCharacter>(InPawn);
 
-	if (BinggyCharacter) {
-		SetHUDHealth(BinggyCharacter->GetHealth(), BinggyCharacter->GetMaxHealth());
-	}
-
 	ABinggyPlayerState* BinggyPlayerState = Cast<ABinggyPlayerState>(PlayerState);
 	if (BinggyPlayerState) {
 		BinggyPlayerState->AddToScore(0);
@@ -93,18 +89,6 @@ void ABinggyPlayerController::SetupInputComponent()
 void ABinggyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-}
-
-void ABinggyPlayerController::SetHUDHealth(float CurrentHealth, float MaxHealth)
-{
-	//BinggyHUD = BinggyHUD == nullptr ? Cast<ABinggyHUD>(GetHUD()) : BinggyHUD;
-	//bool bHUDValid = BinggyHUD && BinggyHUD->CharacterOverlay && BinggyHUD->CharacterOverlay->HealthBar && BinggyHUD->CharacterOverlay->HealthText;
-	//if (bHUDValid) {
-	//	const float HealthPercent = CurrentHealth / MaxHealth;
-	//	BinggyHUD->CharacterOverlay->HealthBar->SetPercent(HealthPercent);
-	//	FString HealthText = FString::Printf(TEXT("%d"), FMath::CeilToInt(CurrentHealth));
-	//	BinggyHUD->CharacterOverlay->HealthText->SetText(FText::FromString(HealthText));
-	//}
 }
 
 void ABinggyPlayerController::SetHUDScore(float Score)

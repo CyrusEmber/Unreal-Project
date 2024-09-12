@@ -6,6 +6,8 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/PlayerController/BinggyPlayerController.h"
+#include "Binggy/PlayerState/BinggyPlayerState.h"
 #include "Component/BinggyHealthComponent.h"
 #include "Component/CombatComponent.h"
 
@@ -21,9 +23,24 @@ ABinggyCharacterBase::ABinggyCharacterBase()
 
 }
 
+ABinggyPlayerController* ABinggyCharacterBase::GetBinggyPlayerController() const
+{
+	return CastChecked<ABinggyPlayerController>(Controller, ECastCheckedType::NullAllowed);
+}
+
+UBinggyAbilitySystemComponent* ABinggyCharacterBase::GetBinggyAbilitySystemComponent() const
+{
+	return Cast<UBinggyAbilitySystemComponent>(GetAbilitySystemComponent());
+}
+
+ABinggyPlayerState* ABinggyCharacterBase::GetBinggyPlayerState() const
+{
+	return CastChecked<ABinggyPlayerState>(GetPlayerState(), ECastCheckedType::NullAllowed);
+}
+
 UAbilitySystemComponent* ABinggyCharacterBase::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent;
+	return GetBinggyPlayerState()->GetAbilitySystemComponent();;
 }
 
 void ABinggyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
@@ -50,7 +67,7 @@ void ABinggyCharacterBase::Die()
 
 void ABinggyCharacterBase::OnAbilitySystemInitialized()
 {
-	UBinggyAbilitySystemComponent* ASC = Cast<UBinggyAbilitySystemComponent>(GetAbilitySystemComponent());
+	UBinggyAbilitySystemComponent* ASC = GetBinggyAbilitySystemComponent();
 	check(ASC);
 	
 	HealthComponent->InitializeWithAbilitySystem(ASC);
@@ -97,8 +114,7 @@ void ABinggyCharacterBase::AddCharacterAbilities()
 	{
 		return;
 	}
-	UBinggyAbilitySystemComponent* BinggyASC = CastChecked<UBinggyAbilitySystemComponent>(AbilitySystemComponent);
-	BinggyASC->AddCharacterAbilities(StartupAbilities);
+	GetBinggyAbilitySystemComponent()->AddCharacterAbilities(StartupAbilities);
 }
 
 FVector ABinggyCharacterBase::GetCombatSocketLocation()
@@ -118,5 +134,10 @@ void ABinggyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABinggyCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
 }
 
