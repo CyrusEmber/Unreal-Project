@@ -50,10 +50,16 @@ void ABinggyCharacterBase::Die()
 
 void ABinggyCharacterBase::OnAbilitySystemInitialized()
 {
+	UBinggyAbilitySystemComponent* ASC = Cast<UBinggyAbilitySystemComponent>(GetAbilitySystemComponent());
+	check(ASC);
+	
+	HealthComponent->InitializeWithAbilitySystem(ASC);
+	// Initialize game tag here with a function TODO:
 }
 
 void ABinggyCharacterBase::OnAbilitySystemUninitialized()
 {
+	HealthComponent->UninitializeFromAbilitySystem();
 }
 
 // Called when the game starts or when spawned

@@ -93,9 +93,6 @@ private:
 	UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 
-	UPROPERTY(VisibleAnywhere)
-	UCombatComponent* CombatComponent;
-
 	// RPC called from client and executed in the server
 	UFUNCTION(Server, Reliable)
 	void ServerEquip();

@@ -44,8 +44,6 @@ protected:
 	
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBinggyHealthComponent> HealthComponent;
 
 	
 };
