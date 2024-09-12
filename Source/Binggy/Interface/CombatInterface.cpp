@@ -14,3 +14,12 @@ FVector ICombatInterface::GetCombatSocketLocation()
 {
 	return FVector();
 }
+
+UAnimMontage* ICombatInterface::GetHitReactMontage()
+{
+	return nullptr;
+}
+
+void ICombatInterface::Die()
+{
+}

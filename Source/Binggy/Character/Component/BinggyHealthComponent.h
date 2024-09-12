@@ -7,6 +7,7 @@
 #include "BinggyHealthComponent.generated.h"
 
 
+class UWidgetComponent;
 class UBinggyAttributeSet;
 class UBinggyAbilitySystemComponent;
 
@@ -56,6 +57,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FBinggyHealth_AttributeChanged OnMaxHealthChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FBinggyHealth_AttributeChanged OnOutOfHealthChanged;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -66,9 +70,14 @@ protected:
 
 	virtual void HandleHealthChanged(float NewValue);
 	virtual void HandleMaxHealthChanged(float NewValue);
+	virtual void HandleOutOfHealth(float NewValue);
 	// virtual void HandleMaxHealthChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
-	
 
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;*/
+
+	// UFUNCTION(BlueprintCallable, Category = "Binggy|Health")
+	// UWidgetComponent* GetHealthBar();
 protected:
 
 	// Ability system used by this component.

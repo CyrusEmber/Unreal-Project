@@ -6,12 +6,18 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Component/BinggyHealthComponent.h"
+#include "Component/CombatComponent.h"
 
 // Sets default values
 ABinggyCharacterBase::ABinggyCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Initialize the component
+	HealthComponent = CreateDefaultSubobject<UBinggyHealthComponent>(TEXT("HealthComponent"));
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 
 }
 
@@ -22,13 +28,24 @@ UAbilitySystemComponent* ABinggyCharacterBase::GetAbilitySystemComponent() const
 
 void ABinggyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	const bool bHitReact = NewCount > 0; 
+	const bool bHitReact = NewCount > 0;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Hit React Tag Changed")); 
 }
 
-UAnimMontage* ABinggyCharacterBase::GetHitReactMontage_Implementation()
+void ABinggyCharacterBase::DeathTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Death Tag Changed")); 
+}
+
+UAnimMontage* ABinggyCharacterBase::GetHitReactMontage()
 {
 	check(HitReactMontage);
 	return HitReactMontage;
+}
+
+void ABinggyCharacterBase::Die()
+{
+	ICombatInterface::Die();
 }
 
 void ABinggyCharacterBase::OnAbilitySystemInitialized()

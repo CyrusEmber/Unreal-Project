@@ -22,6 +22,7 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
+#include "Component/BinggyHealthComponent.h"
 
 
 // Sets default values
@@ -63,9 +64,9 @@ ABinggyCharacter::ABinggyCharacter()
 	OverheadWidget->SetupAttachment(RootComponent);
 	OverheadWidget->CanCharacterStepUpOn = ECB_No;
 
-	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	/*CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	// This is a component, only need to set replicated like this
-	Combat->SetIsReplicated(true);
+	CombatComponent->SetIsReplicated(true);*/
 
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 
@@ -77,6 +78,12 @@ ABinggyCharacter::ABinggyCharacter()
 	// Net 
 	NetUpdateFrequency = 66.f;
 	MinNetUpdateFrequency = 33.f;
+
+	// Health
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
+	HealthBar->SetOwnerNoSee(true);  // Hide for the owner
+
 }
 
 void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -91,7 +98,7 @@ void ABinggyCharacter::EquipOverlappingWeapon()
 {
 	if (OverlappingWeapon) {
 		if (HasAuthority()) {
-			Combat->EquipWeapon(OverlappingWeapon);
+			CombatComponent->EquipWeapon(OverlappingWeapon);
 		}
 		else {
 			ServerEquip();
@@ -101,30 +108,52 @@ void ABinggyCharacter::EquipOverlappingWeapon()
 
 void ABinggyCharacter::FireStart()
 {
-	if (Combat) {
-		Combat->FirePressed(true);
+	if (CombatComponent) {
+		CombatComponent->FirePressed(true);
 	}
 }
 
 void ABinggyCharacter::FireEnd()
 {
-	if (Combat) {
-		Combat->FirePressed(false);
+	if (CombatComponent) {
+		CombatComponent->FirePressed(false);
 	}
 }
 
 void ABinggyCharacter::AimStart()
 {
-	if (Combat) {
-		Combat->SetAiming(true);
+	if (CombatComponent) {
+		CombatComponent->SetAiming(true);
 	}
 }
 
 void ABinggyCharacter::AimEnd()
 {
-	if (Combat) {
-		Combat->SetAiming(false);
+	if (CombatComponent) {
+		CombatComponent->SetAiming(false);
 	}
+}
+
+void ABinggyCharacter::Die()
+{
+	Super::Die();
+	if (GetEquippedWeapon())
+	{
+		GetEquippedWeapon()->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+		GetEquippedWeapon()->GetWeaponMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetEnableGravity(true);
+		GetEquippedWeapon()->GetWeaponMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	}
+
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->Stop();
+	GetMesh()->bPauseAnims = false;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABinggyCharacter::BeginPlay()
@@ -137,6 +166,11 @@ void ABinggyCharacter::BeginPlay()
 	if (HasAuthority()) {
 		OnTakeAnyDamage.AddDynamic(this, &ThisClass::ReceiveDamage);
 	}
+    // Hide health bar for local user
+	if (IsLocallyControlled())
+	{
+		HealthBar->SetVisibility(false);
+	}
 	
 }
 
@@ -148,14 +182,14 @@ void ABinggyCharacter::Tick(float DeltaTime)
 void ABinggyCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	if (Combat) {
-		Combat->Character = this;
+	if (CombatComponent) {
+		CombatComponent->Character = this;
 	}
 }
 
 void ABinggyCharacter::PlayFiringMontage(bool bAiming)
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
+	if (CombatComponent == nullptr || CombatComponent->EquippedWeapon == nullptr) {
 		return;
 	}
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -168,7 +202,7 @@ void ABinggyCharacter::PlayFiringMontage(bool bAiming)
 
 void ABinggyCharacter::PlayElimMontage()
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
+	if (CombatComponent == nullptr || CombatComponent->EquippedWeapon == nullptr) {
 		return;
 	}
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -179,8 +213,8 @@ void ABinggyCharacter::PlayElimMontage()
 
 void ABinggyCharacter::Elimination()
 {
-	if (Combat && Combat->EquippedWeapon) {
-		Combat->EquippedWeapon->Drop();
+	if (CombatComponent && CombatComponent->EquippedWeapon) {
+		CombatComponent->EquippedWeapon->Drop();
 	}
 	MulticastElimination();
 	GetWorldTimerManager().SetTimer(ElimTimer, this, &ThisClass::ElimTimerFinished, ElimDelay);
@@ -199,8 +233,12 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	AddCharacterAbilities();
 	
 	// TODO: Refactoring
-	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &ThisClass::HitReactTagChanged
+	);
+
+	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_Death, EGameplayTagEventType::NewOrRemoved).AddUObject(
+	this, &ThisClass::DeathTagChanged
 	);
 
 	// Fixme this is not working
@@ -239,6 +277,14 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	}
 
 	InitializeDefaultAttributes();
+
+	// Initialize the health component
+	HealthComponent->InitializeWithAbilitySystem(Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent));
+	// TODO: Refactor
+	/*if (GetController()->IsLocalPlayerController())
+	{
+		HealthBar->SetVisibility(false, true);
+	}*/
 }
 
 void ABinggyCharacter::MulticastElimination_Implementation()
@@ -289,7 +335,7 @@ void ABinggyCharacter::ElimTimerFinished()
 
 void ABinggyCharacter::PlayHitReactMontage()
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
+	if (CombatComponent == nullptr || CombatComponent->EquippedWeapon == nullptr) {
 		return;
 	}
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -314,7 +360,7 @@ void ABinggyCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 void ABinggyCharacter::ServerEquip_Implementation()
 {
 	if (OverlappingWeapon && HasAuthority()) {
-		Combat->EquipWeapon(OverlappingWeapon);
+		CombatComponent->EquipWeapon(OverlappingWeapon);
 	}
 }
 
@@ -369,20 +415,20 @@ void ABinggyCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 
 bool ABinggyCharacter::IsWeaponEquiped()
 {
-	return (Combat && Combat->EquippedWeapon);
+	return (CombatComponent && CombatComponent->EquippedWeapon);
 }
 
 bool ABinggyCharacter::IsAiming()
 {
-	return (Combat && Combat->bIsAiming);
+	return (CombatComponent && CombatComponent->bIsAiming);
 }
 
 AWeapon* ABinggyCharacter::GetEquippedWeapon()
 {
-	if (Combat == nullptr) {
+	if (CombatComponent == nullptr) {
 		return nullptr;
 	}
-	return Combat->EquippedWeapon;
+	return CombatComponent->EquippedWeapon;
 }
 
 

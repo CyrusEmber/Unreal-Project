@@ -33,8 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="UtilityLibrary|CharacterAttributesDefault")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
 
-	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
-	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);
+	/*UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
+	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);*/
 	
 private:
 	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);

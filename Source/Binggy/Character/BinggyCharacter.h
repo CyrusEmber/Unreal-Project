@@ -7,6 +7,7 @@
 #include "BinggyCharacter.generated.h"
 
 
+class UBinggyHealthComponent;
 class AWeapon;
 class UBinggyAbilitySystemComponent;
 struct FGameplayTag;
@@ -41,6 +42,7 @@ public:
 
 	// AbilitySystem
 	virtual void PossessedBy(AController* NewController) override;
+	// PlayerState Replication Notification Callback, Init ability actor info for the client
 	virtual void OnRep_PlayerState() override;
 
 	// CombatInterface
@@ -56,6 +58,8 @@ public:
 
 	void AimStart();
 	void AimEnd();
+
+	virtual void Die() override;
 	
 	
 
@@ -67,6 +71,9 @@ protected:
 	void UpdateHUDHealth();
 
 	virtual void InitAbilityActorInfo() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
 
 	
 
@@ -82,11 +89,12 @@ private:
 
 
 
+
 	UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 
 	UPROPERTY(VisibleAnywhere)
-	UCombatComponent* Combat;
+	UCombatComponent* CombatComponent;
 
 	// RPC called from client and executed in the server
 	UFUNCTION(Server, Reliable)
@@ -128,6 +136,8 @@ private:
 
 	void ElimTimerFinished();
 
+	
+
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquiped();
@@ -140,5 +150,5 @@ public:
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
-	FORCEINLINE UCombatComponent* GetCombatComponent() const { return Combat; }
+	FORCEINLINE UCombatComponent* GetCombatComponent() const { return CombatComponent; }
 };

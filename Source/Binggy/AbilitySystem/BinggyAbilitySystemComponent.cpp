@@ -62,7 +62,7 @@ void UBinggyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& 
 
 void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle GameplayEffectHandle)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, FString("Effect Applied"));
+	// GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, FString("Effect Applied"));
 	FGameplayTagContainer AssetTags;
 	
 	EffectSpec.GetAllAssetTags(AssetTags);

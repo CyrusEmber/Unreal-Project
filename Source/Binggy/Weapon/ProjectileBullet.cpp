@@ -23,6 +23,7 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other
 		check(DamageEffectSpecHandle.Data);
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
+			
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Enemy Health: %f"), TargetASC->GetSet<UBinggyAttributeSet>()->GetHealth()));
 		}

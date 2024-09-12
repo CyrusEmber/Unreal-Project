@@ -20,7 +20,16 @@ void UBinggyGameplayAbility_Spell::ActivateAbility(const FGameplayAbilitySpecHan
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	
+	
+	// Projectile->DamageEffectSpecHandle = SpecHandle;
+	
+	
+}
+
+void UBinggyGameplayAbility_Spell::SpawnProjectile(const FVector TargetLocation)
+{
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
@@ -28,24 +37,19 @@ void UBinggyGameplayAbility_Spell::ActivateAbility(const FGameplayAbilitySpecHan
 
 	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 15.f);
-	
-	// Projectile->DamageEffectSpecHandle = SpecHandle;
 
-
-	FireSpell(SpecHandle);
-	
+	FireSpell(TargetLocation, SpecHandle);
 }
 
-void UBinggyGameplayAbility_Spell::FireSpell(const FGameplayEffectSpecHandle& SpecHandle)
+void UBinggyGameplayAbility_Spell::FireSpell(const FVector TargetLocation, const FGameplayEffectSpecHandle& SpecHandle)
 {
 	if (bCanFire)
 	{
 		bCanFire = false;
-		FHitResult HitResult;
-		UUtilityLibrary::TraceUnderCrosshairByVisibility(HitResult, this);
+
 		if (ABinggyCharacter* BinggyCharacter = GetBinggyCharacterFromActorInfo()) {
 			BinggyCharacter->PlayFiringMontage(false);
-			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(HitResult.ImpactPoint, SpecHandle);
+			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(TargetLocation, SpecHandle);
 		}
 		StartFireTimer();
 	}

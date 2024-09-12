@@ -2,6 +2,8 @@
 
 
 #include "BinggyAssetManager.h"
+
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystem/BinggyGameplayTags.h"
 
 UBinggyAssetManager& UBinggyAssetManager::Get()
@@ -15,4 +17,7 @@ void UBinggyAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
 	FBinggyGameplayTags::InitializeNativeGameplayTags();
+
+	// This is required to use target data
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }

@@ -40,9 +40,13 @@ struct  FBinggyGameplayTags
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
 
+	/* Meta Attribute Tag */
 	FGameplayTag Damage;
+	FGameplayTag Healing;
 
-	FGameplayTag Effects_HitReact;
+	/* Event Tag */
+	FGameplayTag GameplayEvent_HitReact;
+	FGameplayTag GameplayEvent_Death;
 	
 
 	static FBinggyGameplayTags GameplayTags;

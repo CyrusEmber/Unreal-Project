@@ -77,10 +77,21 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 		FName("Damage"),
 		FString("Damage")
 		);
+	
+	GameplayTags.Healing = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Healing"),
+	FString("Healing")
+	);
 
-	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
-	FName("Effects_HitReact"),
+	GameplayTags.GameplayEvent_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("GameplayEvent.HitReact"),
 	FString("Tag grant when hit react")
 	);
+
+	GameplayTags.GameplayEvent_Death = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("GameplayEvent.Death"),
+	FString("Tag grant when death")
+	);
+	
 	
 }

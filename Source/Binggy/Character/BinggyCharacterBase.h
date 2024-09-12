@@ -9,12 +9,15 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class UCombatComponent;
+class UBinggyHealthComponent;
 struct FGameplayTag;
 class UGameplayAbility;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 
+// Default class for AI or player character, it has a health component and a combat component. It also has some common functions for a character
 UCLASS(Abstract)
 class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
@@ -27,8 +30,12 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-
-	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	void DeathTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	UFUNCTION(BlueprintCallable)
+	virtual UAnimMontage* GetHitReactMontage() override;
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void Die() override;
 
 protected:
 	virtual void OnAbilitySystemInitialized();
@@ -63,6 +70,13 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	// Common components of character
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBinggyHealthComponent> HealthComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCombatComponent> CombatComponent;
+	
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	

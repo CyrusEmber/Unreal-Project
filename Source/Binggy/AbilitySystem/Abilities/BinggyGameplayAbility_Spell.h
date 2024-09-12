@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
+	UFUNCTION(BlueprintCallable, Category="Projectile")
+	void SpawnProjectile(FVector TargetLocation);
+
 	// Combat 
 	// Automatic fire
 
@@ -32,7 +35,7 @@ protected:
 
 	bool bCanFire = true;
 
-	void FireSpell(const FGameplayEffectSpecHandle& SpecHandle);
+	void FireSpell(FVector TargetLocation, const FGameplayEffectSpecHandle& SpecHandle);
 	void StartFireTimer();
 	void FireTimerFinished();
 	

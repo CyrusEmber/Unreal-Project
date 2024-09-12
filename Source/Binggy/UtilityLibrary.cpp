@@ -73,7 +73,7 @@ void UUtilityLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UA
 	
 }
 
-void UUtilityLibrary::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH)
+/*void UUtilityLibrary::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH)
 {
 	FVector2D ViewportSize;
 	if (GEngine && GEngine->GameViewport) {
@@ -102,7 +102,7 @@ void UUtilityLibrary::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult
 		//	DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
 		//}
 	}
-}
+}*/
 
 void UUtilityLibrary::ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes)
 {

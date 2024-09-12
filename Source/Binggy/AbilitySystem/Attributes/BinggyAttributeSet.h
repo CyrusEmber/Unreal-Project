@@ -60,6 +60,8 @@ public:
 	UBinggyAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
@@ -80,7 +82,9 @@ public:
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalChance);
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Armor);
 
-	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, IncomingDamage);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Damage);
+	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Healing);
+	
 
 	/** Primary Attributes */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
@@ -135,12 +139,15 @@ public:
 	
 	/* Meta Attributes */
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
-	FGameplayAttributeData IncomingDamage;
+	FGameplayAttributeData Damage;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData Healing;
 	
 	
 	/** Defining Rep Notify functions */
 	UFUNCTION()
-	void OnRep_Health(FGameplayAttributeData& OldHealth) const;
+	void OnRep_Health(FGameplayAttributeData& OldHealth);
 	UFUNCTION()
 	void OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) const;
 	UFUNCTION()
@@ -164,11 +171,16 @@ public:
 
 	mutable FBinggyAttributeEvent OnMaxHealthChanged;
 
+	mutable FBinggyAttributeEvent OnOutOfHealth;
+
 private:
 	void SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
 
 	// Store the health before any changes 
 	float MaxHealthBeforeAttributeChange;
 	float HealthBeforeAttributeChange;
+	
+	// Used to track when the health reaches 0.
+	bool bOutOfHealth;
 
 };
