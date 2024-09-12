@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class AWeapon;
 class ABinggyPlayerState;
 class UBinggyAbilitySystemComponent;
 class ABinggyPlayerController;
@@ -45,9 +46,13 @@ public:
 	void DeathTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	UFUNCTION(BlueprintCallable)
 	virtual UAnimMontage* GetHitReactMontage() override;
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDie();
+
 
 protected:
 	// Initialize the component when ability system component set, calls GetBinggyAbilitySystemComponent which will be overriden in AI controlled classes.
@@ -63,7 +68,7 @@ protected:
 	// It is different for player and AI, since player store the ASC in player state
 	virtual void InitAbilityActorInfo();
 
-	// Save a copy of ASC and AS to the character
+	// Save a copy of ASC and AS to the character. ASC is only stored in the Enemy class
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
@@ -93,6 +98,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCombatComponent> CombatComponent;
 
+	// Widget
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> DamageTextWidgetClass;
+
 	// Weapon
 	virtual FVector GetCombatSocketLocation();
 
@@ -102,5 +111,10 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+public:
+	// TODO: put it into static function
+	FORCEINLINE UCombatComponent* GetCombatComponent() const { return CombatComponent; }
+	AWeapon* GetEquippedWeapon() const;
 
 };

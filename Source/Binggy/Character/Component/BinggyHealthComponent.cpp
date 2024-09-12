@@ -6,6 +6,7 @@
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/Interface/CombatInterface.h"
 
 // Sets default values for this component's properties
 UBinggyHealthComponent::UBinggyHealthComponent()
@@ -94,7 +95,7 @@ void UBinggyHealthComponent::OnUnregister()
 
 void UBinggyHealthComponent::HandleHealthChanged(float NewValue)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Event Fired!"));
+	
 	FGameplayTagContainer TagContainer;
 	// Hit React
 	TagContainer.AddTag(FBinggyGameplayTags::Get().GameplayEvent_HitReact);
@@ -130,9 +131,16 @@ void UBinggyHealthComponent::HandleOutOfHealth(float NewValue)
 #endif // #if WITH_SERVER_CODE
 	
 	// This directly activate the current ability owned by the ASC
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Out of health Changed Fired!"));
 	FGameplayTagContainer TagContainer;
 	TagContainer.AddTag(FBinggyGameplayTags::Get().GameplayEvent_Death);
 	AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
+	/*ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetOwner());
+	if (CombatInterface)
+	{
+		CombatInterface->Die();
+	}*/
+	
 
 
 }

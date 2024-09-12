@@ -36,9 +36,12 @@ public:
 	void PlayFiringMontage(bool bAiming);
 	void PlayElimMontage();
 	// Only on server
+	UFUNCTION(BlueprintCallable)
 	void Elimination();
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElimination();
+
+
 
 	// AbilitySystem
 	virtual void PossessedBy(AController* NewController) override;
@@ -59,14 +62,13 @@ public:
 	void AimStart();
 	void AimEnd();
 
-	virtual void Die() override;
-
 
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void InitAbilityActorInfo() override;
 
+	// In world Widget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
@@ -121,10 +123,9 @@ public:
 	bool IsAiming();
 	FORCEINLINE float GetAO_Yaw() const { return AO_Yaw; }
 	FORCEINLINE float GetAO_Pitch() const { return AO_Pitch; }
-	AWeapon* GetEquippedWeapon();
 
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 
-	FORCEINLINE UCombatComponent* GetCombatComponent() const { return CombatComponent; }
+
 };

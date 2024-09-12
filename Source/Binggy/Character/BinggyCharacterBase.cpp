@@ -8,8 +8,11 @@
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
+#include "Binggy/Weapon/Weapon.h"
 #include "Component/BinggyHealthComponent.h"
 #include "Component/CombatComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABinggyCharacterBase::ABinggyCharacterBase()
@@ -62,7 +65,37 @@ UAnimMontage* ABinggyCharacterBase::GetHitReactMontage()
 
 void ABinggyCharacterBase::Die()
 {
-	ICombatInterface::Die();
+	// ICombatInterface::Die();
+
+	if (CombatComponent && CombatComponent->EquippedWeapon) {
+		CombatComponent->EquippedWeapon->Drop();
+	}
+	
+	MulticastHandleDie();
+	
+}
+
+void ABinggyCharacterBase::MulticastHandleDie_Implementation()
+{
+	if (GetEquippedWeapon())
+	{
+		GetEquippedWeapon()->GetWeaponMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetEnableGravity(true);
+		GetEquippedWeapon()->GetWeaponMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	}
+
+	GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->StopMovementImmediately();
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->Stop();
+	GetMesh()->bPauseAnims = false;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->ForceNetUpdate();
 }
 
 void ABinggyCharacterBase::OnAbilitySystemInitialized()
@@ -139,5 +172,13 @@ void ABinggyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void ABinggyCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+}
+
+AWeapon* ABinggyCharacterBase::GetEquippedWeapon() const
+{
+	if (CombatComponent == nullptr) {
+		return nullptr;
+	}
+	return CombatComponent->EquippedWeapon;
 }
 

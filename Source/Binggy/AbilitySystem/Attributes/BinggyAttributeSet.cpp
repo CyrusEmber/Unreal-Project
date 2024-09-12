@@ -8,6 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/Interface/CombatInterface.h"
 #include "GameFramework/Character.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
@@ -45,6 +46,9 @@ void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 }
 
 // Although the value is clamped, it still changed somehow
@@ -92,7 +96,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	FEffectProperties Props;
 	SetEffectProperty(Data, Props);
 
-
+	// GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
 	// Ensure Health and Mana do not go below 0 or above their max values
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
@@ -152,11 +156,18 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		OnHealthChanged.Broadcast(GetHealth());
 	}
 
-	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
+	// TODO: !bOutOfHealth 
+	if ((GetHealth() <= 0.0f))
 	{
 		OnOutOfHealth.Broadcast(GetHealth());
 		// Check health again in case an event above changed it.
 		bOutOfHealth = true;
+		
+		/*ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+		if (CombatInterface)
+		{
+			CombatInterface->Die();
+		}*/
 	}
 
 	
@@ -198,7 +209,7 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("On Rep Health Fired!")); 
 	OnHealthChanged.Broadcast(CurrentHealth);
 	
-	if (!bOutOfHealth && CurrentHealth <= 0.0f)
+	if (CurrentHealth <= 0.0f)
 	{
 		OnOutOfHealth.Broadcast(CurrentHealth);
 	}
@@ -210,7 +221,7 @@ void UBinggyAttributeSet::OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) 
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxHealth, OldMaxHealth);
 	const float CurrentMaxHealth = GetMaxHealth();
-	OnHealthChanged.Broadcast(CurrentMaxHealth);
+	OnMaxHealthChanged.Broadcast(CurrentMaxHealth);
 }
 
 void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldMana) const

@@ -4,7 +4,6 @@
 #include "BinggyCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
@@ -23,6 +22,7 @@
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default values
@@ -82,7 +82,7 @@ ABinggyCharacter::ABinggyCharacter()
 	// Health
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
-	HealthBar->SetOwnerNoSee(true);  // Hide for the owner
+	// HealthBar->SetOwnerNoSee(true);  // Hide for the owner but useless in multiplayer..
 
 }
 
@@ -133,27 +133,6 @@ void ABinggyCharacter::AimEnd()
 	}
 }
 
-void ABinggyCharacter::Die()
-{
-	Super::Die();
-	if (GetEquippedWeapon())
-	{
-		GetEquippedWeapon()->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-		GetEquippedWeapon()->GetWeaponMesh()->SetSimulatePhysics(true);
-		GetMesh()->SetEnableGravity(true);
-		GetEquippedWeapon()->GetWeaponMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	}
-
-	
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	GetMesh()->SetEnableGravity(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	GetMesh()->Stop();
-	GetMesh()->bPauseAnims = false;
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
 
 void ABinggyCharacter::BeginPlay()
 {
@@ -210,13 +189,52 @@ void ABinggyCharacter::Elimination()
 		CombatComponent->EquippedWeapon->Drop();
 	}
 	MulticastElimination();
-	GetWorldTimerManager().SetTimer(ElimTimer, this, &ThisClass::ElimTimerFinished, ElimDelay);
+	// GetWorldTimerManager().SetTimer(ElimTimer, this, &ThisClass::ElimTimerFinished, ElimDelay);
 
 
 	// Avoid collision
 	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
+
+void ABinggyCharacter::MulticastElimination_Implementation()
+{
+	bElimmed = true;
+	PlayElimMontage();
+
+	GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->StopMovementImmediately();
+
+	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
+		DisableInput(BinggyPlayerController);
+	}
+
+	// Stop any running animations
+	//if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	//{
+	//	AnimInstance->StopAllMontages(1.f); // Adjust blend out time as needed
+	//}
+
+	// Enable physics on the skeletal mesh
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	//// Disable hit event
+	////GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	GetMesh()->SetAllBodiesSimulatePhysics(true);
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->WakeAllRigidBodies();
+	GetMesh()->bBlendPhysics = true;
+
+	// Optionally, apply an impulse to the ragdoll
+	//FVector Impulse = FVector(0, 0, 200.0f);
+	//GetMesh()->AddImpulseToAllBodiesBelow(Impulse, GetMesh()->GetBoneName(0), true);
+
+	// Enable ragdoll
+	//if (BinggyPlayerController) {
+	//	DisableInput(BinggyPlayerController);
+	//}
+}
+
+
 
 void ABinggyCharacter::PossessedBy(AController* NewController)
 {
@@ -278,42 +296,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	}*/
 }
 
-void ABinggyCharacter::MulticastElimination_Implementation()
-{
-	bElimmed = true;
-	PlayElimMontage();
 
-	GetCharacterMovement()->DisableMovement();
-	GetCharacterMovement()->StopMovementImmediately();
-
-	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
-		DisableInput(BinggyPlayerController);
-	}
-
-	// Stop any running animations
-	//if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
-	//{
-	//	AnimInstance->StopAllMontages(1.f); // Adjust blend out time as needed
-	//}
-
-	// Enable physics on the skeletal mesh
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	//// Disable hit event
-	////GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-	GetMesh()->SetAllBodiesSimulatePhysics(true);
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->WakeAllRigidBodies();
-	GetMesh()->bBlendPhysics = true;
-
-	// Optionally, apply an impulse to the ragdoll
-	//FVector Impulse = FVector(0, 0, 200.0f);
-	//GetMesh()->AddImpulseToAllBodiesBelow(Impulse, GetMesh()->GetBoneName(0), true);
-
-	// Enable ragdoll
-	//if (BinggyPlayerController) {
-	//	DisableInput(BinggyPlayerController);
-	//}
-}
 
 void ABinggyCharacter::ElimTimerFinished()
 {
@@ -379,13 +362,7 @@ bool ABinggyCharacter::IsAiming()
 	return (CombatComponent && CombatComponent->bIsAiming);
 }
 
-AWeapon* ABinggyCharacter::GetEquippedWeapon()
-{
-	if (CombatComponent == nullptr) {
-		return nullptr;
-	}
-	return CombatComponent->EquippedWeapon;
-}
+
 
 
 

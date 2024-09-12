@@ -169,6 +169,7 @@ void AWeapon::Drop()
 	SetWeaponState(EWeaponState::EWS_Dropped);
 	FDetachmentTransformRules DetachRules(EDetachmentRule::KeepWorld, true);
 	WeaponMesh->DetachFromComponent(DetachRules);
+
 	SetOwner(nullptr);
 }
 
