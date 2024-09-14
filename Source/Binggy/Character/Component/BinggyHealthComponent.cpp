@@ -131,7 +131,7 @@ void UBinggyHealthComponent::HandleOutOfHealth(float NewValue)
 #endif // #if WITH_SERVER_CODE
 	
 	// This directly activate the current ability owned by the ASC
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Out of health Changed Fired!"));
+	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Out of health Changed Fired!"));
 	FGameplayTagContainer TagContainer;
 	TagContainer.AddTag(FBinggyGameplayTags::Get().GameplayEvent_Death);
 	AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);

@@ -34,6 +34,8 @@ void UBinggyGameplayAbility_Spell::SpawnProjectile(const FVector TargetLocation)
 
 	const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+	// Playercontroller good so far
+	// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *Cast<APawn>(GetAvatarActorFromActorInfo())->GetController()->GetName()));
 	/*FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 	EffectContextHandle.SetAbility(this);
 	EffectContextHandle.AddSourceObject(Projectile);

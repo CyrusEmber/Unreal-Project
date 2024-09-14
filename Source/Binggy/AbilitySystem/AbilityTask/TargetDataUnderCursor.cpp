@@ -57,7 +57,7 @@ void UTargetDataUnderCursor::SendMouseCursorData()
 	}
 }
 
-void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, float LINE_TRACE_LENGTH)
+void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, float LINE_TRACE_LENGTH) const
 {
 	FVector2D ViewportSize;
 	if (GEngine && GEngine->GameViewport) {

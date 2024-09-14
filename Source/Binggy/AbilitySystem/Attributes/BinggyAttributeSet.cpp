@@ -9,7 +9,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/Interface/CombatInterface.h"
+#include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
 {
@@ -96,6 +98,9 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	FEffectProperties Props;
 	SetEffectProperty(Data, Props);
 
+	// Meta attribute for damage
+	const float LocalIncomingDamage = GetDamage();
+
 	// GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
 	// Ensure Health and Mana do not go below 0 or above their max values
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -109,7 +114,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		const float LocalIncomingDamage = GetDamage();
+		
 		
 		if (LocalIncomingDamage > 0.f)
 		{
@@ -124,9 +129,11 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			{
 				// TODO
 			}
-
+			// Show the damage text when damage > 0
 			
+			ShowFloatingText(Props, LocalIncomingDamage);
 			SetDamage(0.f);
+			
 		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetHealingAttribute())
@@ -171,6 +178,8 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	}
 
 	
+
+	
 	
 }
 
@@ -188,9 +197,9 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 			}
 		}
 		// Bugged FIXME
-		//if (Props.SourceController) {
-		//	ACharacter* SourceCharacter1 = Cast<ACharacter>(Props.SourceController->GetPawn());
-		//}
+		if (Props.SourceController) {
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+		}
 	}
 
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid()) {
@@ -200,6 +209,20 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 
+}
+
+void UBinggyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float InDamage) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		// UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0) only find the controller where the function is executed: server
+		if(ABinggyPlayerController* PC = Cast<ABinggyPlayerController>(Props.SourceCharacter->GetController()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *Props.SourceCharacter->GetName()));
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *PC->GetName()));
+			PC->ShowDamageNumber(InDamage, Props.TargetCharacter);
+		}
+	}
 }
 
 void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)

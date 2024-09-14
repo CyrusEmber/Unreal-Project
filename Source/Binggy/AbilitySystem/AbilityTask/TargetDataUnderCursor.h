@@ -24,7 +24,7 @@ private:
 
 	virtual void Activate() override;
 	void SendMouseCursorData();
-	void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, float LINE_TRACE_LENGTH = 80000.f);
+	void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, float LINE_TRACE_LENGTH = 80000.f) const;
 
 	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);
 };

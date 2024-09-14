@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BinggyPlayerController.generated.h"
 
+class UDamageTextWidgetComponent;
 class AWeapon;
 struct FInputActionValue;
 class UBinggyInputConfig;
@@ -51,8 +52,15 @@ public:
 	virtual void SetupInputComponent() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// Is it the good position to place it?
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextWidgetComponent> DamageTextComponentClass;
 
 private:
 	ABinggyHUD* BinggyHUD;

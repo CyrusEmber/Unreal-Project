@@ -12,10 +12,9 @@
 #include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
 #include "Binggy/Input/BinggyInputComponent.h"
-#include "Binggy/Weapon/Weapon.h"
+#include "Binggy/UI/Widget/DamageTextWidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Net/UnrealNetwork.h"
 
 ABinggyPlayerController::ABinggyPlayerController()
 {
@@ -89,6 +88,18 @@ void ABinggyPlayerController::SetupInputComponent()
 void ABinggyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+void ABinggyPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		UDamageTextWidgetComponent* DamageText = NewObject<UDamageTextWidgetComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageText->RegisterComponent();
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageText->SetDamageTextAndColor(DamageAmount);
+	}
 }
 
 void ABinggyPlayerController::SetHUDScore(float Score)
