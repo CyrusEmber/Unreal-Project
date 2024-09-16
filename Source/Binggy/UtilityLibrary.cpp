@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
+#include "AbilitySystem/FBinggyGameplayEffectContext.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "GameMode/BinggyGameModeBase.h"
@@ -71,6 +72,23 @@ void UUtilityLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UA
 		ASC->GiveAbility(AbilitySpec);
 	}
 	
+}
+
+bool UUtilityLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BinggyEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UUtilityLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetCriticalHit(bInIsCriticalHit);
+	}
 }
 
 /*void UUtilityLibrary::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH)

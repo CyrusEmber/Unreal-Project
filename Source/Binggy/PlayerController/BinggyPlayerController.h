@@ -54,7 +54,7 @@ public:
 
 	// Is it the good position to place it?
 	UFUNCTION(Client, Reliable)
-	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bIsCriticalHit);
 
 protected:
 	virtual void BeginPlay() override;

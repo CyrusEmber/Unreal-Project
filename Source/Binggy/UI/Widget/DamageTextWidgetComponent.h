@@ -18,7 +18,7 @@ public:
 	UDamageTextWidgetComponent();
 
 	UFUNCTION(BlueprintImplementableEvent ,BlueprintCallable, Category = "DamageText")
-	void SetDamageTextAndColor(float Damage, float DamageColor = 0.f);
+	void SetDamageTextAndColor(float Damage, bool bIsCriticalHit, float DamageColor = 0.f);
 
 protected:
 	// Check for widget class setup

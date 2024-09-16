@@ -17,6 +17,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValue()
 	}
 }
 
+// TODO: Update the menu when the value changes
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
 	Super::BindCallbacksToDependencies();

@@ -49,6 +49,12 @@ void UBinggyGameplayAbility_Spell::SpawnProjectile(const FVector TargetLocation)
 	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);*/
 	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, 15.f);
+	
+	for (auto& Pair : DamageTypes)
+	{
+		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+	}
 
 	FireSpell(TargetLocation, SpecHandle);
 }

@@ -35,7 +35,13 @@ public:
 
 	/*UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
 	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);*/
-	
+
+	UFUNCTION(BlueprintPure, Category = "GameplayEffects")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "GameplayEffects")
+	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
 private:
 	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);
 };

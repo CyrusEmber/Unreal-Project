@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h"
+#include "Binggy/AbilitySystem/Abilities/BinggyDamageGameplayAbility.h"
 #include "BinggyGameplayAbility_Spell.generated.h"
 
 class AProjectile;
@@ -11,7 +11,7 @@ class AProjectile;
  * 
  */
 UCLASS()
-class BINGGY_API UBinggyGameplayAbility_Spell : public UBinggyGameplayAbility
+class BINGGY_API UBinggyGameplayAbility_Spell : public UBinggyDamageGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -21,9 +21,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
 	TSubclassOf<AProjectile> ProjectileClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 
 	UFUNCTION(BlueprintCallable, Category="Projectile")
 	void SpawnProjectile(FVector TargetLocation);

@@ -7,6 +7,8 @@
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Binggy/UtilityLibrary.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemGlobals.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/Interface/CombatInterface.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
@@ -33,6 +35,10 @@ UBinggyAttributeSet::UBinggyAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_PhysicalDamage, GetPhysicalDamageAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MagicalDamage, GetMagicalDamageAttribute);
 
+	// Vital Test health
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Health, GetHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Mana, GetManaAttribute);
+
 	// Health Component initialization
 	HealthBeforeAttributeChange = 0.f;
 	MaxHealthBeforeAttributeChange = 0.f;
@@ -51,6 +57,9 @@ void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, CriticalChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, CriticalDamage, COND_None, REPNOTIFY_Always);
 }
 
 // Although the value is clamped, it still changed somehow
@@ -130,8 +139,9 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				// TODO
 			}
 			// Show the damage text when damage > 0
-			
-			ShowFloatingText(Props, LocalIncomingDamage);
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Debugging")));
+			// UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle)
+			ShowFloatingText(Props, LocalIncomingDamage, UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle));
 			SetDamage(0.f);
 			
 		}
@@ -211,16 +221,16 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 
 }
 
-void UBinggyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float InDamage) const
+void UBinggyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float InDamage, bool bIsCriticalHit) const
 {
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		// UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0) only find the controller where the function is executed: server
 		if(ABinggyPlayerController* PC = Cast<ABinggyPlayerController>(Props.SourceCharacter->GetController()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *Props.SourceCharacter->GetName()));
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *PC->GetName()));
-			PC->ShowDamageNumber(InDamage, Props.TargetCharacter);
+			// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *Props.SourceCharacter->GetName()));
+			// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Controller: %s"), *PC->GetName()));
+			PC->ShowDamageNumber(InDamage, Props.TargetCharacter, bIsCriticalHit);
 		}
 	}
 }

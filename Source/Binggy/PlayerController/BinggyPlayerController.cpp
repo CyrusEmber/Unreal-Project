@@ -90,7 +90,7 @@ void ABinggyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
-void ABinggyPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+void ABinggyPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bIsCriticalHit)
 {
 	if (IsValid(TargetCharacter) && DamageTextComponentClass)
 	{
@@ -98,7 +98,7 @@ void ABinggyPlayerController::ShowDamageNumber_Implementation(float DamageAmount
 		DamageText->RegisterComponent();
 		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageText->SetDamageTextAndColor(DamageAmount);
+		DamageText->SetDamageTextAndColor(DamageAmount, bIsCriticalHit);
 	}
 }
 
