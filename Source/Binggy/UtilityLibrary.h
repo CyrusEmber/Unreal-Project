@@ -36,10 +36,10 @@ public:
 	/*UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
 	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);*/
 
-	UFUNCTION(BlueprintPure, Category = "GameplayEffects")
+	UFUNCTION(BlueprintPure, Category = "AbilitySystem|GameplayEffects")
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 
-	UFUNCTION(BlueprintCallable, Category = "GameplayEffects")
+	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
 
 	// For Ability spec

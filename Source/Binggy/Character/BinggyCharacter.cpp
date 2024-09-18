@@ -240,8 +240,9 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	// Init ability actor info for the server, set ability system component
-	InitAbilityActorInfo();
+	// Make sure add ability first then initialize the overlay
 	AddCharacterAbilities();
+	InitAbilityActorInfo();
 	UBinggyAbilitySystemComponent* AbilitySystemComponent = GetBinggyAbilitySystemComponent();
 	// Fixme this is not working
 	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());

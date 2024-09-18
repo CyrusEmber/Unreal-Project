@@ -42,7 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(APlayerController* PC);
 	UFUNCTION(BlueprintCallable)
+	// Called when initialize the HUD
 	virtual void BroadcastInitialValue();
+	// Called when initialize the HUD
 	virtual void BindCallbacksToDependencies();
 
 	TObjectPtr<UBinggyAbilitySystemComponent> GetBinggyAbilitySystemComponent() const;
@@ -56,6 +58,8 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	
 
 	// Data
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")

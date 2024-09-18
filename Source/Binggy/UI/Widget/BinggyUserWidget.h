@@ -24,7 +24,7 @@ public:
 	TObjectPtr<UObject> WidgetController;
 
 protected:
-	// I dont understand the usage
+	// It generates an event when set the widget controller
 	UFUNCTION(BlueprintImplementableEvent)
 	void WidgetControllerSet();
 

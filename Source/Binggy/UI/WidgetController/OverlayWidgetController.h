@@ -41,7 +41,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FBinggy
 
 
 /**
- * 
+ *  Health broadcast is handled from health component
  */
 UCLASS(Blueprintable, BlueprintType)
 class BINGGY_API UOverlayWidgetController : public UBinggyWidgetController
@@ -52,10 +52,11 @@ public:
 	virtual void BroadcastInitialValue() override;
 	virtual void BindCallbacksToDependencies() override;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
+	// Delegate used, health is handled in health component
+	/*UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangedSigniture OnHealthChanged;
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnAttributeChangedSigniture OnMaxHealthChanged;
+	FOnAttributeChangedSigniture OnMaxHealthChanged;*/
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSigniture MessageWidgetRowDelegate;
 

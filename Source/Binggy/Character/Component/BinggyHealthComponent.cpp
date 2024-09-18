@@ -37,6 +37,14 @@ void UBinggyHealthComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCom
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
 	OnHealthChanged.Broadcast(AbilitySet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AbilitySet->GetMaxHealth());
+
+	// TODO: trade off
+	/*AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BinggyAttributeSet->GetHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		}
+	);*/
 }
 
 void UBinggyHealthComponent::UninitializeFromAbilitySystem()

@@ -5,8 +5,6 @@
 #include "AbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
-//#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
-//#include "GameFramework/PlayerController.h"
 
 void UBinggyWidgetController::SetWidgetControllerParams(APlayerController* PC)
 {

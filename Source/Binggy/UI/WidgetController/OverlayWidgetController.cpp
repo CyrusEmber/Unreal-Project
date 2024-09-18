@@ -18,9 +18,6 @@ void UOverlayWidgetController::BroadcastInitialValue()
 	// FIXME
 	const UBinggyAttributeSet* BinggyAttributeSet = CastChecked<UBinggyAttributeSet>(AttributeSet);
 
-	OnHealthChanged.Broadcast(BinggyAttributeSet->GetHealth());
-	OnMaxHealthChanged.Broadcast(BinggyAttributeSet->GetMaxHealth());
-
 }
 
 // GetGameplayAttributeValueChangeDelegate this happens when certain attribute changes value
@@ -29,19 +26,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	// NO Super
 	Super::BindCallbacksToDependencies();
 	const UBinggyAttributeSet* BinggyAttributeSet = CastChecked<UBinggyAttributeSet>(AttributeSet);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BinggyAttributeSet->GetHealthAttribute()).AddLambda(
-		[this](const FOnAttributeChangeData& Data)
-		{
-			OnHealthChanged.Broadcast(Data.NewValue);
-		}
-	);
-
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BinggyAttributeSet->GetMaxHealthAttribute()).AddLambda(
-		[this](const FOnAttributeChangeData& Data)
-		{
-			OnMaxHealthChanged.Broadcast(Data.NewValue);
-		}
-	);
 
 	if (UBinggyAbilitySystemComponent* BinggyAbilitySystemComponent = GetBinggyAbilitySystemComponent())
 	{
@@ -68,11 +52,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				}
 		);
 	}
-
-	
-
-	
-
 }
 
 void UOverlayWidgetController::OnInitializeStartupAbilities() const
@@ -87,7 +66,10 @@ void UOverlayWidgetController::BroadcastAbilityInfoForAllAbilities() const
 	for (const FGameplayAbilitySpec& AbilitySpec : AbilitySystemComponent->GetActivatableAbilities())
 	{
 		FBinggyAbilityInfo Info = AbilityInfo->GetAbilityInfoByTag(UUtilityLibrary::GetAbilityTagFromSpec(AbilitySpec));
-		Info.InputTag = UUtilityLibrary::GetInputTagFromSpec(AbilitySpec);
-		AbilityInfoDelegate.Broadcast(Info);
+		if (Info.AbilityTag.IsValid())
+		{
+			Info.InputTag = UUtilityLibrary::GetInputTagFromSpec(AbilitySpec);
+			AbilityInfoDelegate.Broadcast(Info);
+		}
 	}
 }

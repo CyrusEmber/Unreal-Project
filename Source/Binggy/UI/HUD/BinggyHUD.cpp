@@ -86,6 +86,8 @@ void ABinggyHUD::InitOverlay(APlayerController* PC)
 
 	OverlayWidgetController = GetOverlayWidgetController(PC);
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
+
+	
 	OverlayWidgetController->BroadcastInitialValue();
 	// Could there be duplicated callbacks added?
 	OverlayWidgetController->BindCallbacksToDependencies();
