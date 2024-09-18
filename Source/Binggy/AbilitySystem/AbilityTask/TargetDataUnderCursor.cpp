@@ -59,7 +59,6 @@ void UTargetDataUnderCursor::SendMouseCursorData()
 
 void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult)
 {
-	const float LINE_TRACE_LENGTH = 80000.f;
 	FVector2D ViewportSize;
 	if (GEngine && GEngine->GameViewport) {
 		GEngine->GameViewport->GetViewportSize(ViewportSize);
@@ -75,8 +74,9 @@ void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHi
 		CrosshairWorldDirection
 	);
 	if (bScreenToWorld) {
+		float TraceLength = 80000.f;
 		FVector Start = CrosshairWorldPosition;
-		FVector End = Start + CrosshairWorldDirection * LINE_TRACE_LENGTH;
+		FVector End = Start + CrosshairWorldDirection * TraceLength;
 
 		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECollisionChannel::ECC_Visibility);
 

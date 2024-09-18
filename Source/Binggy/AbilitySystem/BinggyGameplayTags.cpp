@@ -138,6 +138,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Ice, GameplayTags.Resistance_Ice);
 	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Physical, GameplayTags.Resistance_Physical);
 
+	/* Abilities */  
+	GameplayTags.Abilities_Fire_FireBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Fire.FireBall"),
+	FString("FireBall Ability Tag")
+	);
+
 	GameplayTags.GameplayEvent_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
         FName("GameplayEvent.HitReact"),
         FString("Tag grant when hit react")

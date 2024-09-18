@@ -3,9 +3,12 @@
 
 #include "BinggyEnemy.h"
 
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "Binggy/AI/BinggyAIController.h"
 #include "Components/WidgetComponent.h"
 
 
@@ -48,6 +51,16 @@ void ABinggyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	InitAbilityActorInfo();
+}
+
+void ABinggyEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	AIController = Cast<ABinggyAIController>(NewController);
+	if (!HasAuthority()) return;
+	AIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	AIController->RunBehaviorTree(BehaviorTree);
 }
 
 void ABinggyEnemy::InitAbilityActorInfo()

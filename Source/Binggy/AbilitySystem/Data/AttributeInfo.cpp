@@ -3,6 +3,8 @@
 
 #include "AttributeInfo.h"
 
+#include "Binggy/BinggyLogChannel.h"
+
 FBinggyAttributeInfo UAttributeInfo::GetAttributeInfoByTag(FGameplayTag AttributeTag, bool bLogNotFound)
 {
 	for (const FBinggyAttributeInfo& Info : AttributeInfoArray)
@@ -14,7 +16,7 @@ FBinggyAttributeInfo UAttributeInfo::GetAttributeInfoByTag(FGameplayTag Attribut
 	}
 	if (bLogNotFound)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo [%s]."), *AttributeTag.ToString(),*GetNameSafe(this));
+		UE_LOG(LogBinggy, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo [%s]."), *AttributeTag.ToString(),*GetNameSafe(this));
 	}
 
 	return FBinggyAttributeInfo();

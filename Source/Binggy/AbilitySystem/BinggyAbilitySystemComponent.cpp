@@ -21,6 +21,8 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 			GiveAbility(AbilitySpec);
 		}
 	}
+	// Add ability is executed in PossessedBy, and HUD initialization is afterward
+	// AbilityGivenDelegate.Broadcast();
 }
 
 void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)

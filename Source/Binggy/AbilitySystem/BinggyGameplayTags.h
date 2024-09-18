@@ -63,6 +63,9 @@ struct  FBinggyGameplayTags
 	/* Damage to resistance mapping */
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistanceTypes;
 
+	/* Abilities */
+	FGameplayTag Abilities_Fire_FireBall;
+
 	/* Event Tag */
 	FGameplayTag GameplayEvent_HitReact;
 	FGameplayTag GameplayEvent_Death;

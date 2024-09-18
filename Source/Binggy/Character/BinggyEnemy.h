@@ -7,6 +7,8 @@
 #include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
+class ABinggyAIController;
+class UBehaviorTree;
 class UBinggyHealthComponent;
 class UWidgetComponent;
 enum class ECharacterClass : uint8;
@@ -31,6 +33,8 @@ protected:
 	virtual void OnAbilitySystemUninitialized() override;
 	
 	virtual void BeginPlay() override;
+	// Set the AI controller
+	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitializeDefaultAttributes() const override;
@@ -43,6 +47,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	// AI related
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+	
+	// Set from possessedby
+	TObjectPtr<ABinggyAIController> AIController;
 	
 
 private:

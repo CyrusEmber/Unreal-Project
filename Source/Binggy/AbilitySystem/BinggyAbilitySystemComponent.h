@@ -7,7 +7,8 @@
 #include "BinggyAbilitySystemComponent.generated.h" 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&);
-
+// DECLARE_MULTICAST_DELEGATE(FAbilityGiven);
+class UAbilityInfo;
 /**
  * 
  */
@@ -20,7 +21,12 @@ public:
 	// Bind delegate
 	void AbilityActorInfoSet();
 
+
+
+	// Broadcast to message system
 	FEffectAssetTags EffectAssetTags;
+	// Broadcast when the ability is given to a actor
+	// FAbilityGiven AbilityGivenDelegate;
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 

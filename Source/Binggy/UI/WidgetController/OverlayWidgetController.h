@@ -8,6 +8,7 @@
 #include "OverlayWidgetController.generated.h"
 
 
+class UAbilityInfo;
 class UBinggyUserWidget;
 struct FOnAttributeChangeData;
 
@@ -34,6 +35,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSigniture, float,
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSigniture, FUIWidgetRow, Row);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FBinggyAbilityInfo&, Info);
+
 
 
 
@@ -56,14 +59,27 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSigniture MessageWidgetRowDelegate;
 
+	// TODO: make it on changed
+	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
+	FAbilityInfoSignature AbilityInfoDelegate;
+
 
 protected:
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Wiget Data")
+	// Information data
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	// Callback to AbilityGivenDelegate in ASC, get the information of each ability and broadcast them to the widget.
+	void OnInitializeStartupAbilities() const;
+
+	// Broadcast the ability info of all the abilities, TODO where is the best class to put it?
+	void BroadcastAbilityInfoForAllAbilities() const;
 
 	
 };

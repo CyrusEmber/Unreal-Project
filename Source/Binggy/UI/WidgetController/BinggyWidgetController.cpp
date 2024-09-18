@@ -3,6 +3,7 @@
 
 #include "BinggyWidgetController.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
 //#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
 //#include "GameFramework/PlayerController.h"
@@ -23,4 +24,9 @@ void UBinggyWidgetController::BroadcastInitialValue()
 
 void UBinggyWidgetController::BindCallbacksToDependencies()
 {
+}
+
+TObjectPtr<UBinggyAbilitySystemComponent> UBinggyWidgetController::GetBinggyAbilitySystemComponent() const
+{
+	return CastChecked<UBinggyAbilitySystemComponent>(AbilitySystemComponent);
 }

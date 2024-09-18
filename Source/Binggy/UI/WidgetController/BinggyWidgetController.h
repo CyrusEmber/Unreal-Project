@@ -7,6 +7,8 @@
 #include "BinggyWidgetController.generated.h"
 
 
+class UAbilityInfo;
+class UBinggyAbilitySystemComponent;
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -43,6 +45,8 @@ public:
 	virtual void BroadcastInitialValue();
 	virtual void BindCallbacksToDependencies();
 
+	TObjectPtr<UBinggyAbilitySystemComponent> GetBinggyAbilitySystemComponent() const;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
@@ -52,4 +56,8 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	// Data
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;*/
 };

@@ -2,9 +2,10 @@
 
 
 #include "OverlayWidgetController.h"
+
+#include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-
-
+#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
 
 
 void UOverlayWidgetController::BroadcastInitialValue()
@@ -42,26 +43,51 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		}
 	);
 
-	check(MessageWidgetDataTable);
-	// Add a callback with lambda
-	Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[this](const FGameplayTagContainer& AssetTags)
-			{
-				// TODO: change the location of tag
-				
-				for (const FGameplayTag& Tag : AssetTags)
+	if (UBinggyAbilitySystemComponent* BinggyAbilitySystemComponent = GetBinggyAbilitySystemComponent())
+	{
+		// Add ability is executed in PossessedBy, and HUD initialization is afterward
+		// BinggyAbilitySystemComponent->AbilityGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+		OnInitializeStartupAbilities();
+		check(MessageWidgetDataTable);
+		// Add a callback with lambda
+		BinggyAbilitySystemComponent->EffectAssetTags.AddLambda(
+			[this](const FGameplayTagContainer& AssetTags)
 				{
-					FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
-					if (Tag.MatchesTag(MessageTag)) {
+					// TODO: change the location of tag
+				
+					for (const FGameplayTag& Tag : AssetTags)
+					{
+						FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
+						if (Tag.MatchesTag(MessageTag)) {
 						
-						const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-						//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, Row->Message.ToString());
-						MessageWidgetRowDelegate.Broadcast(*Row);
+							const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+							//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, Row->Message.ToString());
+							MessageWidgetRowDelegate.Broadcast(*Row);
+						}
 					}
-
-
 				}
-			}
-	);
+		);
+	}
 
+	
+
+	
+
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities() const
+{
+	BroadcastAbilityInfoForAllAbilities();
+}
+
+void UOverlayWidgetController::BroadcastAbilityInfoForAllAbilities() const
+{
+	// Lock the ability list to prevent changes while modifying it
+	FScopedAbilityListLock ActiveScopeLock(*AbilitySystemComponent);
+	for (const FGameplayAbilitySpec& AbilitySpec : AbilitySystemComponent->GetActivatableAbilities())
+	{
+		FBinggyAbilityInfo Info = AbilityInfo->GetAbilityInfoByTag(UUtilityLibrary::GetAbilityTagFromSpec(AbilitySpec));
+		Info.InputTag = UUtilityLibrary::GetInputTagFromSpec(AbilitySpec);
+		AbilityInfoDelegate.Broadcast(Info);
+	}
 }
