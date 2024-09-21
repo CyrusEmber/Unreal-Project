@@ -72,7 +72,10 @@ void ABinggyEnemy::InitAbilityActorInfo()
 	
 }
 
+// FIXME enemy should have identical attribute and abilities
 void ABinggyEnemy::InitializeDefaultAttributes() const
 {
+	
 	UUtilityLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	UUtilityLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 }

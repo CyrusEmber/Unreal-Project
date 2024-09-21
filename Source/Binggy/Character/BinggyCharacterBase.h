@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class UExperienceComponent;
 class AWeapon;
 class ABinggyPlayerState;
 class UBinggyAbilitySystemComponent;
@@ -52,6 +53,8 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDie();
+
+	FORCEINLINE virtual float GetKilledExperience() const override { return KilledExperience; }
 
 
 protected:
@@ -98,6 +101,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCombatComponent> CombatComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UExperienceComponent> ExperienceComponent;
+
 	// Widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> DamageTextWidgetClass;
@@ -105,9 +111,15 @@ protected:
 	// Weapon
 	virtual FVector GetCombatSocketLocation();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Experience")
+	float KilledExperience = 10.f;
+
 private:	
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

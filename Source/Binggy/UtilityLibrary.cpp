@@ -47,6 +47,7 @@ void UUtilityLibrary::InitializeDefaultAttributes(const UObject* WorldContextObj
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
 	UCharacterClassInfo* CharacterClassInfo = BinggyGameMode->CharacterClassInfo;
+
 	FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	// Apply the gameplay effect with source object

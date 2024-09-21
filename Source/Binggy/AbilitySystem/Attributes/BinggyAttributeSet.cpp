@@ -110,6 +110,11 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	// Meta attribute for damage
 	const float LocalIncomingDamage = GetDamage();
 
+	// Extract Information
+	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+	AActor* Instigator = EffectContext.GetOriginalInstigator();
+	AActor* Causer = EffectContext.GetEffectCauser();
+
 	// GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
 	// Ensure Health and Mana do not go below 0 or above their max values
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -139,7 +144,6 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				// TODO
 			}
 			// Show the damage text when damage > 0
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Debugging")));
 			// UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle)
 			ShowFloatingText(Props, LocalIncomingDamage, UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle));
 			SetDamage(0.f);
@@ -176,7 +180,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	// TODO: !bOutOfHealth 
 	if ((GetHealth() <= 0.0f))
 	{
-		OnOutOfHealth.Broadcast(GetHealth());
+		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 		// Check health again in case an event above changed it.
 		bOutOfHealth = true;
 		
@@ -239,12 +243,14 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Health, OldValue);
 	const float CurrentHealth = GetHealth();
-	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("On Rep Health Fired!")); 
+	const float EstimatedMagnitude = CurrentHealth - OldValue.GetCurrentValue();
+
 	OnHealthChanged.Broadcast(CurrentHealth);
 	
 	if (CurrentHealth <= 0.0f)
 	{
-		OnOutOfHealth.Broadcast(CurrentHealth);
+		// TODO: this is not working
+		// OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
 	}
 
 	bOutOfHealth = (CurrentHealth <= 0.0f);

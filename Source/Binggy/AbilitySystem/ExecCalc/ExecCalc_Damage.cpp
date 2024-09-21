@@ -73,7 +73,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		Damage *= (1 + CriticalDamage / 100);
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Damage: %f"), Damage));
+	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Damage: %f"), Damage));
 	const FGameplayModifierEvaluatedData EvaluatedData(UBinggyAttributeSet::GetDamageAttribute(), EGameplayModOp::Override, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

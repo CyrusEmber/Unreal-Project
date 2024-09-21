@@ -1,0 +1,51 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "BinggyExperienceSet.h"
+
+#include "GameplayEffectExtension.h"
+#include "Net/UnrealNetwork.h"
+
+// TODO place holder
+UBinggyExperienceSet::UBinggyExperienceSet()
+: Level(1.0f)
+, Experience(100.0f)
+{
+
+}
+
+void UBinggyExperienceSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Level, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Experience, COND_None, REPNOTIFY_Always);
+}
+
+void UBinggyExperienceSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	if (Data.EvaluatedData.Attribute == GetInComingExpAttribute())
+	{
+		SetExperience(GetExperience() + GetInComingExp());
+		SetInComingExp(0.f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetLevelAttribute())
+	{
+		
+	}
+}
+
+void UBinggyExperienceSet::OnRep_Experience(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyExperienceSet, Experience, OldValue);
+}
+
+void UBinggyExperienceSet::OnRep_Level(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyExperienceSet, Level, OldValue);
+}
+
+
+
+

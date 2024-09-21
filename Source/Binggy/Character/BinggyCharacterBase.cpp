@@ -148,6 +148,7 @@ void ABinggyCharacterBase::AddCharacterAbilities()
 		return;
 	}
 	GetBinggyAbilitySystemComponent()->AddCharacterAbilities(StartupAbilities);
+	GetBinggyAbilitySystemComponent()->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
 
 FVector ABinggyCharacterBase::GetCombatSocketLocation()

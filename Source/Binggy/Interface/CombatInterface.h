@@ -30,5 +30,9 @@ public:
 	virtual UAnimMontage* GetHitReactMontage();
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void Die();
+	virtual void Die() = 0;
+
+	// TODO: this need refactoring?
+	UFUNCTION(BlueprintCallable)
+	virtual float GetKilledExperience() const = 0;
 };

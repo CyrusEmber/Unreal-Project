@@ -20,6 +20,3 @@ UAnimMontage* ICombatInterface::GetHitReactMontage()
 	return nullptr;
 }
 
-void ICombatInterface::Die()
-{
-}

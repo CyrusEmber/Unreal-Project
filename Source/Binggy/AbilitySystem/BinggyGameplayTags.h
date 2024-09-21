@@ -47,6 +47,7 @@ struct  FBinggyGameplayTags
 	/* Meta Attribute Tag */
 	FGameplayTag Damage;
 	FGameplayTag Healing;
+	FGameplayTag Meta_Exp;
 	
 	/* Damage Type Tag */
 	FGameplayTag Damage_Fire;
@@ -64,7 +65,10 @@ struct  FBinggyGameplayTags
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistanceTypes;
 
 	/* Abilities */
-	FGameplayTag Abilities_Fire_FireBall;
+	FGameplayTag Ability_Fire_FireBall;
+
+	/* Cooldowns */
+	FGameplayTag Cooldown_Fire_FireBall;
 
 	/* Event Tag */
 	FGameplayTag GameplayEvent_HitReact;

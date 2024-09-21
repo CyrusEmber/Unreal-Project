@@ -7,6 +7,7 @@
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Net/UnrealNetwork.h"
 
 ABinggyPlayerState::ABinggyPlayerState()
@@ -18,7 +19,9 @@ ABinggyPlayerState::ABinggyPlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
+	// These attribute sets will be detected by AbilitySystemComponent::InitializeComponent. Keeping a reference so that the sets don't get garbage collected before that.
 	AttributeSet = CreateDefaultSubobject<UBinggyAttributeSet>("AttributeSet");
+	ExperienceSet = CreateDefaultSubobject<UBinggyExperienceSet>(TEXT("ExperienceSet"));
 }
 
 // This will only execute on clients.

@@ -28,8 +28,13 @@ public:
 	// Broadcast when the ability is given to a actor
 	// FAbilityGiven AbilityGivenDelegate;
 
+	// With input tag
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
 
+	// Activate once and without input tag
+	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
+
+	// TODO: performance issue?
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 

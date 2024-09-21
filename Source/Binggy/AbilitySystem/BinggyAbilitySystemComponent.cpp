@@ -25,6 +25,15 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 	// AbilityGivenDelegate.Broadcast();
 }
 
+void UBinggyAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
+{
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : Abilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
 void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid())
@@ -36,10 +45,9 @@ void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& Inpu
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
-			if (!AbilitySpec.IsActive())
-			{
-				TryActivateAbility(AbilitySpec.Handle);
-			}
+			// Continue to fire 
+			TryActivateAbility(AbilitySpec.Handle);
+			/*if (!AbilitySpec.IsActive()) */
 		}
 	}
 }

@@ -39,6 +39,10 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	// Experience attribute set used by this actor.
+	UPROPERTY()
+	TObjectPtr<const class UBinggyExperienceSet> ExperienceSet;
+
 private:
 	ABinggyPlayerController* BinggyController;
 	ABinggyCharacter* BinggyCharacter;

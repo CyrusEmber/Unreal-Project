@@ -22,6 +22,7 @@
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
+#include "Component/ExperienceComponent.h"
 #include "Components/CapsuleComponent.h"
 
 
@@ -82,8 +83,9 @@ ABinggyCharacter::ABinggyCharacter()
 	// Health
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
-	// HealthBar->SetOwnerNoSee(true);  // Hide for the owner but useless in multiplayer..
-
+	
+	// Initialize the component
+	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("ExperienceComponent"));
 }
 
 void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -290,6 +292,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 
 	// Initialize the health component
 	HealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
+	ExperienceComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	// TODO: Refactor
 	/*if (GetController()->IsLocalPlayerController())
 	{

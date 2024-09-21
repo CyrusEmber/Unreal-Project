@@ -7,7 +7,6 @@
 #include "BinggyCharacter.generated.h"
 
 
-class UBinggyHealthComponent;
 class AWeapon;
 class UBinggyAbilitySystemComponent;
 struct FGameplayTag;

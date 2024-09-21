@@ -78,7 +78,8 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 		FName("InputTag.4"),
 		FString("Input Tag for 4 key")
 		);
-
+	
+	/* Meta Attribute Tag */
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage"),
 		FString("Damage")
@@ -88,6 +89,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
         FName("Healing"),
         FString("Healing")
         );
+
+	/* Meta Tag */
+	GameplayTags.Meta_Exp = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Meta.XP"),
+		FString("experience")
+		);
         
     /* Damage Type Tag */
     GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -139,9 +146,16 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Physical, GameplayTags.Resistance_Physical);
 
 	/* Abilities */  
-	GameplayTags.Abilities_Fire_FireBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	GameplayTags.Ability_Fire_FireBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Abilities.Fire.FireBall"),
 	FString("FireBall Ability Tag")
+	);
+
+
+	/* Cooldowns */  
+	GameplayTags.Cooldown_Fire_FireBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Cooldown.Fire.FireBall"),
+	FString("FireBall Ability Cooldown")
 	);
 
 	GameplayTags.GameplayEvent_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(

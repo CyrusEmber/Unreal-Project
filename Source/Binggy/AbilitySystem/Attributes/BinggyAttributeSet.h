@@ -15,7 +15,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
-// DECLARE_MULTICAST_DELEGATE_SixParams(FBinggyAttributeEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayEffectSpec* /*EffectSpec*/, float /*EffectMagnitude*/, float /*OldValue*/, float /*NewValue*/);
+// TODO: find a way to balance the delegate
+DECLARE_MULTICAST_DELEGATE_SixParams(FBinggyAttributeComplexEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayEffectSpec* /*EffectSpec*/, float /*EffectMagnitude*/, float /*OldValue*/, float /*NewValue*/);
 DECLARE_MULTICAST_DELEGATE_OneParam(FBinggyAttributeEvent, float /*NewValue*/);
 USTRUCT()
 struct FEffectProperties
@@ -172,7 +173,7 @@ public:
 
 	mutable FBinggyAttributeEvent OnMaxHealthChanged;
 
-	mutable FBinggyAttributeEvent OnOutOfHealth;
+	mutable FBinggyAttributeComplexEvent OnOutOfHealth;
 
 private:
 	void SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);

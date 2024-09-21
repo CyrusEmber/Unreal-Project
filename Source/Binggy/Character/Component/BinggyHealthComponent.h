@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "Components/ActorComponent.h"
 #include "BinggyHealthComponent.generated.h"
 
@@ -70,7 +71,11 @@ protected:
 
 	virtual void HandleHealthChanged(float NewValue);
 	virtual void HandleMaxHealthChanged(float NewValue);
-	virtual void HandleOutOfHealth(float NewValue);
+
+	// Called when actor health hit 0
+	virtual void HandleOutOfHealth(AActor* EffectInstigator, AActor* DamageCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float
+	                               OldValue, float NewValue);
+	
 	// virtual void HandleMaxHealthChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
 
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
