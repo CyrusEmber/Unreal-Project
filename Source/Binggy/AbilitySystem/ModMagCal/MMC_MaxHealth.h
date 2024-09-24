@@ -7,7 +7,7 @@
 #include "MMC_MaxHealth.generated.h"
 
 /**
- * 
+ *  Make sure that all the attributes is initialized
  */
 UCLASS()
 class BINGGY_API UMMC_MaxHealth : public UGameplayModMagnitudeCalculation

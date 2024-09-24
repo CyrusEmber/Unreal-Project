@@ -79,10 +79,6 @@ ABinggyCharacter::ABinggyCharacter()
 	// Net 
 	NetUpdateFrequency = 66.f;
 	MinNetUpdateFrequency = 33.f;
-
-	// Health
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
-	HealthBar->SetupAttachment(GetRootComponent());
 	
 	// Initialize the component
 	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("ExperienceComponent"));

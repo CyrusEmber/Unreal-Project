@@ -8,7 +8,9 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/AI/BinggyAIController.h"
+#include "Component/ExperienceComponent.h"
 #include "Components/WidgetComponent.h"
 
 
@@ -21,9 +23,9 @@ ABinggyEnemy::ABinggyEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UBinggyAttributeSet>("AttributeSet");
+	ExperienceSet = CreateDefaultSubobject<UBinggyExperienceSet>("ExperienceSet");
 
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
-	HealthBar->SetupAttachment(GetRootComponent());
+
 }
 
 int32 ABinggyEnemy::GetPlayerLevel()
@@ -69,6 +71,10 @@ void ABinggyEnemy::InitAbilityActorInfo()
 	Cast<UBinggyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	InitializeDefaultAttributes();
 	OnAbilitySystemInitialized();
+
+	check(AbilitySystemComponent);
+	// TODO Fix its level problem impacting MMC to work
+	// ExperienceComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	
 }
 

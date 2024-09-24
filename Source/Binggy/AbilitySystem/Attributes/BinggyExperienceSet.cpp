@@ -2,8 +2,6 @@
 
 
 #include "BinggyExperienceSet.h"
-
-#include "BinggyAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"

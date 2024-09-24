@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class UWidgetComponent;
 class UExperienceComponent;
 class AWeapon;
 class ABinggyPlayerState;
@@ -107,6 +108,10 @@ protected:
 	// Widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> DamageTextWidgetClass;
+
+	// In world Widget
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
 
 	// Weapon
 	virtual FVector GetCombatSocketLocation();

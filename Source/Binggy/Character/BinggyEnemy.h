@@ -7,10 +7,10 @@
 #include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
+class UBinggyExperienceSet;
 class ABinggyAIController;
 class UBehaviorTree;
 class UBinggyHealthComponent;
-class UWidgetComponent;
 enum class ECharacterClass : uint8;
 /**
  * 
@@ -45,8 +45,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Defaults")
 	ECharacterClass CharacterClass = ECharacterClass::Elementalist;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UWidgetComponent> HealthBar;
+
 
 	// AI related
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
@@ -54,6 +53,10 @@ protected:
 	
 	// Set from possessedby
 	TObjectPtr<ABinggyAIController> AIController;
+
+	// TODO fix the initialization place holder for more attribute sets
+	UPROPERTY()
+	TObjectPtr<UBinggyExperienceSet> ExperienceSet;
 	
 
 private:

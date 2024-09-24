@@ -38,7 +38,11 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	Vigor = FMath::Max<float>(Vigor, 0.f);
 
 	float Level = 0.f;
-	GetCapturedAttributeMagnitude(LevelDef, Spec, EvaluationParameters, Level);
+	if (!GetCapturedAttributeMagnitude(LevelDef, Spec, EvaluationParameters, Level))
+	{
+		// Set a default value if the Level attribute is not present
+		Level = 0.f; // or any other default value you want
+	}
 	Level = FMath::Max<float>(Level, 0.f);
 
 	/*ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());

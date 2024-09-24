@@ -12,6 +12,7 @@
 #include "Component/BinggyHealthComponent.h"
 #include "Component/CombatComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -23,6 +24,10 @@ ABinggyCharacterBase::ABinggyCharacterBase()
 	// Initialize the component
 	HealthComponent = CreateDefaultSubobject<UBinggyHealthComponent>(TEXT("HealthComponent"));
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+
+	// Health bar
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 
 }
 
@@ -73,6 +78,9 @@ void ABinggyCharacterBase::Die()
 	
 	MulticastHandleDie();
 	
+	// TODO: not working
+	HealthBar->SetVisibility(false);
+	
 }
 
 void ABinggyCharacterBase::MulticastHandleDie_Implementation()
@@ -95,6 +103,9 @@ void ABinggyCharacterBase::MulticastHandleDie_Implementation()
 	GetMesh()->Stop();
 	GetMesh()->bPauseAnims = false;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+
+	
 	this->ForceNetUpdate();
 }
 
