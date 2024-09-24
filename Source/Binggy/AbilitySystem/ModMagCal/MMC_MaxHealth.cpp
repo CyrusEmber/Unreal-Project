@@ -3,6 +3,7 @@
 
 #include "MMC_MaxHealth.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/Interface/CombatInterface.h"
 
 UMMC_MaxHealth::UMMC_MaxHealth()
@@ -11,7 +12,12 @@ UMMC_MaxHealth::UMMC_MaxHealth()
 	VigorDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
 	VigorDef.bSnapshot = false;
 
+	LevelDef.AttributeToCapture = UBinggyExperienceSet::GetLevelAttribute();
+	LevelDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	LevelDef.bSnapshot = false;
+
 	RelevantAttributesToCapture.Add(VigorDef);
+	RelevantAttributesToCapture.Add(LevelDef);
 }
 
 float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
@@ -30,9 +36,14 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	float Vigor = 0.f;
 	GetCapturedAttributeMagnitude(VigorDef, Spec, EvaluationParameters, Vigor);
 	Vigor = FMath::Max<float>(Vigor, 0.f);
-	ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());
-	const int32 PlayerLevel = CombatInterface->GetPlayerLevel();
+
+	float Level = 0.f;
+	GetCapturedAttributeMagnitude(LevelDef, Spec, EvaluationParameters, Level);
+	Level = FMath::Max<float>(Level, 0.f);
+
+	/*ICombatInterface* CombatInterface = Cast<ICombatInterface>(Spec.GetContext().GetSourceObject());
+	const int32 PlayerLevel = CombatInterface->GetPlayerLevel();*/
 	
-	// TODO: Base value
-	return 50.0f + 10.f * Vigor + 10.f * PlayerLevel;
+	// TODO: Base value or get from interface?
+	return 50.0f + 10.f * Vigor + 10.f * Level;
 }

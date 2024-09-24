@@ -36,9 +36,10 @@ struct  FBinggyGameplayTags
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Mana;
 
-	/* Attribute and skill points Tag */
-	FGameplayTag Attributes_AttributePoints;
-	FGameplayTag Attributes_SkillPoints;
+	/* Experience Tag */
+	FGameplayTag Attributes_Experience_Level;
+	FGameplayTag Attributes_Experience_AttributePoints;
+	FGameplayTag Attributes_Experience_SkillPoints;
 
 	/* InputTag */
 	FGameplayTag InputTag_LMB;

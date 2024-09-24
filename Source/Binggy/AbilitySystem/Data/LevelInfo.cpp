@@ -22,3 +22,8 @@ int32 ULevelInfo::GetLevelByXP(int32 XP)
 	}
 	return Level;
 }
+
+int32 ULevelInfo::GetXPByLevel(int32 Level)
+{
+	return LevelInformation[Level].LevelUpRequirement;
+}

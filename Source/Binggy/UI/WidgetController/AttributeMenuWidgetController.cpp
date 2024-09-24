@@ -50,7 +50,7 @@ void UAttributeMenuWidgetController::UpdateAttribute(const FGameplayTag& Attribu
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 	
 	// Handle attribute point change
-	Payload.EventTag = GameplayTags.Attributes_AttributePoints;
+	Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
 	Payload.EventMagnitude = -1.f;
 	// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);

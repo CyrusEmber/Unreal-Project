@@ -45,11 +45,14 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Vital_Mana = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Attributes.Vital.Mana"));
 
-	/* Attribute and skill points Tag */
-	GameplayTags.Attributes_AttributePoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
-	FName("Attributes.AttributePoints"));
-	GameplayTags.Attributes_SkillPoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
-	FName("Attributes.SkillPoints"));
+	/* Experience Tag */
+	GameplayTags.Attributes_Experience_AttributePoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Experience.AttributePoints"));
+	GameplayTags.Attributes_Experience_SkillPoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Experience.SkillPoints"));
+	GameplayTags.Attributes_Experience_Level = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Experience.Level"));
+	
 
 	/*
 	 * Input Tags

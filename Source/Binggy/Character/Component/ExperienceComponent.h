@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "ExperienceComponent.generated.h"
 
+class ULevelInfo;
 struct FGameplayTag;
 struct FOnAttributeChangeData;
 class UBinggyExperienceSet;
@@ -91,17 +92,21 @@ protected:
 	UPROPERTY()
 	TObjectPtr<const UBinggyExperienceSet> ExperienceSet;
 
-	// Level up information
-	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Experience")
-	UAbilityInfo* AbilityInfo;
-
-
 
 private:
-	// Variables relate to 
+	// Level up information
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Experience")
+	ULevelInfo* LevelInfo;
 
+	// Set up PreviousLevelExperience and CurrentLevelExperience
+	void SetLevelExperience(const float InLevel);
+
+	// TODO: add points based on level info
+	void OnLevelUp(const float AddLevel) const;
+	
+	// Variables relate to 
 	float PreviousLevelExperience = 0.0f;
-	float CurrentLevelExperience = 300.f;
+	float CurrentLevelExperience = 0.f;
 
 	
 	

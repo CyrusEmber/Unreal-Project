@@ -30,11 +30,14 @@ class BINGGY_API ULevelInfo : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-    // Index by level, e.g. LevelInformation[1] is level 1 info
-    UPROPERTY(EditAnywhere, meta = (TitleProperty = "LevelUpRequirement"))
-	TArray<FBinggyLevelInfo> LevelInformation;
-	
 	int32 GetLevelByXP(int32 XP);
+
+	int32 GetXPByLevel(int32 Level);
+
+private:
+	// Index by level, e.g. LevelInformation[1] is level 1 info
+	UPROPERTY(EditAnywhere, meta = (TitleProperty = "LevelUpRequirement"))
+	TArray<FBinggyLevelInfo> LevelInformation;
 	
 	
 };
