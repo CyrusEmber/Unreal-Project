@@ -3,6 +3,7 @@
 
 #include "BinggyAbilitySystemComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/BinggyGameplayAbility.h"
 
 void UBinggyAbilitySystemComponent::AbilityActorInfoSet()

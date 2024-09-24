@@ -4,6 +4,8 @@
 #include "AttributeMenuWidgetController.h"
 
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 
 
@@ -17,7 +19,6 @@ void UAttributeMenuWidgetController::BroadcastInitialValue()
 	}
 }
 
-// TODO: Update the menu when the value changes
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
 	Super::BindCallbacksToDependencies();
@@ -25,11 +26,42 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 	for (auto& Pair : AS->TagsToAttributes)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
-		[this, Pair](const FOnAttributeChangeData& Data)
-		{
-			BroadcastAttributeInfo(Pair.Key, Pair.Value());
-		}
-	);
+			[this, Pair](const FOnAttributeChangeData& Data)
+			{
+				BroadcastAttributeInfo(Pair.Key, Pair.Value());
+			}
+		);
+	}
+}
+
+void UAttributeMenuWidgetController::UnbindDelegateOnDestroy()
+{
+	AttributeInfoDelegate.Clear();
+}
+
+void UAttributeMenuWidgetController::UpdateAttribute(const FGameplayTag& AttributeTag)
+{
+	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+	
+	FGameplayEventData Payload;
+	Payload.EventTag = AttributeTag;
+	Payload.EventMagnitude = 1.f;
+	// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+	
+	// Handle attribute point change
+	Payload.EventTag = GameplayTags.Attributes_AttributePoints;
+	Payload.EventMagnitude = -1.f;
+	// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+}
+
+void UAttributeMenuWidgetController::UnbindAllDelegates()
+{
+	UBinggyAttributeSet* AS = CastChecked<UBinggyAttributeSet>(AttributeSet);
+	for (auto& Pair : AS->TagsToAttributes)
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).RemoveAll(this);
 	}
 }
 

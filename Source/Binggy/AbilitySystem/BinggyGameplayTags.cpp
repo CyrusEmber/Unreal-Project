@@ -45,6 +45,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Vital_Mana = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Attributes.Vital.Mana"));
 
+	/* Attribute and skill points Tag */
+	GameplayTags.Attributes_AttributePoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.AttributePoints"));
+	GameplayTags.Attributes_SkillPoints = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.SkillPoints"));
+
 	/*
 	 * Input Tags
 	 */
@@ -90,11 +96,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
         FString("Healing")
         );
 
-	/* Meta Tag */
-	GameplayTags.Meta_Exp = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Meta.XP"),
-		FString("experience")
+	GameplayTags.Attributes_Meta_Exp = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Meta.XP"),
+		FString("Experience change")
 		);
+
         
     /* Damage Type Tag */
     GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -158,6 +164,7 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FString("FireBall Ability Cooldown")
 	);
 
+	/* Gameplay event tag */ 
 	GameplayTags.GameplayEvent_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
         FName("GameplayEvent.HitReact"),
         FString("Tag grant when hit react")
@@ -167,6 +174,28 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
         FName("GameplayEvent.Death"),
         FString("Tag grant when death")
         );
+
+	GameplayTags.GameplayEvent_Attributes_Vigor = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("GameplayEvent.Attributes.Vigor"),
+		FString("Vigor change")
+		);
+
+	GameplayTags.GameplayEvent_Attributes_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("GameplayEvent.Attributes.Strength"),
+	FString("Strength change")
+	);
+
+	GameplayTags.GameplayEvent_Attributes_Intelligence = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("GameplayEvent.Attributes.Intelligence"),
+	FString("Intelligence change")
+	);
+
+	GameplayTags.GameplayEvent_Attributes_AttributePoint = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("GameplayEvent.Attributes.AttributePoint"),
+	FString("AttributePoint change")
+	);
+
+
 	
 	
 }

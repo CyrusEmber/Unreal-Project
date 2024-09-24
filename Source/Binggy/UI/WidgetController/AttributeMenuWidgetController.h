@@ -25,6 +25,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FAttributeInfoSigniture AttributeInfoDelegate;
 
+	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
+	void UnbindDelegateOnDestroy();
+
+	// Update the attribute value when attribute change from UI
+	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
+	void UpdateAttribute(const FGameplayTag& AttributeTag);
+
+	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
+	void UnbindAllDelegates();
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAttributeInfo> AttributeInfoArray;

@@ -60,6 +60,8 @@ void UBinggyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, CriticalChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyAttributeSet, CriticalDamage, COND_None, REPNOTIFY_Always);
+	
+
 }
 
 // Although the value is clamped, it still changed somehow
@@ -249,7 +251,7 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 	
 	if (CurrentHealth <= 0.0f)
 	{
-		// TODO: this is not working
+		// TODO: this is working twice
 		// OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
 	}
 
@@ -290,6 +292,14 @@ void UBinggyAttributeSet::OnRep_HealthRegeneration(FGameplayAttributeData& OldVa
 }
 
 void UBinggyAttributeSet::OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_AttributePoints(FGameplayAttributeData& OldValue) const
+{
+}
+
+void UBinggyAttributeSet::OnRep_SkillPoints(FGameplayAttributeData& OldValue) const
 {
 }
 

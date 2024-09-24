@@ -36,6 +36,10 @@ struct  FBinggyGameplayTags
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Mana;
 
+	/* Attribute and skill points Tag */
+	FGameplayTag Attributes_AttributePoints;
+	FGameplayTag Attributes_SkillPoints;
+
 	/* InputTag */
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
@@ -47,7 +51,8 @@ struct  FBinggyGameplayTags
 	/* Meta Attribute Tag */
 	FGameplayTag Damage;
 	FGameplayTag Healing;
-	FGameplayTag Meta_Exp;
+	FGameplayTag Attributes_Meta_Exp;
+
 	
 	/* Damage Type Tag */
 	FGameplayTag Damage_Fire;
@@ -73,7 +78,16 @@ struct  FBinggyGameplayTags
 	/* Event Tag */
 	FGameplayTag GameplayEvent_HitReact;
 	FGameplayTag GameplayEvent_Death;
-	
+
+	// TODO usage??
+	FGameplayTag GameplayEvent_Attributes_Vigor;
+	FGameplayTag GameplayEvent_Attributes_Strength;
+	FGameplayTag GameplayEvent_Attributes_Intelligence;
+	FGameplayTag GameplayEvent_Attributes_AttributePoint;
+	FGameplayTag GameplayEvent_Meta_Exp;
+
+
+
 
 	static FBinggyGameplayTags GameplayTags;
 

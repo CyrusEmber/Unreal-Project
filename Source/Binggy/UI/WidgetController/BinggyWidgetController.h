@@ -41,10 +41,13 @@ class BINGGY_API UBinggyWidgetController : public UObject
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(APlayerController* PC);
+	
+	// Called when initialize the HUD or blueprint
 	UFUNCTION(BlueprintCallable)
-	// Called when initialize the HUD
 	virtual void BroadcastInitialValue();
-	// Called when initialize the HUD
+	
+	// Called when initialize the HUD or blueprint
+	UFUNCTION(BlueprintCallable)
 	virtual void BindCallbacksToDependencies();
 
 	TObjectPtr<UBinggyAbilitySystemComponent> GetBinggyAbilitySystemComponent() const;

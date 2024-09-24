@@ -28,6 +28,9 @@ public:
 	ATTRIBUTE_ACCESSORS(UBinggyExperienceSet, Experience);
 	ATTRIBUTE_ACCESSORS(UBinggyExperienceSet, Level);
 	ATTRIBUTE_ACCESSORS(UBinggyExperienceSet, InComingExp);
+
+	ATTRIBUTE_ACCESSORS(UBinggyExperienceSet, AttributePoints);
+	ATTRIBUTE_ACCESSORS(UBinggyExperienceSet, SkillPoints);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -41,6 +44,12 @@ protected:
 
 	UFUNCTION()
 	void OnRep_Level(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_AttributePoints(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_SkillPoints(const FGameplayAttributeData& OldValue);
 	
 
 private:
@@ -52,8 +61,17 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Level, Category = "Lyra|Experience", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Level;
 
-	// Meta attribute
+	/* Attributes Point */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttributePoints, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AttributePoints;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SkillPoints, Category = "Attributes", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SkillPoints;
+
+	// Meta attribute does not need ReplicateDUsing
 	UPROPERTY(BlueprintReadOnly, Category = "Lyra|Experience", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData InComingExp;
+
+
 	
 };

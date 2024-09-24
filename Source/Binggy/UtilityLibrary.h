@@ -32,13 +32,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="UtilityLibrary|CharacterAttributesDefault")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
-
-	/*UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Cursor")
-	static void TraceUnderCrosshairByVisibility(FHitResult& TraceHitResult, const UObject* WorldContextObject, const float LINE_TRACE_LENGTH = 80000.f);*/
-
+	
+	// Get critical hit information from custom effect context handle
 	UFUNCTION(BlueprintPure, Category = "AbilitySystem|GameplayEffects")
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
-
+	
+	// Set critical hit information from custom effect context handle
 	UFUNCTION(BlueprintCallable, Category = "AbilitySystem|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
 

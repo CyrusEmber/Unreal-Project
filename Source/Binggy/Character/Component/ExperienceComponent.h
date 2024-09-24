@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
 #include "Components/ActorComponent.h"
 #include "ExperienceComponent.generated.h"
 
+struct FGameplayTag;
 struct FOnAttributeChangeData;
 class UBinggyExperienceSet;
 class UBinggyAbilitySystemComponent;
@@ -41,6 +43,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Binggy|Experience")
 	float GetExperienceNormalized() const;
 
+	/* Attribute and skill points, create gameplay effect at runtime to modify the value, in level up */
+	UFUNCTION(BlueprintCallable, Category = "Binggy|Experience")
+	float GetSkillPoints() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Binggy|Experience")
+	float GetAttributePoints() const;
+
+	// On experience change and level change delegate binding will not be removed. It clear OnAttributePointsChanged and OnSkillPointsChanged
+	UFUNCTION(BlueprintCallable, Category = "Binggy|Experience")
+	void ClearPointsDelegateBinding();
+	
+
 // TODO: do I need this?
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -50,13 +64,24 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FBinggyExperience_AttributeChanged OnLevelChanged;
 	
+	UPROPERTY(BlueprintAssignable)
+	FBinggyExperience_AttributeChanged OnAttributePointsChanged;
+	
+	UPROPERTY(BlueprintAssignable)
+	FBinggyExperience_AttributeChanged OnSkillPointsChanged;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	// Handle experience change and level up here TODO: Level up
 	virtual void HandleExperienceChanged(const FOnAttributeChangeData& Data);
+
+	// TODO: Change the delegate type to handle 2 levels up
 	virtual void HandleLevelChanged(const FOnAttributeChangeData& Data);
+
+	virtual void HandleAttributePointsChanged(const FOnAttributeChangeData& Data);
+	virtual void HandleSkillPointsChanged(const FOnAttributeChangeData& Data);
 	
 	// Ability system used by this component.
 	UPROPERTY()
@@ -65,6 +90,12 @@ protected:
 	// Health set used by this component.
 	UPROPERTY()
 	TObjectPtr<const UBinggyExperienceSet> ExperienceSet;
+
+	// Level up information
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Experience")
+	UAbilityInfo* AbilityInfo;
+
+
 
 private:
 	// Variables relate to 

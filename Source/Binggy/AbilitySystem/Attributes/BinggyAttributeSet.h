@@ -84,8 +84,13 @@ public:
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, CriticalChance);
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Armor);
 
+	// Meta atttribute
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Damage);
 	ATTRIBUTE_ACCESSORS(UBinggyAttributeSet, Healing);
+
+
+
+	
 	
 
 	/** Primary Attributes */
@@ -145,6 +150,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Healing;
+
+
 	
 	
 	/** Defining Rep Notify functions */
@@ -167,6 +174,11 @@ public:
 	void OnRep_HealthRegeneration(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
 	void OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const;
+	
+	UFUNCTION()
+	void OnRep_AttributePoints(FGameplayAttributeData& OldValue) const;
+	UFUNCTION()
+	void OnRep_SkillPoints(FGameplayAttributeData& OldValue) const;
 
 	// Delegate
 	mutable FBinggyAttributeEvent OnHealthChanged;

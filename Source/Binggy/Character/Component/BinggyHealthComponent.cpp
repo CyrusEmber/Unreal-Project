@@ -153,8 +153,9 @@ void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor*
 			const float XPReward = CombatInterface->GetKilledExperience();
 			const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
 			FGameplayEventData Payload;
-			Payload.EventTag = GameplayTags.Meta_Exp;
+			Payload.EventTag = GameplayTags.Attributes_Meta_Exp;
 			Payload.EventMagnitude = XPReward;
+			// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PS->GetPawn(), Payload.EventTag, Payload);
 		}
 	}
