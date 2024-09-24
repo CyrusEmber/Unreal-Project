@@ -3,7 +3,9 @@
 
 #include "BinggyExperienceSet.h"
 
+#include "BinggyAttributeSet.h"
 #include "GameplayEffectExtension.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 // TODO place holder
@@ -36,6 +38,13 @@ void UBinggyExperienceSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 	{
 		
 	}
+}
+
+void UBinggyExperienceSet::OnLevelUp()
+{
+	// TODO: Fix the coupling problem
+	/*const UBinggyAttributeSet* AttributeSet = Cast<UBinggyAbilitySystemComponent>(GetOwningAbilitySystemComponent())->GetSet<UBinggyAttributeSet>();
+	AttributeSet->SetHealth()*/
 }
 
 void UBinggyExperienceSet::OnRep_Experience(const FGameplayAttributeData& OldValue)

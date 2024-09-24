@@ -94,6 +94,7 @@ void UExperienceComponent::SetLevelExperience(float InLevel)
 	CurrentLevelExperience = LevelInfo->GetXPByLevel(IntLevel);
 }
 
+// TODO: potential batch operation
 void UExperienceComponent::OnLevelUp(const float AddLevel) const
 {
 	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
@@ -110,6 +111,12 @@ void UExperienceComponent::OnLevelUp(const float AddLevel) const
 
 	// Add skill points
 	Payload.EventTag = GameplayTags.Attributes_Experience_SkillPoints;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+
+	// Refill health and mana
+	Payload.EventTag = GameplayTags.Attributes_Vital_Health;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+	Payload.EventTag = GameplayTags.Attributes_Vital_Mana;
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 }
 

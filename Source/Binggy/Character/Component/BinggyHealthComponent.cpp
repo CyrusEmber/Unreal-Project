@@ -35,7 +35,12 @@ void UBinggyHealthComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCom
 	AbilitySystemComponent = InASC;
 	AbilitySet = AbilitySystemComponent->GetSet<UBinggyAttributeSet>();
 	AbilitySet->OnHealthChanged.AddUObject(this, &ThisClass::HandleHealthChanged);
-	AbilitySet->OnMaxHealthChanged.AddUObject(this, &ThisClass::HandleMaxHealthChanged);
+	
+	// TODO: trade off
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+	AbilitySet->GetMaxHealthAttribute()).AddUObject(this, &UBinggyHealthComponent::HandleMaxHealthChanged);
+	
+	//AbilitySet->OnMaxHealthChanged.AddUObject(this, &ThisClass::HandleMaxHealthChanged);
 	AbilitySet->OnOutOfHealth.AddUObject(this, &ThisClass::HandleOutOfHealth);
 
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
@@ -115,9 +120,9 @@ void UBinggyHealthComponent::HandleHealthChanged(float NewValue)
 	OnHealthChanged.Broadcast(NewValue);
 }
 
-void UBinggyHealthComponent::HandleMaxHealthChanged(float NewValue)
+void UBinggyHealthComponent::HandleMaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	OnMaxHealthChanged.Broadcast(NewValue);
+	OnMaxHealthChanged.Broadcast(Data.NewValue);
 }
 
 void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor* DamageCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)

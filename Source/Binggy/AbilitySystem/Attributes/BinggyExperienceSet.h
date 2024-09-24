@@ -37,6 +37,9 @@ public:
 	// Server Broadcast while OnRep is the client broadcast
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	// Fill health and mana when level up
+	void OnLevelUp();
+
 	
 protected:
 	UFUNCTION()

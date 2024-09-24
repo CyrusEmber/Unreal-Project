@@ -101,7 +101,7 @@ private:
 	// Set up PreviousLevelExperience and CurrentLevelExperience
 	void SetLevelExperience(const float InLevel);
 
-	// TODO: add points based on level info
+	// TODO: add points based on level info, make them in one struct
 	void OnLevelUp(const float AddLevel) const;
 	
 	// Variables relate to 

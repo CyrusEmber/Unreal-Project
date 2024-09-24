@@ -70,7 +70,7 @@ protected:
 	// void ClearGameplayTags();
 
 	virtual void HandleHealthChanged(float NewValue);
-	virtual void HandleMaxHealthChanged(float NewValue);
+	virtual void HandleMaxHealthChanged(const FOnAttributeChangeData& Data);
 
 	// Called when actor health hit 0
 	virtual void HandleOutOfHealth(AActor* EffectInstigator, AActor* DamageCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float

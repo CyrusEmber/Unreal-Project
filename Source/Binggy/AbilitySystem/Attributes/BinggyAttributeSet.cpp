@@ -170,7 +170,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			SetHealth(GetMaxHealth());
 		}
 		// Notify on any requested max health changes
-		OnMaxHealthChanged.Broadcast(GetMaxHealth());
+		// OnMaxHealthChanged.Broadcast(GetMaxHealth());
 	}
 	
 	// If health has actually changed activate callbacks
@@ -261,8 +261,8 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 void UBinggyAttributeSet::OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxHealth, OldMaxHealth);
-	const float CurrentMaxHealth = GetMaxHealth();
-	OnMaxHealthChanged.Broadcast(CurrentMaxHealth);
+
+	// OnMaxHealthChanged.Broadcast(GetMaxHealth());
 }
 
 void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldMana) const
