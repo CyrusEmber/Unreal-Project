@@ -5,8 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 
 void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpluse, const FHitResult& HitResult)
@@ -23,15 +21,14 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other
 		check(DamageEffectSpecHandle.Data);
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
+			DamageEffectSpecHandle.Data->GetContext().AddHitResult(HitResult);
 			
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Enemy Health: %f"), TargetASC->GetSet<UBinggyAttributeSet>()->GetHealth()));
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("HitComponent: %s"), *OtherComp->GetName()));
+			
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Hit bone name: %s"), *HitResult.BoneName.ToString()));
 		}
 		
 	}
 	Destroy();
-	
-	// Destroy
-	// Destroy();
-	// Super::OnHit(OverlappedComp, OtherActor, OtherComp, NormalImpluse, HitResult);
 }

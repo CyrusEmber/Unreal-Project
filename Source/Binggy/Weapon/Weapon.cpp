@@ -8,7 +8,6 @@
 #include "Net/UnrealNetwork.h"
 #include "Animation/AnimationAsset.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Binggy/UI/HUD/OverheadWidget.h"
 #include "Casing.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Binggy/Binggy.h"

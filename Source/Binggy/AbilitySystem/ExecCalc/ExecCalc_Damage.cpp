@@ -43,6 +43,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	
 
 	// Get Damage Set by Caller Magnitude
 	float Damage = 0.f;

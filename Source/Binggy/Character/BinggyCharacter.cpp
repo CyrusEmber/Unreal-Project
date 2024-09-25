@@ -52,6 +52,14 @@ ABinggyCharacter::ABinggyCharacter()
 	//GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	//GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	RootComponent = GetCapsuleComponent();
+
+	// Create the Physics Control Component
+	/*PhysicsControl = CreateDefaultSubobject<UPhysicsControlComponent>(TEXT("PhysicsControl"));
+	PhysicsControl->SetupAttachment(RootComponent);	*/
+
+
+	// Camera Component TODO
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetMesh());
 	CameraBoom->TargetArmLength = 300.0f;
@@ -71,10 +79,13 @@ ABinggyCharacter::ABinggyCharacter()
 
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 
+	// Set collision channel
+
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+	GetCapsuleComponent()->SetCollisionObjectType(ECC_HitBox);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
 	// Net 
 	NetUpdateFrequency = 66.f;

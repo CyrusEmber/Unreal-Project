@@ -11,6 +11,10 @@ class UProjectileMovementComponent;
 class UParticleSystem;
 class USoundCue;
 class UParticleSystemComponent;
+/*
+ * Projectile class is of collision type projectile, and by default would block skeletal mesh
+ * 
+ */
 UCLASS()
 class BINGGY_API AProjectile : public AActor
 {

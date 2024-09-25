@@ -6,9 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
-#include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/Binggy.h"
 
 
@@ -17,16 +15,18 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 	// Spawn on the server and replicate to the client
 	bReplicates = true;
-
+	
+	// Set Collision type and channel
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+	CollisionBox->SetCollisionObjectType(ECC_Projectile);
 	SetRootComponent(CollisionBox);
-	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	CollisionBox->SetCollisionObjectType(ECC_WorldDynamic);
 	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
-	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
-	CollisionBox->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECollisionResponse::ECR_Block);
-	CollisionBox->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Block);
+	CollisionBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+	CollisionBox->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	CollisionBox->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	CollisionBox->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECR_Block);
+	CollisionBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;

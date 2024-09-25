@@ -130,8 +130,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		
-		
+
 		if (LocalIncomingDamage > 0.f)
 		{
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
@@ -148,9 +147,14 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			// Show the damage text when damage > 0
 			// UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle)
 			ShowFloatingText(Props, LocalIncomingDamage, UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle));
-			SetDamage(0.f);
 			
+			// Get Bone name and apply impulse according to damage
+			Props.EffectContextHandle.GetHitResult()->BoneName;
+			
+			
+			SetDamage(0.f);
 		}
+
 	}
 	else if (Data.EvaluatedData.Attribute == GetHealingAttribute())
     	{

@@ -22,6 +22,7 @@ class UAnimMontage;
 class ABinggyPlayerController;
 class AController;
 class UAbilitySystemComponent;
+class UPhysicsControlComponent;
 UCLASS()
 class BINGGY_API ABinggyCharacter : public ABinggyCharacterBase
 {
@@ -60,6 +61,11 @@ public:
 
 	void AimStart();
 	void AimEnd();
+
+	// Declare component
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPhysicsControlComponent* PhysicsControl;*/
+	
 
 
 protected:

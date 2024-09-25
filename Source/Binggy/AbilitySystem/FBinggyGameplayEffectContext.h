@@ -10,6 +10,9 @@ public:
 	bool IsCriticalHit() const { return bIsCriticalHit; };
 	void SetCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; };
 	
+	FName GetHitBoneName() const { return HitBoneName; };
+	void SetHitBoneName(FName InHitBoneName) { HitBoneName = InHitBoneName; };
+	
 	/** Returns the actual struct used for serialization, subclasses must override this! */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
@@ -24,14 +27,14 @@ public:
 
 	/** Custom serialization, subclasses must override this */
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
-
-
-
 	
-
 protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+
+	// The hit result is replicated
+	UPROPERTY()
+	FName HitBoneName = FName();
 
 };
 
