@@ -97,27 +97,34 @@ void UExperienceComponent::SetLevelExperience(float InLevel)
 // TODO: potential batch operation
 void UExperienceComponent::OnLevelUp(const float AddLevel) const
 {
-	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+	// Only send the information on the client is able to do the trick, there is some experience BUG: TODO:
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if (OwnerPawn && OwnerPawn->IsLocallyControlled())
+	{
+		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Level Up Send to actor name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Level Up Owner name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
+		// Add Attribute points
+		FGameplayEventData Payload;
+		Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
+		Payload.EventMagnitude = AddLevel;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+
+		// Add level
+		Payload.EventTag = GameplayTags.Attributes_Experience_Level;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+
+		// Add skill points
+		Payload.EventTag = GameplayTags.Attributes_Experience_SkillPoints;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+
+		// Refill health and mana
+		Payload.EventTag = GameplayTags.Attributes_Vital_Health;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+		Payload.EventTag = GameplayTags.Attributes_Vital_Mana;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+	}
 	
-	// Add Attribute points
-	FGameplayEventData Payload;
-	Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
-	Payload.EventMagnitude = AddLevel;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
-
-	// Add level
-	Payload.EventTag = GameplayTags.Attributes_Experience_Level;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
-
-	// Add skill points
-	Payload.EventTag = GameplayTags.Attributes_Experience_SkillPoints;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
-
-	// Refill health and mana
-	Payload.EventTag = GameplayTags.Attributes_Vital_Health;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
-	Payload.EventTag = GameplayTags.Attributes_Vital_Mana;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 }
 
 void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemComponent* InASC)
@@ -129,7 +136,21 @@ void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCompo
 	// Set experience variable
 	check(LevelInfo);
 	SetLevelExperience(GetLevel());
-	
+
+		// Debug
+		UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
+		GEDebug->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+		int32 Idx = GEDebug->Modifiers.Num();
+		GEDebug->Modifiers.SetNum(Idx + 1);
+
+		FGameplayModifierInfo& AttributePoints = GEDebug->Modifiers[Idx];
+		AttributePoints.ModifierMagnitude = FScalableFloat(1.0f);
+		AttributePoints.ModifierOp = EGameplayModOp::Additive;
+		AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();
+
+		AbilitySystemComponent->ApplyGameplayEffectToSelf(GEDebug, 1.0f, AbilitySystemComponent->MakeEffectContext());
+		
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
 	OnExperienceChanged.Broadcast(ExperienceSet->GetExperience());
 	OnLevelChanged.Broadcast(ExperienceSet->GetLevel());

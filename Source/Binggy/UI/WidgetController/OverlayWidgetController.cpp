@@ -3,20 +3,13 @@
 
 #include "OverlayWidgetController.h"
 
-#include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
 
 
 void UOverlayWidgetController::BroadcastInitialValue()
 {
 	// Super is empty
 	Super::BroadcastInitialValue();
-	//OnHealthChanged.Broadcast(AttributeSet->GetHealth());
-	//OnMaxHealthChanged.Broadcast(AttributeSet->GetMaxHealth());
-
-	// FIXME
-	const UBinggyAttributeSet* BinggyAttributeSet = CastChecked<UBinggyAttributeSet>(AttributeSet);
 
 }
 
@@ -25,15 +18,14 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 {
 	// NO Super
 	Super::BindCallbacksToDependencies();
-	const UBinggyAttributeSet* BinggyAttributeSet = CastChecked<UBinggyAttributeSet>(AttributeSet);
 
 	if (UBinggyAbilitySystemComponent* BinggyAbilitySystemComponent = GetBinggyAbilitySystemComponent())
 	{
 		// Add ability is executed in PossessedBy, and HUD initialization is afterward
-		// BinggyAbilitySystemComponent->AbilityGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
-		OnInitializeStartupAbilities();
+		BroadcastAbilityInfoForAllAbilities();
 		check(MessageWidgetDataTable);
-		// Add a callback with lambda
+		
+		// Add a callback with lambda, output message information
 		BinggyAbilitySystemComponent->EffectAssetTags.AddLambda(
 			[this](const FGameplayTagContainer& AssetTags)
 				{
@@ -54,22 +46,4 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	}
 }
 
-void UOverlayWidgetController::OnInitializeStartupAbilities() const
-{
-	BroadcastAbilityInfoForAllAbilities();
-}
 
-void UOverlayWidgetController::BroadcastAbilityInfoForAllAbilities() const
-{
-	// Lock the ability list to prevent changes while modifying it
-	FScopedAbilityListLock ActiveScopeLock(*AbilitySystemComponent);
-	for (const FGameplayAbilitySpec& AbilitySpec : AbilitySystemComponent->GetActivatableAbilities())
-	{
-		FBinggyAbilityInfo Info = AbilityInfo->GetAbilityInfoByTag(UUtilityLibrary::GetAbilityTagFromSpec(AbilitySpec));
-		if (Info.AbilityTag.IsValid())
-		{
-			Info.InputTag = UUtilityLibrary::GetInputTagFromSpec(AbilitySpec);
-			AbilityInfoDelegate.Broadcast(Info);
-		}
-	}
-}

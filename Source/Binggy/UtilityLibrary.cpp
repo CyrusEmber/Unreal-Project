@@ -10,33 +10,46 @@
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "GameMode/BinggyGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerState/BinggyPlayerState.h"
 
-UOverlayWidgetController* UUtilityLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
+UOverlayWidgetController* UUtilityLibrary::GetOverlayWidgetController(APlayerController* PlayerController)
 {
-	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	if (PlayerController)
 	{
-		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PC->GetHUD()))
+		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PlayerController->GetHUD()))
 		{
-			return HUD->GetOverlayWidgetController(PC);
+			return HUD->GetOverlayWidgetController();
 		}
 	}
 	return nullptr;
 }
 
-UAttributeMenuWidgetController* UUtilityLibrary::GetAttributeMenuWidgetController(const UObject* WorldContextObject)
+UAttributeMenuWidgetController* UUtilityLibrary::GetAttributeMenuWidgetController(APlayerController* PlayerController)
 {
-	if (APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	if (PlayerController)
 	{
-		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PC->GetHUD()))
+		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PlayerController->GetHUD()))
 		{
-			return HUD->GetAttributeMenuController(PC);
+			return HUD->GetAttributeMenuController();
+		}
+	}
+	return nullptr;
+}
+
+USkillMenuWidgetController* UUtilityLibrary::GetSkillMenuWidgetController(APlayerController* PlayerController)
+{
+	if (PlayerController)
+	{
+		if (ABinggyHUD* HUD = Cast<ABinggyHUD>(PlayerController->GetHUD()))
+		{
+			return HUD->GetSkillMenuController();
 		}
 	}
 	return nullptr;
 }
 
 void UUtilityLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass,
-	float Level, UAbilitySystemComponent* ASC)
+                                                  float Level, UAbilitySystemComponent* ASC)
 {
 	ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (BinggyGameMode == nullptr)

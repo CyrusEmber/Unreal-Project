@@ -24,6 +24,9 @@ public:
 	virtual void OnRep_Score() override;
 	void AddToScore(float ScoreToAdd);
 
+	/*AActor interface*/
+	virtual void PostInitializeComponents() override;
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -44,6 +47,7 @@ protected:
 	TObjectPtr<const class UBinggyExperienceSet> ExperienceSet;
 
 private:
+	// TODO Error C2445 : result type of conditional expression is ambiguous: types 'To *' and 'TObjectPtr<ABinggyCharacter>' can be converted to multiple common types
 	ABinggyPlayerController* BinggyController;
 	ABinggyCharacter* BinggyCharacter;
 

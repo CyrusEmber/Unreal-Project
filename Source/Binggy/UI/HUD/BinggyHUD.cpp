@@ -3,10 +3,10 @@
 
 #include "BinggyHUD.h"
 #include "GameFramework/PlayerController.h"
-#include "CharacterOverlay.h"
 #include "Binggy/UI/Widget/BinggyUserWidget.h"
 #include "Binggy/UI/WidgetController/AttributeMenuWidgetController.h"
 #include "Binggy/UI/WidgetController/OverlayWidgetController.h"
+#include "Binggy/UI/WidgetController/SkillMenuWidgetController.h"
 
 
 
@@ -67,24 +67,31 @@ void ABinggyHUD::DrawHUD()
 
 }
 
-UOverlayWidgetController* ABinggyHUD::GetOverlayWidgetController(APlayerController* PC)
+UOverlayWidgetController* ABinggyHUD::GetOverlayWidgetController()
 {
-	return GetWidgetController<UOverlayWidgetController>(OverlayWidgetController, OverlayWidgetControllerClass, PC);
+	return GetWidgetController<UOverlayWidgetController>(OverlayWidgetController, OverlayWidgetControllerClass);
 }
 
-UAttributeMenuWidgetController* ABinggyHUD::GetAttributeMenuController(APlayerController* PC)
+UAttributeMenuWidgetController* ABinggyHUD::GetAttributeMenuController()
 {
-	return GetWidgetController<UAttributeMenuWidgetController>(AttributeMenuWidgetController, AttributeMenuWidgetControllerClass, PC);
+	return GetWidgetController<UAttributeMenuWidgetController>(AttributeMenuWidgetController, AttributeMenuWidgetControllerClass);
 }
 
-void ABinggyHUD::InitOverlay(APlayerController* PC)
+USkillMenuWidgetController* ABinggyHUD::GetSkillMenuController()
 {
+	return GetWidgetController<USkillMenuWidgetController>(SkillMenuWidgetController, SkillMenuWidgetControllerClass);
+}
+
+void ABinggyHUD::InitOverlay(UBinggyAbilitySystemComponent* InASC)
+{
+	AbilitySystemComponent = InASC;
 	checkf(OverlayWidgetClass, TEXT("CharacterOverlayClass not set"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass not set"));
 	OverlayWidget = CreateWidget<UBinggyUserWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget->AddToViewport();
+	
 
-	OverlayWidgetController = GetOverlayWidgetController(PC);
+	OverlayWidgetController = GetOverlayWidgetController();
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
 
 	

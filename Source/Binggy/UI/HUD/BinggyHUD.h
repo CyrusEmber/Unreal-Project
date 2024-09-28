@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "GameFramework/HUD.h"
 #include "BinggyHUD.generated.h"
 
+class USkillMenuWidgetController;
 class UAttributeMenuWidgetController;
+class USkillMenuWidgetController;
 class UTexture2D;
 class UCharacterOverlay;
 class UBinggyUserWidget;
@@ -40,12 +43,13 @@ public:
 	
 
 	/* Get Widget Controller if it is not set yet, set the widget controller */
-	UOverlayWidgetController* GetOverlayWidgetController(APlayerController* PC);
-	UAttributeMenuWidgetController* GetAttributeMenuController(APlayerController* PC);
+	UOverlayWidgetController* GetOverlayWidgetController();
+	UAttributeMenuWidgetController* GetAttributeMenuController();
+	USkillMenuWidgetController* GetSkillMenuController();
 
 	//UCharacterOverlay* CharacterOverlay;
 
-	void InitOverlay(APlayerController* PC);
+	void InitOverlay(UBinggyAbilitySystemComponent* InASC);
 
 protected:
 	virtual void BeginPlay() override;
@@ -78,16 +82,23 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
 
+	UPROPERTY()
+	TObjectPtr<USkillMenuWidgetController> SkillMenuWidgetController;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<USkillMenuWidgetController> SkillMenuWidgetControllerClass;
+	
+	UBinggyAbilitySystemComponent* AbilitySystemComponent;
+
 
 	// Template function
 	// TODO: Is it good practice to use template function?
 	template <typename T>
-	T* GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass, APlayerController* PC)
+	T* GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass)
 	{
 		check(WidgetControllerClass);
 		if (WidgetController == nullptr) {
 			WidgetController = NewObject<T>(this, WidgetControllerClass);
-			WidgetController->SetWidgetControllerParams(PC);
+			WidgetController->InitializeWithAbilitySystem(AbilitySystemComponent);
 		}
 		return WidgetController;
 	}

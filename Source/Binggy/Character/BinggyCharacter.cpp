@@ -20,6 +20,7 @@
 #include "AbilitySystemComponent.h"
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
 #include "Component/ExperienceComponent.h"
@@ -256,6 +257,7 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	// Fixme this is not working
 	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
 	// TODO: Refactoring
+	
 	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &ThisClass::HitReactTagChanged
 	);
@@ -269,7 +271,8 @@ void ABinggyCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	// Init ability actor info for the client
-	InitAbilityActorInfo();
+	// InitAbilityActorInfo();
+	
 }
 
 int32 ABinggyCharacter::GetPlayerLevel()
@@ -283,23 +286,57 @@ void ABinggyCharacter::InitAbilityActorInfo()
 {
 	ABinggyPlayerState* BinggyPlayerState = GetBinggyPlayerState();
 	check(BinggyPlayerState);
-	UBinggyAbilitySystemComponent* AbilitySystemComponent = GetBinggyAbilitySystemComponent();
-	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
-	AbilitySystemComponent->AbilityActorInfoSet();
+	UBinggyAbilitySystemComponent* AbilitySystemComponent = Cast<UBinggyAbilitySystemComponent>(BinggyPlayerState->GetAbilitySystemComponent());
 
+	if (AbilitySystemComponent->GetAvatarActor() != this)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Not equal")));
+	}
 	
-	AttributeSet = BinggyPlayerState->GetAttributeSet();
-	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
-		if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
-			BinggyHUD->InitOverlay(BinggyPlayerController);
-		}
+	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
+
+	// Debug
+	UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
+	GEDebug->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+	int32 Idx = GEDebug->Modifiers.Num();
+	GEDebug->Modifiers.SetNum(Idx + 1);
+
+	FGameplayModifierInfo& AttributePoints = GEDebug->Modifiers[Idx];
+	AttributePoints.ModifierMagnitude = FScalableFloat(1.0f);
+	AttributePoints.ModifierOp = EGameplayModOp::Additive;
+	AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();
+
+	// AbilitySystemComponent->ApplyGameplayEffectToSelf(GEDebug, 1.0f, AbilitySystemComponent->MakeEffectContext());
+	//AbilitySystemComponent->AbilityActorInfoSet();
+
+	/*
+	if (!HasAuthority())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Client Character Avatar name: %s"), *this->GetName()));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Client Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
+	}
+	*/
+	
+	
+	// AttributeSet = BinggyPlayerState->GetAttributeSet();
+	// Initialize the HUD with PS
+	ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController();
+	if (BinggyPlayerController) {
+            if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
+                BinggyHUD->InitOverlay(AbilitySystemComponent);
+            	/*GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));*/
+            }
 	}
 
 	InitializeDefaultAttributes();
 
-	// Initialize the health component
+	// Initialize the health and EXP component
 	HealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	ExperienceComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
+	
+
 	// TODO: Refactor
 	/*if (GetController()->IsLocalPlayerController())
 	{

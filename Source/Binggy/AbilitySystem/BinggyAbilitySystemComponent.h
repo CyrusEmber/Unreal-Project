@@ -25,8 +25,6 @@ public:
 
 	// Broadcast to message system
 	FEffectAssetTags EffectAssetTags;
-	// Broadcast when the ability is given to a actor
-	// FAbilityGiven AbilityGivenDelegate;
 
 	// With input tag
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);

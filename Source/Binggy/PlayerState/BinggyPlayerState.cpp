@@ -49,6 +49,11 @@ void ABinggyPlayerState::AddToScore(float ScoreToAdd)
 	}
 }
 
+void ABinggyPlayerState::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+}
+
 void ABinggyPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

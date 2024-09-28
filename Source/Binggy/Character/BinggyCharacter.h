@@ -45,6 +45,7 @@ public:
 
 	// AbilitySystem
 	virtual void PossessedBy(AController* NewController) override;
+
 	// PlayerState Replication Notification Callback, Init ability actor info for the client
 	virtual void OnRep_PlayerState() override;
 

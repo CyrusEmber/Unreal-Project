@@ -8,6 +8,7 @@
 #include "AttributeMenuWidgetController.generated.h"
 
 
+class UGameplayEffect;
 struct FGameplayAttribute;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSigniture, const FBinggyAttributeInfo&, AttributeInfo);
 /**
@@ -30,7 +31,10 @@ public:
 
 	// Update the attribute value when attribute change from UI
 	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
-	void UpdateAttribute(const FGameplayTag& AttributeTag);
+	void UpdateAttribute(const FGameplayTag& AttributeTag, AActor* InCharacter);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
 
 	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
 	void UnbindAllDelegates();
@@ -40,6 +44,10 @@ protected:
 	TObjectPtr<UAttributeInfo> AttributeInfoArray;
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Wiget Data")
 	TObjectPtr<UDataAsset> AttributeMenuWidgetDataAsset;*/
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> AttributeEffectClass;
+	
 
 private:
 	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;

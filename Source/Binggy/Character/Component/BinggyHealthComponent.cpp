@@ -150,6 +150,7 @@ void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor*
 	// TODO: is it really health related problem?
 	// Send XP to instigator
 	// Send a gameplay event only when the actor has a combat interface, effect instigator is by default player state
+	
 	if (APlayerState* PS = Cast<APlayerState>(EffectInstigator))
 	{
 		if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(PS->GetPawn()))

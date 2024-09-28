@@ -43,12 +43,20 @@ void ABinggyPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	ABinggyCharacter* BinggyCharacter = Cast<ABinggyCharacter>(InPawn);
+	// ABinggyCharacter* BinggyCharacter = Cast<ABinggyCharacter>(InPawn);
 
 	ABinggyPlayerState* BinggyPlayerState = Cast<ABinggyPlayerState>(PlayerState);
 	if (BinggyPlayerState) {
 		BinggyPlayerState->AddToScore(0);
 	}
+
+	// Initialize HUD
+	// BinggyHUD->InitOverlay(GetPlayerState<ABinggyPlayerState>());
+}
+
+void ABinggyPlayerController::AcknowledgePossession(class APawn* P)
+{
+	Super::AcknowledgePossession(P);
 }
 
 void ABinggyPlayerController::Tick(float DeltaTime)

@@ -13,6 +13,7 @@
 #include "Binggy/Interface/CombatInterface.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
@@ -184,7 +185,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	}
 
 	// TODO: !bOutOfHealth 
-	if ((GetHealth() <= 0.0f))
+	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
 		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 		// Check health again in case an event above changed it.

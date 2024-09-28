@@ -23,6 +23,10 @@ struct FBinggyAbilityInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> Icon = nullptr;
 
+	// Temporary TODO:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName AbilityDisplayName = FName();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UMaterialInterface> BackgroundMaterial = nullptr;
 

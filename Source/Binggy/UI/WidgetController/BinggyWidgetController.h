@@ -7,6 +7,9 @@
 #include "BinggyWidgetController.generated.h"
 
 
+class UBinggyAttributeSet;
+class ABinggyPlayerController;
+class ABinggyPlayerState;
 class UAbilityInfo;
 class UBinggyAbilitySystemComponent;
 class UAbilitySystemComponent;
@@ -33,14 +36,16 @@ struct FWidgetControllerParams {
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FBinggyAbilityInfo&, Info);
 UCLASS()
 class BINGGY_API UBinggyWidgetController : public UObject
 {
 	GENERATED_BODY()
 
 public:
+	// Use player state to set the controller because player state is replicated across all networks. This do sets the player controller but locally, so it has some problem when broadcasting using playercontroller
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetControllerParams(APlayerController* PC);
+	void InitializeWithAbilitySystem(UBinggyAbilitySystemComponent* InASC);
 	
 	// Called when initialize the HUD or blueprint
 	UFUNCTION(BlueprintCallable)
@@ -52,15 +57,30 @@ public:
 
 	TObjectPtr<UBinggyAbilitySystemComponent> GetBinggyAbilitySystemComponent() const;
 
+	
+	// TODO: make it on changed
+	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
+	FAbilityInfoSignature AbilityInfoDelegate;
+
 protected:
+	// Basic pointer
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
-	TObjectPtr<APlayerController> PlayerController;
+	TObjectPtr<ABinggyPlayerController> PlayerController;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
-	TObjectPtr<APlayerState> PlayerState;
+	TObjectPtr<ABinggyPlayerState> PlayerState;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UBinggyAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
-	TObjectPtr<UAttributeSet> AttributeSet;
+	TObjectPtr<const UBinggyAttributeSet> AttributeSet;
+
+	// Information data
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+
+	// Broadcast the ability info of all the abilities, TODO where is the best class to put it?
+	// Get the information of each ability and broadcast them to the widget.
+	void BroadcastAbilityInfoForAllAbilities() const;
+
 
 	
 

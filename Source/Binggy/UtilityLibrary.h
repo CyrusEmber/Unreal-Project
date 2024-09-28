@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffect.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "UtilityLibrary.generated.h"
 
+class USkillMenuWidgetController;
 enum class ECharacterClass : uint8;
 class UAbilitySystemComponent;
 class UOverlayWidgetController;
@@ -21,11 +23,14 @@ class BINGGY_API UUtilityLibrary : public UBlueprintFunctionLibrary
 
 public:
 	// Called from a widget with a player controller
-	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController")
-	static UOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, Category = "UILibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	static UOverlayWidgetController* GetOverlayWidgetController(APlayerController* PlayerController);
 
-	UFUNCTION(BlueprintPure, Category = "UtilityLibrary|WidgetController")
-	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, Category = "UtilityLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(APlayerController* PlayerController);
+
+	UFUNCTION(BlueprintPure, Category = "UtilityLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
+	static USkillMenuWidgetController* GetSkillMenuWidgetController(APlayerController* PlayerController);
 	
 	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|CharacterAttributesDefault")
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);

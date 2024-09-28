@@ -12,6 +12,7 @@
 void ABinggyGameMode::BeginPlay()
 {
 	UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), PlayerStarts);
+	 
 }
 
 void ABinggyGameMode::PlayerElimiated(ABinggyCharacter* ElimmedCharacter, ABinggyPlayerController* VictimController, ABinggyPlayerController* AttackerController)

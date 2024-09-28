@@ -33,7 +33,7 @@ ABinggyCharacterBase::ABinggyCharacterBase()
 
 ABinggyPlayerController* ABinggyCharacterBase::GetBinggyPlayerController() const
 {
-	return CastChecked<ABinggyPlayerController>(Controller, ECastCheckedType::NullAllowed);
+	return Cast<ABinggyPlayerController>(Controller);
 }
 
 UBinggyAbilitySystemComponent* ABinggyCharacterBase::GetBinggyAbilitySystemComponent() const
@@ -43,7 +43,7 @@ UBinggyAbilitySystemComponent* ABinggyCharacterBase::GetBinggyAbilitySystemCompo
 
 ABinggyPlayerState* ABinggyCharacterBase::GetBinggyPlayerState() const
 {
-	return CastChecked<ABinggyPlayerState>(GetPlayerState(), ECastCheckedType::NullAllowed);
+	return Cast<ABinggyPlayerState>(GetPlayerState());
 }
 
 UAbilitySystemComponent* ABinggyCharacterBase::GetAbilitySystemComponent() const
