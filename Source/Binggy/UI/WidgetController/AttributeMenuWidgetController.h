@@ -31,8 +31,9 @@ public:
 
 	// Update the attribute value when attribute change from UI
 	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
-	void UpdateAttribute(const FGameplayTag& AttributeTag, AActor* InCharacter);
-	
+	void UpdateAttribute(const FGameplayTag& AttributeTag);
+
+	// Use the server ASC to apply the effect
 	UFUNCTION(Server, Reliable)
 	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
 

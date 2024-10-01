@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "ExperienceComponent.generated.h"
 
+class UGameplayEffect;
 class ULevelInfo;
 struct FGameplayTag;
 struct FOnAttributeChangeData;
@@ -54,6 +55,14 @@ public:
 	// On experience change and level change delegate binding will not be removed. It clear OnAttributePointsChanged and OnSkillPointsChanged
 	UFUNCTION(BlueprintCallable, Category = "Binggy|Experience")
 	void ClearPointsDelegateBinding();
+
+	// Should be in attribute component TODO?
+	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
+	void UpdateAttribute(const FGameplayTag& AttributeTag);
+
+	// Use the server ASC to apply the effect
+	UFUNCTION(Server, Reliable)
+	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
 	
 
 // TODO: do I need this?
@@ -61,7 +70,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FBinggyExperience_AttributeChanged OnExperienceChanged;
 
-	// Delegate fired when the max health value has changed. This is called on the client but the instigator may not be valid
+	// Delegate fired when the attribute value has changed. This is called on the client but the instigator may not be valid
 	UPROPERTY(BlueprintAssignable)
 	FBinggyExperience_AttributeChanged OnLevelChanged;
 	
@@ -107,6 +116,9 @@ private:
 	// Variables relate to 
 	float PreviousLevelExperience = 0.0f;
 	float CurrentLevelExperience = 0.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> AttributeEffectClass;
 
 	
 	

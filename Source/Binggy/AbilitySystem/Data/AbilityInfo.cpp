@@ -5,7 +5,7 @@
 
 #include "Binggy/BinggyLogChannel.h"
 
-FBinggyAbilityInfo UAbilityInfo::GetAbilityInfoByTag(const FGameplayTag& AbilityTag, bool bLogNotFound)
+FBinggyAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& AbilityTag, bool bLogNotFound)
 {
 	for (const auto& AbilityInfo: AbilitiesInformation)
 	{

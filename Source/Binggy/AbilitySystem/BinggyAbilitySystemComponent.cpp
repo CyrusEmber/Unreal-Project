@@ -4,7 +4,13 @@
 #include "BinggyAbilitySystemComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BinggyGameplayTags.h"
 #include "Abilities/BinggyGameplayAbility.h"
+#include "Attributes/BinggyExperienceSet.h"
+#include "Binggy/UtilityLibrary.h"
+#include "Data/AbilityInfo.h"
+
+struct FBinggyAbilityInfo;
 
 void UBinggyAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -19,11 +25,13 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 		if (const UBinggyGameplayAbility* BinggyAbility = Cast<UBinggyGameplayAbility>(AbilitySpec.Ability))
 		{
 			AbilitySpec.DynamicAbilityTags.AddTag(BinggyAbility->StartUpInputTag);
+			AbilitySpec.DynamicAbilityTags.AddTag(FBinggyGameplayTags::Get().Ability_Status_Equipped);
 			GiveAbility(AbilitySpec);
 		}
 	}
 	// Add ability is executed in PossessedBy, and HUD initialization is afterward
 	// AbilityGivenDelegate.Broadcast();
+	this->GetGameplayAttributeValueChangeDelegate(UBinggyExperienceSet::GetLevelAttribute()).AddUObject(this, &ThisClass::UpdateAbilityStatus);
 }
 
 void UBinggyAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
@@ -32,6 +40,54 @@ void UBinggyAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TS
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
+// TODO find some solutions to reduce time complexity
+FGameplayTag UBinggyAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag StatusTag : AbilitySpec.DynamicAbilityTags)
+	{
+		if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
+		{
+			return StatusTag;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayAbilitySpec* UBinggyAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	FScopedAbilityListLock ActiveScopeLoc(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		for (FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags)
+		{
+			if (Tag.MatchesTag(AbilityTag))
+			{
+				return &AbilitySpec;
+			}
+		}
+	}
+	return nullptr;
+}
+
+void UBinggyAbilitySystemComponent::UpdateAbilityStatus(const FOnAttributeChangeData& Data)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Triggered")); 
+	UAbilityInfo* AbilityInfo = UUtilityLibrary::GetAbilityInfo(GetAvatarActor());
+	for (const FBinggyAbilityInfo& Info : AbilityInfo->AbilitiesInformation)
+	{
+		if (!Info.AbilityTag.IsValid()) continue;
+		if (Data.NewValue < Info.LevelRequirement) continue;
+		if (GetSpecFromAbilityTag(Info.AbilityTag) == nullptr)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+			AbilitySpec.DynamicAbilityTags.AddTag(FBinggyGameplayTags::Get().Ability_Status_Unlocked);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec);
+			ClientUpdateAbilityStatus(Info.AbilityTag, FBinggyGameplayTags::Get().Ability_Status_Unlocked);
+		}
 	}
 }
 
@@ -79,6 +135,12 @@ void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* Abili
 	EffectSpec.GetAllAssetTags(AssetTags);
 
 	EffectAssetTags.Broadcast(AssetTags);
+}
+
+void UBinggyAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
+	const FGameplayTag& StatusTag)
+{
+	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
 }
 
 

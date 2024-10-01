@@ -55,41 +55,14 @@ void UAttributeMenuWidgetController::UnbindDelegateOnDestroy()
 }
 
 // Check if we have enough attribute point ?
-void UAttributeMenuWidgetController::UpdateAttribute(const FGameplayTag& AttributeTag, AActor* InCharacter)
+void UAttributeMenuWidgetController::UpdateAttribute(const FGameplayTag& AttributeTag)
 {
-	/*const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Send to actor name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Current actor name: %s"), *InCharacter->GetName()));
-	// Handle attribute change
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Send to owner get pawn name: %s"), *Cast<APlayerState>(AbilitySystemComponent->GetOwner())->GetPawn()->GetName()));
-	FGameplayEventData Payload;
-	Payload.EventTag = AttributeTag;
-	Payload.EventMagnitude = 1.f;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Cast<APlayerState>(AbilitySystemComponent->GetOwner())->GetPawn(), Payload.EventTag, Payload);
-	
-	// Handle attribute point change
-	Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
-	Payload.EventMagnitude = -1.f;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Cast<APlayerState>(AbilitySystemComponent->GetOwner())->GetPawn(), Payload.EventTag, Payload);*/
-
-	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-
-	// TODO Specify the level
-	FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(AttributeEffectClass, 1, EffectContext);
-	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Experience_AttributePoints, -1.f);
-
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AttributeTag, 1.f);
-	
-	// Apply the effect to the character
-	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-
-	// ServerUpgradeAttribute(AttributeTag);
+	ServerUpgradeAttribute(AttributeTag);
 }
 
 void UAttributeMenuWidgetController::ServerUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)
 {
+	
 	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 
@@ -102,20 +75,6 @@ void UAttributeMenuWidgetController::ServerUpgradeAttribute_Implementation(const
 	
 	// Apply the effect to the character
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-	/*const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Server RPC")));
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Send to actor name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
-	// Handle attribute change
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Send to owner name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
-	FGameplayEventData Payload;
-	Payload.EventTag = AttributeTag;
-	Payload.EventMagnitude = 1.f;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
-	
-	// Handle attribute point change
-	Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
-	Payload.EventMagnitude = -1.f;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);*/
 }
 
 void UAttributeMenuWidgetController::UnbindAllDelegates()

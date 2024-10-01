@@ -263,41 +263,46 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
-void UBinggyAttributeSet::OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) const
+void UBinggyAttributeSet::OnRep_MaxHealth(FGameplayAttributeData& OldValue) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxHealth, OldMaxHealth);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxHealth, OldValue);
 
 	// OnMaxHealthChanged.Broadcast(GetMaxHealth());
 }
 
-void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldMana) const
+void UBinggyAttributeSet::OnRep_Mana(FGameplayAttributeData& OldValue) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Mana, OldMana);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Mana, OldValue);
 }
 
-void UBinggyAttributeSet::OnRep_MaxMana(FGameplayAttributeData& OldMaxMana) const
+void UBinggyAttributeSet::OnRep_MaxMana(FGameplayAttributeData& OldValue) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxMana, OldMaxMana);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, MaxMana, OldValue);
 }
 
-void UBinggyAttributeSet::OnRep_Strength(FGameplayAttributeData& OldMaxMana) const
+void UBinggyAttributeSet::OnRep_Strength(FGameplayAttributeData& OldValue) const
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Strength, OldValue);
 }
 
-void UBinggyAttributeSet::OnRep_Intelligence(FGameplayAttributeData& OldMaxMana) const
+void UBinggyAttributeSet::OnRep_Intelligence(FGameplayAttributeData& OldValue) const
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Intelligence, OldValue);
 }
 
-void UBinggyAttributeSet::OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const
+void UBinggyAttributeSet::OnRep_Vigor(FGameplayAttributeData& OldValue) const
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Vigor, OldValue);
 }
 
 void UBinggyAttributeSet::OnRep_HealthRegeneration(FGameplayAttributeData& OldValue) const
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, HealthRegeneration, OldValue);
 }
 
 void UBinggyAttributeSet::OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, ManaRegeneration, OldValue);
 }
 
 void UBinggyAttributeSet::OnRep_AttributePoints(FGameplayAttributeData& OldValue) const

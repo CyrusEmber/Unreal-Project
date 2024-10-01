@@ -7,6 +7,7 @@
 #include "BinggyGameModeBase.generated.h"
 
 class UCharacterClassInfo;
+class UAbilityInfo;
 /**
  * 
  */
@@ -15,6 +16,11 @@ class BINGGY_API ABinggyGameModeBase : public AGameMode
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Data | Character Class Defaults")
 	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data | Ability Info")
+	UAbilityInfo* AbilityInfoDataAsset;
+
+	virtual void BeginPlay() override;
 };

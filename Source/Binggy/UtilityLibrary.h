@@ -31,6 +31,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "UtilityLibrary|WidgetController", meta = (DefaultToSelf = "WorldContextObject"))
 	static USkillMenuWidgetController* GetSkillMenuWidgetController(APlayerController* PlayerController);
+
+	// Get Data from game mode
+	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|Data")
+	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 	
 	UFUNCTION(BlueprintCallable, Category = "UtilityLibrary|CharacterAttributesDefault")
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
@@ -51,6 +55,9 @@ public:
 	
 	// For Ability spec
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+
+	// For Ability spec
+	static FGameplayTag GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
 private:
 	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);

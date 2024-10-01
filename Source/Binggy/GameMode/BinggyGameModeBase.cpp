@@ -3,3 +3,9 @@
 
 #include "BinggyGameModeBase.h"
 
+void ABinggyGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+	check(CharacterClassInfo);
+	check(AbilityInfoDataAsset);
+}

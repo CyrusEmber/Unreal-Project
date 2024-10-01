@@ -19,4 +19,6 @@ protected:
 	
 	virtual void BindCallbacksToDependencies() override;
 	
+	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
+	void UnbindAllDelegates();
 };

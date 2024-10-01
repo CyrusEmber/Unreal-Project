@@ -72,13 +72,24 @@ struct  FBinggyGameplayTags
 
 	/* Abilities */
 	FGameplayTag Ability_Fire_FireBall;
+	FGameplayTag Ability_Lighting_LightingBall;
 
 	/* Cooldowns */
 	FGameplayTag Cooldown_Fire_FireBall;
+	FGameplayTag Cooldown_Lighting_LightingBall;
+
+	/* Ability Status Tag */
+	FGameplayTag Ability_Status_Locked;
+	FGameplayTag Ability_Status_Unlocked;
+	FGameplayTag Ability_Status_Equipped;
+
+	/* TODO Ability Type Tag */
+
 
 	/* Event Tag */
 	FGameplayTag GameplayEvent_HitReact;
 	FGameplayTag GameplayEvent_Death;
+
 
 	// TODO usage??
 	FGameplayTag GameplayEvent_Attributes_Vigor;

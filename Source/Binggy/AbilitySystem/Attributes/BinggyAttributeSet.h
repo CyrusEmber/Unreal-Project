@@ -156,25 +156,26 @@ public:
 	
 	/** Defining Rep Notify functions */
 	UFUNCTION()
-	void OnRep_Health(FGameplayAttributeData& OldHealth);
+	void OnRep_Health(FGameplayAttributeData& OldValue);
 	UFUNCTION()
-	void OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth) const;
+	void OnRep_MaxHealth(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_Mana(FGameplayAttributeData& OldMana) const;
+	void OnRep_Mana(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_MaxMana(FGameplayAttributeData& OldMaxMana) const;
+	void OnRep_MaxMana(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_Strength(FGameplayAttributeData& OldMaxMana) const;
+	void OnRep_Strength(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_Intelligence(FGameplayAttributeData& OldMaxMana) const;
+	void OnRep_Intelligence(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
-	void OnRep_Vigor(FGameplayAttributeData& OldMaxMana) const;
+	void OnRep_Vigor(FGameplayAttributeData& OldValue) const;
 
 	UFUNCTION()
 	void OnRep_HealthRegeneration(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()
 	void OnRep_ManaRegeneration(FGameplayAttributeData& OldValue) const;
-	
+
+	// This variable is used in the experience set TODO
 	UFUNCTION()
 	void OnRep_AttributePoints(FGameplayAttributeData& OldValue) const;
 	UFUNCTION()

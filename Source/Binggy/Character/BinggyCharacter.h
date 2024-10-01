@@ -7,6 +7,7 @@
 #include "BinggyCharacter.generated.h"
 
 
+class UBinggyUIComponent;
 class AWeapon;
 class UBinggyAbilitySystemComponent;
 struct FGameplayTag;
@@ -73,6 +74,9 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void InitAbilityActorInfo() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBinggyUIComponent> UIComponent;
 
 
 

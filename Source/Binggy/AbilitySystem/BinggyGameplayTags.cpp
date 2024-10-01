@@ -159,12 +159,38 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Abilities.Fire.FireBall"),
 	FString("FireBall Ability Tag")
 	);
+	
+	GameplayTags.Ability_Lighting_LightingBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Lighting.LightingBall"),
+	FString("LightingBall Ability Tag")
+	);
 
 
 	/* Cooldowns */  
 	GameplayTags.Cooldown_Fire_FireBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Cooldown.Fire.FireBall"),
 	FString("FireBall Ability Cooldown")
+	);
+	
+	GameplayTags.Cooldown_Lighting_LightingBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Cooldown.Lighting.LightingBall"),
+	FString("LightingBall Ability Cooldown")
+	);
+
+	/* Ability Status Tag */
+	GameplayTags.Ability_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Status.Locked"),
+	FString("The ability is locked either the player has not learned it by getting the ability or not with enough level to unlock it")
+	);
+	
+	GameplayTags.Ability_Status_Unlocked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Status.Unlocked"),
+	FString("The ability is unlocked and can be used to upgrade or equipped")
+	);
+	
+	GameplayTags.Ability_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Status.Equipped"),
+	FString("Ability Equipped to the current equipped bar")
 	);
 
 	/* Gameplay event tag */ 

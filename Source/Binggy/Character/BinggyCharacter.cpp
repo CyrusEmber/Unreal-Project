@@ -23,6 +23,7 @@
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
+#include "Component/BinggyUIComponent.h"
 #include "Component/ExperienceComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -94,6 +95,7 @@ ABinggyCharacter::ABinggyCharacter()
 	
 	// Initialize the component
 	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("ExperienceComponent"));
+	UIComponent = CreateDefaultSubobject<UBinggyUIComponent>(TEXT("UIComponent"));
 }
 
 void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -271,7 +273,7 @@ void ABinggyCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	// Init ability actor info for the client
-	// InitAbilityActorInfo();
+	InitAbilityActorInfo();
 	
 }
 
@@ -296,7 +298,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
 
 	// Debug
-	UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
+	/*UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
 	GEDebug->DurationPolicy = EGameplayEffectDurationType::Instant;
 
 	int32 Idx = GEDebug->Modifiers.Num();
@@ -305,7 +307,7 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	FGameplayModifierInfo& AttributePoints = GEDebug->Modifiers[Idx];
 	AttributePoints.ModifierMagnitude = FScalableFloat(1.0f);
 	AttributePoints.ModifierOp = EGameplayModOp::Additive;
-	AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();
+	AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();*/
 
 	// AbilitySystemComponent->ApplyGameplayEffectToSelf(GEDebug, 1.0f, AbilitySystemComponent->MakeEffectContext());
 	//AbilitySystemComponent->AbilityActorInfoSet();
@@ -317,24 +319,36 @@ void ABinggyCharacter::InitAbilityActorInfo()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Client Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
 	}
 	*/
+	InitializeDefaultAttributes();
+
+	// Initialize the health and EXP component for all clients and server, for server, you need to initialize component for server and clients, for clients, initialize component for server and clients
+
+	// Only the server abilitysystem component can 
+	/*if (HasAuthority())
+	UIComponent->InitializeWithAbilitySystem(AbilitySystemComponent);*/
+	
+	
 	
 	
 	// AttributeSet = BinggyPlayerState->GetAttributeSet();
-	// Initialize the HUD with PS
+	// Initialize the HUD with PS, however, the client ability system component version , should initial overlay with server version ASC
 	ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController();
 	if (BinggyPlayerController) {
             if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
+            	// UIComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
                 BinggyHUD->InitOverlay(AbilitySystemComponent);
             	/*GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));*/
             }
 	}
-
-	InitializeDefaultAttributes();
-
-	// Initialize the health and EXP component
+	// The health component and experience component can broadcast initial value to overlay
 	HealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
 	ExperienceComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
+
+
+	
+	
+
 	
 
 	// TODO: Refactor

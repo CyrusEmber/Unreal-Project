@@ -6,9 +6,12 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/AbilitySystem/Data/LevelInfo.h"
+#include "Binggy/Character/BinggyCharacter.h"
 
+class UBinggyAttributeSet;
 // Sets default values for this component's properties
 UExperienceComponent::UExperienceComponent()
 {
@@ -53,11 +56,35 @@ void UExperienceComponent::ClearPointsDelegateBinding()
 	OnSkillPointsChanged.Clear();
 }
 
+void UExperienceComponent::UpdateAttribute(const FGameplayTag& AttributeTag)
+{
+	ServerUpgradeAttribute(AttributeTag);
+}
+
+void UExperienceComponent::ServerUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)
+{
+	// Get server ASC
+	UAbilitySystemComponent* ServerASC = Cast<ABinggyCharacter>(GetOwner())->GetAbilitySystemComponent();
+	FGameplayEffectContextHandle EffectContext = ServerASC->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	// TODO Specify the level
+	FGameplayEffectSpecHandle SpecHandle = ServerASC->MakeOutgoingSpec(AttributeEffectClass, 1, EffectContext);
+	FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Experience_AttributePoints, -1.f);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AttributeTag, 1.f);
+	
+	// Apply the effect to the character
+	ServerASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
 // Called when the game starts
 void UExperienceComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	// check
+	check(AttributeEffectClass);
 }
 
 void UExperienceComponent::HandleExperienceChanged(const FOnAttributeChangeData& Data)
@@ -102,8 +129,6 @@ void UExperienceComponent::OnLevelUp(const float AddLevel) const
 	if (OwnerPawn && OwnerPawn->IsLocallyControlled())
 	{
 		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Level Up Send to actor name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Level Up Owner name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
 		// Add Attribute points
 		FGameplayEventData Payload;
 		Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
@@ -120,8 +145,10 @@ void UExperienceComponent::OnLevelUp(const float AddLevel) const
 
 		// Refill health and mana
 		Payload.EventTag = GameplayTags.Attributes_Vital_Health;
+		Payload.EventMagnitude = AbilitySystemComponent->GetSet<UBinggyAttributeSet>()->GetMaxHealth();
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 		Payload.EventTag = GameplayTags.Attributes_Vital_Mana;
+		Payload.EventMagnitude = AbilitySystemComponent->GetSet<UBinggyAttributeSet>()->GetMaxMana();
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 	}
 	
@@ -136,20 +163,6 @@ void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCompo
 	// Set experience variable
 	check(LevelInfo);
 	SetLevelExperience(GetLevel());
-
-		// Debug
-		UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
-		GEDebug->DurationPolicy = EGameplayEffectDurationType::Instant;
-
-		int32 Idx = GEDebug->Modifiers.Num();
-		GEDebug->Modifiers.SetNum(Idx + 1);
-
-		FGameplayModifierInfo& AttributePoints = GEDebug->Modifiers[Idx];
-		AttributePoints.ModifierMagnitude = FScalableFloat(1.0f);
-		AttributePoints.ModifierOp = EGameplayModOp::Additive;
-		AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();
-
-		AbilitySystemComponent->ApplyGameplayEffectToSelf(GEDebug, 1.0f, AbilitySystemComponent->MakeEffectContext());
 		
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
 	OnExperienceChanged.Broadcast(ExperienceSet->GetExperience());
@@ -173,6 +186,8 @@ void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCompo
 
 void UExperienceComponent::UninitializeFromAbilitySystem()
 {
+	AbilitySystemComponent = nullptr;
+	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetExperienceAttribute()).RemoveAll(this);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetLevelAttribute()).RemoveAll(this);

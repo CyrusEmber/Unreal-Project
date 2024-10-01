@@ -7,18 +7,13 @@
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Binggy/AbilitySystem/Data/AbilityInfo.h"
-#include "Binggy/PlayerState/BinggyPlayerState.h"
 
 void UBinggyWidgetController::InitializeWithAbilitySystem(UBinggyAbilitySystemComponent* InASC)
 {
 	// So Far so good
-	// PlayerController = Cast<ABinggyPlayerController>(PS->GetPlayerController());
-	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Set PS name: %s"), *PS->GetName()));
-	// PlayerState = Cast<ABinggyPlayerState>(PS);
 	// TODO: Potential Fix on the member variable
+	check(InASC);
 	AbilitySystemComponent = InASC;
-	// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Set ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
-	
 	AttributeSet = AbilitySystemComponent->GetSet<UBinggyAttributeSet>();;
 }
 
@@ -41,10 +36,12 @@ void UBinggyWidgetController::BroadcastAbilityInfoForAllAbilities() const
 	FScopedAbilityListLock ActiveScopeLock(*AbilitySystemComponent);
 	for (const FGameplayAbilitySpec& AbilitySpec : AbilitySystemComponent->GetActivatableAbilities())
 	{
-		FBinggyAbilityInfo Info = AbilityInfo->GetAbilityInfoByTag(UUtilityLibrary::GetAbilityTagFromSpec(AbilitySpec));
+		FBinggyAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(UUtilityLibrary::GetAbilityTagFromSpec(AbilitySpec));
 		if (Info.AbilityTag.IsValid())
 		{
+			// TODO refactoring
 			Info.InputTag = UUtilityLibrary::GetInputTagFromSpec(AbilitySpec);
+			Info.StatusTag = UUtilityLibrary::GetAbilityStatusTagFromSpec(AbilitySpec);
 			AbilityInfoDelegate.Broadcast(Info);
 		}
 	}

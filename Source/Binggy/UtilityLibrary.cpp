@@ -48,10 +48,20 @@ USkillMenuWidgetController* UUtilityLibrary::GetSkillMenuWidgetController(APlaye
 	return nullptr;
 }
 
+UAbilityInfo* UUtilityLibrary::GetAbilityInfo(const UObject* WorldContextObject)
+{
+	const ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (BinggyGameMode != nullptr)
+	{
+		return BinggyGameMode->AbilityInfoDataAsset;
+	}
+	return nullptr;
+}
+
 void UUtilityLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass,
                                                   float Level, UAbilitySystemComponent* ASC)
 {
-	ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	const ABinggyGameModeBase* BinggyGameMode = Cast<ABinggyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (BinggyGameMode == nullptr)
 	{
 		return;
@@ -125,6 +135,18 @@ FGameplayTag UUtilityLibrary::GetInputTagFromSpec(const FGameplayAbilitySpec& Ab
 	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
+		{
+			return Tag;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UUtilityLibrary::GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+	{
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Ability.Status"))))
 		{
 			return Tag;
 		}
