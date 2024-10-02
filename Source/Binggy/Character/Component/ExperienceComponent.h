@@ -60,9 +60,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GAS|Attributes")
 	void UpdateAttribute(const FGameplayTag& AttributeTag);
 
-	// Use the server ASC to apply the effect
-	UFUNCTION(Server, Reliable)
-	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
+
 	
 
 // TODO: do I need this?
@@ -110,8 +108,16 @@ private:
 	// Set up PreviousLevelExperience and CurrentLevelExperience
 	void SetLevelExperience(const float InLevel);
 
-	// TODO: add points based on level info, make them in one struct
+	// TODO: add points based on level info, make them in one struct, should I put it into HandleLevelChanged?
 	void OnLevelUp(const float AddLevel) const;
+
+	// We don't need server on level up because the experience component will have a server version and a client version, which will all listen to the change
+	/*UFUNCTION(Server, Reliable)
+	void ServerOnLevelUp(const float AddLevel) const;*/
+
+	// Use the server ASC to apply the effect, we need this because this is called on client for client, not the server version
+	UFUNCTION(Server, Reliable)
+	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
 	
 	// Variables relate to 
 	float PreviousLevelExperience = 0.0f;

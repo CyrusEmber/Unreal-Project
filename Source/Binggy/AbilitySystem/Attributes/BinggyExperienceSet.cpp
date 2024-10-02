@@ -17,11 +17,11 @@ UBinggyExperienceSet::UBinggyExperienceSet()
 void UBinggyExperienceSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
-	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Level, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Experience, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, AttributePoints, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, SkillPoints, COND_None, REPNOTIFY_Always);
+	// TODO REPNOTIFY_OnChanged?
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Level, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, Experience, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, AttributePoints, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UBinggyExperienceSet, SkillPoints, COND_None, REPNOTIFY_OnChanged);
 }
 
 void UBinggyExperienceSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

@@ -89,6 +89,7 @@ void UExperienceComponent::BeginPlay()
 
 void UExperienceComponent::HandleExperienceChanged(const FOnAttributeChangeData& Data)
 {
+	// Level up check
 	if (Data.NewValue >= CurrentLevelExperience)
 	{
 		const int32 NewLevel = LevelInfo->GetLevelByXP(FMath::RoundToInt(Data.NewValue));
@@ -100,7 +101,32 @@ void UExperienceComponent::HandleExperienceChanged(const FOnAttributeChangeData&
 
 void UExperienceComponent::HandleLevelChanged(const FOnAttributeChangeData& Data)
 {
+	if (Data.OldValue == Data.NewValue)
+	{
+		return;
+	}
+	const float AddLevel = Data.NewValue - Data.OldValue;
+	if (GetOwnerRole() == ROLE_Authority)
+	{
+		UAbilitySystemComponent* ServerASC = Cast<ABinggyCharacter>(GetOwner())->GetAbilitySystemComponent();
+		FGameplayEffectContextHandle EffectContext = ServerASC->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		// TODO Specify the level
+		FGameplayEffectSpecHandle SpecHandle = ServerASC->MakeOutgoingSpec(AttributeEffectClass, 1, EffectContext);
+		FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
+		
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Experience_AttributePoints, AddLevel);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Experience_SkillPoints, AddLevel);
+		// Handle health and mana refill
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Vital_Health,  AbilitySystemComponent->GetSet<UBinggyAttributeSet>()->GetMaxHealth());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Vital_Mana,  AbilitySystemComponent->GetSet<UBinggyAttributeSet>()->GetMaxMana());
+
+		// UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AttributeTag, 1.f);
 	
+		// Apply the effect to the character
+		ServerASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	}
 	OnLevelChanged.Broadcast(Data.NewValue);
 }
 
@@ -126,9 +152,21 @@ void UExperienceComponent::OnLevelUp(const float AddLevel) const
 {
 	// Only send the information on the client is able to do the trick, there is some experience BUG: TODO:
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
-	if (OwnerPawn && OwnerPawn->IsLocallyControlled())
+	if (OwnerPawn && OwnerPawn->HasAuthority())
 	{
-		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+		UAbilitySystemComponent* ServerASC = Cast<ABinggyCharacter>(GetOwner())->GetAbilitySystemComponent();
+		FGameplayEffectContextHandle EffectContext = ServerASC->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		FGameplayEffectSpecHandle SpecHandle = ServerASC->MakeOutgoingSpec(AttributeEffectClass, 1, EffectContext);
+		FBinggyGameplayTags GameplayTags = FBinggyGameplayTags::Get();
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Experience_Level, AddLevel);
+	
+		// Apply the effect to the character
+		ServerASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+
+		// Lagecy 
+		/*const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
 		// Add Attribute points
 		FGameplayEventData Payload;
 		Payload.EventTag = GameplayTags.Attributes_Experience_AttributePoints;
@@ -149,10 +187,15 @@ void UExperienceComponent::OnLevelUp(const float AddLevel) const
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
 		Payload.EventTag = GameplayTags.Attributes_Vital_Mana;
 		Payload.EventMagnitude = AbilitySystemComponent->GetSet<UBinggyAttributeSet>()->GetMaxMana();
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(AbilitySystemComponent->GetAvatarActor(), Payload.EventTag, Payload);*/
 	}
 	
 }
+
+/*void UExperienceComponent::ServerOnLevelUp_Implementation(const float AddLevel) const
+{
+
+}*/
 
 void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemComponent* InASC)
 {
@@ -192,8 +235,8 @@ void UExperienceComponent::UninitializeFromAbilitySystem()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetLevelAttribute()).RemoveAll(this);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetLevelAttribute()).RemoveAll(this);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetAttributePointsAttribute()).RemoveAll(this);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetLevelAttribute()).RemoveAll(this);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetSkillPointsAttribute()).RemoveAll(this);
 }
 

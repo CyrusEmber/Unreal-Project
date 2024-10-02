@@ -31,7 +31,7 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 	}
 	// Add ability is executed in PossessedBy, and HUD initialization is afterward
 	// AbilityGivenDelegate.Broadcast();
-	this->GetGameplayAttributeValueChangeDelegate(UBinggyExperienceSet::GetLevelAttribute()).AddUObject(this, &ThisClass::UpdateAbilityStatus);
+	this->GetGameplayAttributeValueChangeDelegate(UBinggyExperienceSet::GetLevelAttribute()).AddUObject(this, &UBinggyAbilitySystemComponent::UpdateAbilityStatus);
 }
 
 void UBinggyAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
@@ -74,7 +74,11 @@ FGameplayAbilitySpec* UBinggyAbilitySystemComponent::GetSpecFromAbilityTag(const
 
 void UBinggyAbilitySystemComponent::UpdateAbilityStatus(const FOnAttributeChangeData& Data)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Triggered")); 
+	// TODO turn this to experience component
+	if (Data.OldValue == Data.NewValue)
+	{
+		return;
+	}
 	UAbilityInfo* AbilityInfo = UUtilityLibrary::GetAbilityInfo(GetAvatarActor());
 	for (const FBinggyAbilityInfo& Info : AbilityInfo->AbilitiesInformation)
 	{

@@ -17,21 +17,29 @@ void USkillMenuWidgetController::BindCallbacksToDependencies()
 {
 	// Super is empty
 	Super::BindCallbacksToDependencies();
-	AbilitySystemComponent->AbilityStatusChanged.AddLambda([this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
+	AbilitySystemComponent->AbilityStatusChanged.AddUObject(this, &USkillMenuWidgetController::BroadcastAbilityInfo);
+}
+
+void USkillMenuWidgetController::BeginDestroy()
+{
+	Super::BeginDestroy();
+	UnbindAllDelegates();
+}
+
+void USkillMenuWidgetController::BroadcastAbilityInfo(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag) const
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Broadcast AbilityStatusChanged")); 
+	if (AbilityInfo)
 	{
-		if (AbilityInfo)
-		{
-			FBinggyAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
-			Info.StatusTag = StatusTag;
-			AbilityInfoDelegate.Broadcast(Info);
-		}
-	});
+		FBinggyAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
+		Info.StatusTag = StatusTag;
+		AbilityInfoDelegate.Broadcast(Info);
+	}
 }
 
 void USkillMenuWidgetController::UnbindAllDelegates()
 {
-	for (auto& Pair : AttributeSet->TagsToAttributes)
-	{
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).RemoveAll(this);
-	}
+	check(AbilitySystemComponent);
+	
+	AbilitySystemComponent->AbilityStatusChanged.RemoveAll(this);	
 }

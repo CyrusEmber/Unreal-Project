@@ -34,6 +34,7 @@ public:
 	FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
 
+	// TODO: put in inside experience component?
 	// Update ability status when player level up, bind as callback to level attribute change, whenever a status tag is added to a spec, the old status tag should be removed
 	void UpdateAbilityStatus(const FOnAttributeChangeData& Data);
 

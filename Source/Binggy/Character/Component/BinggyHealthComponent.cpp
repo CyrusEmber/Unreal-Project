@@ -8,9 +8,8 @@
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
-#include "Binggy/Character/BinggyCharacter.h"
 #include "Binggy/Interface/CombatInterface.h"
-#include "GameFramework/PlayerState.h"
+#include "Binggy/PlayerState/BinggyPlayerState.h"
 
 // Sets default values for this component's properties
 UBinggyHealthComponent::UBinggyHealthComponent()
@@ -151,19 +150,33 @@ void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor*
 	// Send XP to instigator
 	// Send a gameplay event only when the actor has a combat interface, effect instigator is by default player state
 	
-	if (APlayerState* PS = Cast<APlayerState>(EffectInstigator))
+	if (ABinggyPlayerState* PS = Cast<ABinggyPlayerState>(EffectInstigator))
 	{
 		if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(PS->GetPawn()))
 		{
 			// const int32 TargetLevel = CombatInterface->GetPlayerLevel();
 			// const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
-			const float XPReward = CombatInterface->GetKilledExperience();
+			/*const float XPReward = CombatInterface->GetKilledExperience();
 			const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
 			FGameplayEventData Payload;
 			Payload.EventTag = GameplayTags.Attributes_Meta_Exp;
 			Payload.EventMagnitude = XPReward;
 			// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PS->GetPawn(), Payload.EventTag, Payload);
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PS->GetPawn(), Payload.EventTag, Payload);*/
+			// Changed from event to apply gameplay effect
+			UGameplayEffect* GEXP = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("XP")));
+			GEXP->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+			int32 Idx = GEXP->Modifiers.Num();
+			GEXP->Modifiers.SetNum(Idx + 1);
+
+			FGameplayModifierInfo& InfoXP = GEXP->Modifiers[Idx];
+			const float XPReward = CombatInterface->GetKilledExperience();
+			InfoXP.ModifierMagnitude = FScalableFloat(XPReward);
+			InfoXP.ModifierOp = EGameplayModOp::Additive;
+			InfoXP.Attribute = UBinggyExperienceSet::GetExperienceAttribute();
+
+			AbilitySystemComponent->ApplyGameplayEffectToTarget(GEXP, PS->GetAbilitySystemComponent(), 1.0f, AbilitySystemComponent->MakeEffectContext());
 		}
 	}
 	
