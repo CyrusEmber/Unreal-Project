@@ -42,11 +42,6 @@ void USkillMenuWidgetController::BroadcastAbilityInfo(const FGameplayTag& Abilit
 		{
 			Info.InputTag = InputTag;
 		}
-		if (!AbilityTag.IsValid())
-		{
-			
-		}
-		
 		AbilityInfoDelegate.Broadcast(Info);
 	}
 }
