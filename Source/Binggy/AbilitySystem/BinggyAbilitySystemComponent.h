@@ -4,10 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "BinggyAbilitySystemComponent.generated.h" 
+#include "BinggyAbilitySystemComponent.generated.h"
+struct FAbilitySpecPair
+{
+	FGameplayAbilitySpec* AbilityTagSpec = nullptr;
+	FGameplayAbilitySpec* InputTagSpec = nullptr;
+};
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FAbilityStatusChanged, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/)
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, const FGameplayTag& /*InputTag*/)
 // DECLARE_MULTICAST_DELEGATE(FAbilityGiven);
 class UAbilityInfo;
 /**
@@ -30,9 +35,11 @@ public:
 
 	// Activate once and without input tag
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
-
-	FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+
+	// If the return value is nullptr, then the slot is empty
+	FGameplayAbilitySpec* GetSpecsFromInputTag(const FGameplayTag& InputTag);
 
 	// TODO: put in inside experience component?
 	// Update ability status when player level up, bind as callback to level attribute change, whenever a status tag is added to a spec, the old status tag should be removed
@@ -42,6 +49,7 @@ public:
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 
+	// The AbilityTag could be 0, then we are swapping between an equipped skill and an empty skill slot
 	FAbilityStatusChanged AbilityStatusChanged;
 
 
@@ -50,6 +58,12 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
+
+	
+
+	// Clear the current ability slot for equipped ability
+	void ClearSlot(const FGameplayTag& InputTag);
+	
 private:
 	// Map from AbilityTag to AbilitySpec pointer
 	TMap<FGameplayTag, FGameplayAbilitySpec*> AbilityTagToSpecMap;

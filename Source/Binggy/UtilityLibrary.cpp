@@ -117,6 +117,7 @@ void UUtilityLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectConte
 
 FGameplayTag UUtilityLibrary::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
+	check(&AbilitySpec);
 	if (AbilitySpec.Ability)
 	{
 		for (FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags)
@@ -132,6 +133,7 @@ FGameplayTag UUtilityLibrary::GetAbilityTagFromSpec(const FGameplayAbilitySpec& 
 
 FGameplayTag UUtilityLibrary::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
+	check(&AbilitySpec);
 	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag"))))
@@ -144,6 +146,7 @@ FGameplayTag UUtilityLibrary::GetInputTagFromSpec(const FGameplayAbilitySpec& Ab
 
 FGameplayTag UUtilityLibrary::GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
+	check(&AbilitySpec);
 	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Ability.Status"))))

@@ -33,7 +33,7 @@ struct FBinggyAbilityInfo
 
 	// Temporary TODO:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FName AbilityDisplayName = FName();
+	FName AbilityDisplayName = FName(TEXT(" "));
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UMaterialInterface> BackgroundMaterial = nullptr;

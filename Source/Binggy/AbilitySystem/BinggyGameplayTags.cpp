@@ -57,6 +57,10 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	/*
 	 * Input Tags
 	 */
+	GameplayTags.InputTag_None= UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("InputTag.None"),
+	FString("Input Tag for Left Mouse Button")
+	);
 
 	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.LMB"),

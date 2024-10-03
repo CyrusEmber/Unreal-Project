@@ -42,6 +42,7 @@ struct  FBinggyGameplayTags
 	FGameplayTag Attributes_Experience_SkillPoints;
 
 	/* InputTag */
+	FGameplayTag InputTag_None;
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_1;
@@ -70,7 +71,8 @@ struct  FBinggyGameplayTags
 	/* Damage to resistance mapping */
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistanceTypes;
 
-	/* Abilities */
+	/* Abilities TODO: None ability */
+	FGameplayTag Ability_None;
 	FGameplayTag Ability_Fire_FireBall;
 	FGameplayTag Ability_Lighting_LightingBall;
 

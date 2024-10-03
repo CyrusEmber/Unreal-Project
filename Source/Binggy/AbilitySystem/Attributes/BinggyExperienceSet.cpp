@@ -8,8 +8,8 @@
 
 // TODO place holder
 UBinggyExperienceSet::UBinggyExperienceSet()
-: Level(1.0f)
-, Experience(100.0f)
+: Experience(100.0f),
+Level(1.0f)
 {
 
 }

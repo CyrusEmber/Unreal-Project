@@ -43,19 +43,6 @@ void UBinggyAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TS
 	}
 }
 
-// TODO find some solutions to reduce time complexity
-FGameplayTag UBinggyAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
-{
-	for (FGameplayTag StatusTag : AbilitySpec.DynamicAbilityTags)
-	{
-		if (StatusTag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
-		{
-			return StatusTag;
-		}
-	}
-	return FGameplayTag();
-}
-
 FGameplayAbilitySpec* UBinggyAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
 {
 	FScopedAbilityListLock ActiveScopeLoc(*this);
@@ -70,6 +57,26 @@ FGameplayAbilitySpec* UBinggyAbilitySystemComponent::GetSpecFromAbilityTag(const
 		}
 	}
 	return nullptr;
+}
+
+FGameplayAbilitySpec* UBinggyAbilitySystemComponent::GetSpecsFromInputTag(
+	const FGameplayTag& InputTag)
+{
+	FGameplayAbilitySpec* InputTagSpec = nullptr;
+	
+	FScopedAbilityListLock ActiveScopeLoc(*this);
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
+		{
+			if (Tag.MatchesTag(InputTag))
+			{
+				InputTagSpec = &AbilitySpec;
+				break;
+			}
+		}
+	}
+	return InputTagSpec;
 }
 
 void UBinggyAbilitySystemComponent::UpdateAbilityStatus(const FOnAttributeChangeData& Data)
@@ -144,7 +151,7 @@ void UBinggyAbilitySystemComponent::AffectApplied(UAbilitySystemComponent* Abili
 void UBinggyAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
 	const FGameplayTag& StatusTag)
 {
-	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag, FGameplayTag());
 }
 
 
