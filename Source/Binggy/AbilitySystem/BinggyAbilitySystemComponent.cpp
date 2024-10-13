@@ -31,6 +31,7 @@ void UBinggyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclass
 	}
 	// Add ability is executed in PossessedBy, and HUD initialization is afterward
 	// AbilityGivenDelegate.Broadcast();
+	// TODO: put in the experience component
 	this->GetGameplayAttributeValueChangeDelegate(UBinggyExperienceSet::GetLevelAttribute()).AddUObject(this, &UBinggyAbilitySystemComponent::UpdateAbilityStatus);
 }
 

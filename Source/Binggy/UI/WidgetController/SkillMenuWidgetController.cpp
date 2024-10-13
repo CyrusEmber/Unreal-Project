@@ -30,7 +30,6 @@ void USkillMenuWidgetController::BeginDestroy()
 
 void USkillMenuWidgetController::BroadcastAbilityInfo(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& InputTag) const
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Broadcast AbilityStatusChanged")); 
 	if (AbilityInfo)
 	{
 		FBinggyAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
@@ -48,8 +47,14 @@ void USkillMenuWidgetController::BroadcastAbilityInfo(const FGameplayTag& Abilit
 
 void USkillMenuWidgetController::EquipAbility(const FGameplayTag& AbilityToEquipAbilityTag, const FGameplayTag& EquippedAbilityInputTag)
 {
+	// AbilityToEquipAbilityTag is always valid if we set it in the skill menu
 	// Get According Spec
 	FGameplayAbilitySpec* AbilityToEquipSpec = AbilitySystemComponent->GetSpecFromAbilityTag(AbilityToEquipAbilityTag);
+	// AbilityToEquip is empty, disable drag in UI or equip HERE
+	if (!AbilityToEquipSpec)
+	{
+		return;
+	}
 	FGameplayAbilitySpec* EquippedAbilitySpec = AbilitySystemComponent->GetSpecsFromInputTag(EquippedAbilityInputTag);
 	
 	const FGameplayTag AbilityToEquipInputTag = UUtilityLibrary::GetInputTagFromSpec(*AbilityToEquipSpec);
@@ -153,7 +158,8 @@ void USkillMenuWidgetController::EquipAbility(const FGameplayTag& AbilityToEquip
 
 void USkillMenuWidgetController::UnbindAllDelegates()
 {
-	check(AbilitySystemComponent);
-	
-	AbilitySystemComponent->AbilityStatusChanged.RemoveAll(this);	
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityStatusChanged.RemoveAll(this);
+	}
 }

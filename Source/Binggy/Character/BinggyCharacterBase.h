@@ -9,6 +9,7 @@
 #include "BinggyCharacterBase.generated.h"
 
 
+class UDebuffNiagaraComponent;
 class UWidgetComponent;
 class UExperienceComponent;
 class AWeapon;
@@ -50,10 +51,10 @@ public:
 	virtual UAnimMontage* GetHitReactMontage() override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Die() override;
+	virtual void Die(FVector ImpulseDirection, FName BoneName) override;
 
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDie();
+	virtual void MulticastHandleDie(FVector ImpulseDirection, FName BoneName);
 
 	FORCEINLINE virtual float GetKilledExperience() const override { return KilledExperience; }
 
@@ -61,6 +62,7 @@ public:
 protected:
 	// Initialize the component when ability system component set, calls GetBinggyAbilitySystemComponent which will be overriden in AI controlled classes.
 	virtual void OnAbilitySystemInitialized();
+	// Uninitialize the component's connection with ASC.
 	virtual void OnAbilitySystemUninitialized();
 
 	// Actor Interface?
@@ -105,6 +107,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UExperienceComponent> ExperienceComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
+
 	// Widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> DamageTextWidgetClass;
@@ -128,6 +133,13 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+	
+	// Elimination Need refactoring
+	bool bElimmed = false;
+	FTimerHandle ElimTimer;
+	UPROPERTY(EditDefaultsOnly)
+	float ElimDelay = 4.f;
+	void ElimTimerFinished();
 
 public:
 	// TODO: put it into static function

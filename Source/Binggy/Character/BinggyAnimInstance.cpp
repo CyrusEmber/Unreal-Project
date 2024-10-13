@@ -32,7 +32,8 @@ void UBinggyAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	EquippedWeapon = BinggyCharacter->GetEquippedWeapon();
 	bIsCrouched = BinggyCharacter->bIsCrouched;
 	bIsAiming = BinggyCharacter->IsAiming();
-	bElimmed = BinggyCharacter->IsElimmed();
+	// TODO
+	bElimmed = false;
 
 	// The rotation of player controller, global rotation
 	FRotator AimRotation = BinggyCharacter->GetBaseAimRotation();

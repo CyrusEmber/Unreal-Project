@@ -19,7 +19,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 		GEngine->AddOnScreenDebugMessage(1, 30.0f, FColor::Yellow, FString::Printf(TEXT("Total player %i"), NumPlayers));
 		GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Yellow, FString::Printf(TEXT("Player %s joined"), *PlayerName));
 	}
-	// Need fix
+	// Need fix TODO
 	if (NumPlayers == 2) {
 		UWorld* World = GetWorld();
 		if (World) {

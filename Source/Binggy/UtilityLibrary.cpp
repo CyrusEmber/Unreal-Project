@@ -3,9 +3,12 @@
 
 #include "UtilityLibrary.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
 #include "AbilitySystem/FBinggyGameplayEffectContext.h"
+#include "AbilitySystem/Abilities/BinggyAbilityTypes.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "GameMode/BinggyGameModeBase.h"
@@ -107,11 +110,118 @@ bool UUtilityLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectCo
 	return false;
 }
 
+bool UUtilityLibrary::IsSuccessfulDebuff(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BinggyEffectContext->IsSuccessfulDebuff();
+	}
+	return false;
+}
+
+float UUtilityLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BinggyEffectContext->GetDebuffDamage();
+	}
+	return 0.f;
+}
+
+float UUtilityLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BinggyEffectContext->GetDebuffDuration();
+	}
+	return 0.f;
+}
+
+float UUtilityLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BinggyEffectContext->GetDebuffFrequency();
+	}
+	return 0.f;
+}
+
+FGameplayTag UUtilityLibrary::GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		if (BinggyEffectContext->GetDamageType().IsValid())
+		{
+			return *BinggyEffectContext->GetDamageType();
+		}
+	}
+	return FGameplayTag();
+}
+
+FVector UUtilityLibrary::GetImpulseDirection(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBinggyGameplayEffectContext* AuraEffectContext = static_cast<const FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return AuraEffectContext->GetImpulseDirection();
+	}
+	return FVector::ZeroVector;
+}
+
 void UUtilityLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit)
 {
 	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		BinggyEffectContext->SetCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UUtilityLibrary::SetIsSuccessfulDebuff(FGameplayEffectContextHandle& EffectContextHandle, bool bInSuccessfulDebuff)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetIsSuccessfulDebuff(bInSuccessfulDebuff);
+	}
+}
+
+void UUtilityLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle, float InDamage)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetDebuffDamage(InDamage);
+	}
+}
+
+void UUtilityLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle, float InDuration)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetDebuffDuration(InDuration);
+	}
+}
+
+void UUtilityLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle, float InFrequency)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetDebuffFrequency(InFrequency);
+	}
+}
+
+void UUtilityLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
+		BinggyEffectContext->SetDamageType(DamageType);
+	}
+}
+
+void UUtilityLibrary::SetImpulseDirection(FGameplayEffectContextHandle& EffectContextHandle,
+	const FVector& InImpulseDirection)
+{
+	if (FBinggyGameplayEffectContext* BinggyEffectContext = static_cast<FBinggyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BinggyEffectContext->SetImpulseDirection(InImpulseDirection);
 	}
 }
 
@@ -155,6 +265,32 @@ FGameplayTag UUtilityLibrary::GetAbilityStatusTagFromSpec(const FGameplayAbility
 		}
 	}
 	return FGameplayTag();
+}
+
+FGameplayEffectContextHandle UUtilityLibrary::ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams)
+{
+	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	
+	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
+	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+	SetImpulseDirection(EffectContexthandle, DamageEffectParams.ImpulseDirection);
+	EffectContexthandle.AddHitResult(DamageEffectParams.HitResult);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Hit bone name: %s"), *DamageEffectParams.HitResult.BoneName.ToString()));
+	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
+	for (auto& Pair : DamageEffectParams.DamageTypes)
+	{
+		// GetAbilityLevel() TODO
+		const float ScaledDamage = Pair.Value.GetValueAtLevel(1.f);
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+	}
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance, DamageEffectParams.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage, DamageEffectParams.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration, DamageEffectParams.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency, DamageEffectParams.DebuffFrequency);
+	
+	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	return EffectContexthandle;
 }
 
 void UUtilityLibrary::ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes)

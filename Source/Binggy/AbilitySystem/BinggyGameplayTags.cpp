@@ -120,7 +120,7 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FString("Ice Damage Type")
 	);
 
-	GameplayTags.Damage_Lighting = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	GameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Damage.Lighting"),
 	FString("Lighting Damage Type")
 	);
@@ -141,7 +141,7 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FString("Ice Resistance Type")
 	);
 
-	GameplayTags.Resistance_Lighting = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	GameplayTags.Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Resistance.Lighting"),
 	FString("Lighting Resistance Type")
 	);
@@ -154,7 +154,7 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
       
     /* Add damage types to the map */  
     GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Fire, GameplayTags.Resistance_Fire);
-	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Lighting, GameplayTags.Resistance_Lighting);
+	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Lightning, GameplayTags.Resistance_Lightning);
 	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Ice, GameplayTags.Resistance_Ice);
 	GameplayTags.DamageTypesToResistanceTypes.Add(GameplayTags.Damage_Physical, GameplayTags.Resistance_Physical);
 
@@ -168,6 +168,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Abilities.Lighting.LightingBall"),
 	FString("LightingBall Ability Tag")
 	);
+	GameplayTags.Ability_Ice_IceBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Ice.IceBall"),
+	FString("IceBall Ability Tag")
+	);
+
 
 
 	/* Cooldowns */  
@@ -180,6 +185,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Cooldown.Lighting.LightingBall"),
 	FString("LightingBall Ability Cooldown")
 	);
+	GameplayTags.Cooldown_Ice_IceBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Cooldown.Ice.IceBall"),
+	FString("IceBall Cooldown Tag")
+	);
+	
 
 	/* Ability Status Tag */
 	GameplayTags.Ability_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -196,6 +206,38 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Ability.Status.Equipped"),
 	FString("Ability Equipped to the current equipped bar")
 	);
+
+	/* Debuff Tag */
+	GameplayTags.Debuff_Burn = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Burn"),
+	FString("Debuff for Fire damage")
+	);
+
+	GameplayTags.Debuff_Frost = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Frost"),
+	FString("Debuff for Ice damage")
+	);
+
+	GameplayTags.Debuff_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Chance"),
+	FString("Debuff for Ice damage")
+	);
+	GameplayTags.Debuff_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Damage"),
+	FString("Debuff for Ice damage")
+	);
+	GameplayTags.Debuff_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Duration"),
+	FString("Debuff for Ice damage")
+	);
+	GameplayTags.Debuff_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Debuff.Frequency"),
+	FString("Debuff for Ice damage")
+	);
+
+	/* Debuff tag */
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Ice, GameplayTags.Debuff_Frost);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Fire, GameplayTags.Debuff_Burn);
 
 	/* Gameplay event tag */ 
 	GameplayTags.GameplayEvent_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(

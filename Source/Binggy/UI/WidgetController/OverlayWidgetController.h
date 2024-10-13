@@ -58,6 +58,8 @@ public:
 
 
 protected:
+	// TODO: same function in skill menu widget
+	void BroadcastAbilityInfo(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& InputTag) const;
 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
@@ -65,6 +67,8 @@ protected:
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	void UnbindDelegates();
 	
 };
 

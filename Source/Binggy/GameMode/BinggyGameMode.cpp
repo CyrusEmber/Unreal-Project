@@ -40,7 +40,6 @@ void ABinggyGameMode::RequestRespawn(ACharacter* ElimmedCharacter, AController* 
 	if (ElimmedController && PlayerStarts.Num() != 0) {
 		int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 		RestartPlayerAtPlayerStart(ElimmedController, PlayerStarts[RandomIndex]);
-		
 	}
 }
 

@@ -150,9 +150,9 @@ void UExperienceComponent::SetLevelExperience(float InLevel)
 // TODO: potential batch operation
 void UExperienceComponent::OnLevelUp(const float AddLevel) const
 {
-	// Only send the information on the client is able to do the trick, there is some experience BUG: TODO:
-	APawn* OwnerPawn = Cast<APawn>(GetOwner());
-	if (OwnerPawn && OwnerPawn->HasAuthority())
+	// Only send the information on the client is able to do the trick
+	// APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if (GetOwnerRole() == ROLE_Authority)
 	{
 		UAbilitySystemComponent* ServerASC = Cast<ABinggyCharacter>(GetOwner())->GetAbilitySystemComponent();
 		FGameplayEffectContextHandle EffectContext = ServerASC->MakeEffectContext();

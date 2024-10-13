@@ -20,7 +20,7 @@ public:
 	virtual void Fire(const FVector& HitTarget) override;
 
 	// TODO: Make it virtual
-	virtual void FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle) override;
+	virtual void FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams) override;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Projectile Weapon")

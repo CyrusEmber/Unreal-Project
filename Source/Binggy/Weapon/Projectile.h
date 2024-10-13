@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
+#include "Binggy/AbilitySystem/Abilities/BinggyAbilityTypes.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -29,7 +30,7 @@ public:
 	void SetDamageEffectSpecHandleByDefault();
 	
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn=true))
-	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+	FDamageEffectParams DamageEffectParams;
 	
 
 protected:

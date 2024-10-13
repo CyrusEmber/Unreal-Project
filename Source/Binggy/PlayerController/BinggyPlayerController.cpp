@@ -82,8 +82,9 @@ void ABinggyPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ABinggyPlayerController::CrouchPressed);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABinggyPlayerController::Aim);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABinggyPlayerController::StopAiming);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABinggyPlayerController::Fire);
-		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABinggyPlayerController::StopFiring);
+		// TODO
+		/*EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABinggyPlayerController::Fire);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABinggyPlayerController::StopFiring);*/
 	}
 	
 	// TODO: Refactoring

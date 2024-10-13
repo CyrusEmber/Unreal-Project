@@ -11,6 +11,7 @@
 #include "Casing.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Binggy/Binggy.h"
+#include "Binggy/AbilitySystem/Abilities/BinggyAbilityTypes.h"
 
 AWeapon::AWeapon()
 {
@@ -159,7 +160,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 	}
 }
 
-void AWeapon::FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle)
+void AWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams)
 {
 }
 

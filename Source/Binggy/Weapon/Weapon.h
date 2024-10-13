@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Binggy/AbilitySystem/Abilities/BinggyAbilityTypes.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
@@ -33,7 +34,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
-	virtual void FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle);
+	virtual void FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams);
 	virtual void Drop();
 
 	// Texture for the weapon crosshairs

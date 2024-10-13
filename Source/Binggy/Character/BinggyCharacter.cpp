@@ -21,6 +21,7 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
+#include "Binggy/AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
 #include "Component/BinggyUIComponent.h"
@@ -211,7 +212,7 @@ void ABinggyCharacter::Elimination()
 
 void ABinggyCharacter::MulticastElimination_Implementation()
 {
-	bElimmed = true;
+	// bElimmed = true;
 	PlayElimMontage();
 
 	GetCharacterMovement()->DisableMovement();
@@ -235,6 +236,9 @@ void ABinggyCharacter::MulticastElimination_Implementation()
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->WakeAllRigidBodies();
 	GetMesh()->bBlendPhysics = true;
+
+	// Handle ASC
+	OnAbilitySystemUninitialized();
 
 	// Optionally, apply an impulse to the ragdoll
 	//FVector Impulse = FVector(0, 0, 200.0f);
@@ -289,11 +293,6 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	ABinggyPlayerState* BinggyPlayerState = GetBinggyPlayerState();
 	check(BinggyPlayerState);
 	UBinggyAbilitySystemComponent* AbilitySystemComponent = Cast<UBinggyAbilitySystemComponent>(BinggyPlayerState->GetAbilitySystemComponent());
-
-	if (AbilitySystemComponent->GetAvatarActor() != this)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Not equal")));
-	}
 	
 	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
 
@@ -341,14 +340,9 @@ void ABinggyCharacter::InitAbilityActorInfo()
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));*/
             }
 	}
-	// The health component and experience component can broadcast initial value to overlay
-	HealthComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
-	ExperienceComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
-
-
 	
+	OnAbilitySystemInitialized();
 	
-
 	
 
 	// TODO: Refactor
@@ -358,18 +352,20 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	}*/
 }
 
-
-
-void ABinggyCharacter::ElimTimerFinished()
+void ABinggyCharacter::OnAbilitySystemInitialized()
 {
-	ABinggyGameMode* BinggyGameMode = GetWorld()->GetAuthGameMode<ABinggyGameMode>();
-	if (BinggyGameMode) {
-		BinggyGameMode->RequestRespawn(this, Controller);
-	}
+	Super::OnAbilitySystemInitialized();
+	ExperienceComponent->InitializeWithAbilitySystem(GetBinggyAbilitySystemComponent());
 }
 
+void ABinggyCharacter::OnAbilitySystemUninitialized()
+{
+	// The health component and experience component can broadcast initial value to overlay
+	Super::OnAbilitySystemUninitialized();
+	ExperienceComponent->UninitializeFromAbilitySystem();
+}
 
-void ABinggyCharacter::PlayHitReactMontage()
+/*void ABinggyCharacter::PlayHitReactMontage()
 {
 	if (CombatComponent == nullptr || CombatComponent->EquippedWeapon == nullptr) {
 		return;
@@ -380,7 +376,7 @@ void ABinggyCharacter::PlayHitReactMontage()
 		FName SectionName = FName("Default");
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
-}
+}*/
 
 // TODO
 void ABinggyCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)

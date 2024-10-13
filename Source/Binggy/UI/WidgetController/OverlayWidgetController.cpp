@@ -3,14 +3,16 @@
 
 #include "OverlayWidgetController.h"
 
+#include "SkillMenuWidgetController.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
 
 
 void UOverlayWidgetController::BroadcastInitialValue()
 {
 	// Super is empty
 	Super::BroadcastInitialValue();
-
+	BroadcastAbilityInfoForAllAbilities();
 }
 
 // GetGameplayAttributeValueChangeDelegate this happens when certain attribute changes value
@@ -44,6 +46,31 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				}
 		);
 	}
+	AbilitySystemComponent->AbilityStatusChanged.AddUObject(this, &UOverlayWidgetController::BroadcastAbilityInfo);
+}
+
+void UOverlayWidgetController::BroadcastAbilityInfo(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag,
+	const FGameplayTag& InputTag) const
+{
+	if (AbilityInfo)
+	{
+		FBinggyAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
+		if (StatusTag.IsValid())
+		{
+			Info.StatusTag = StatusTag;
+		}
+		if (InputTag.IsValid())
+		{
+			Info.InputTag = InputTag;
+		}
+		AbilityInfoDelegate.Broadcast(Info);
+	}
+}
+
+void UOverlayWidgetController::UnbindDelegates()
+{
+	MessageWidgetRowDelegate.RemoveAll(this);
+	AbilitySystemComponent->AbilityStatusChanged.RemoveAll(this);
 }
 
 

@@ -8,13 +8,9 @@
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemGlobals.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-#include "Binggy/Interface/CombatInterface.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/PlayerState.h"
-#include "Kismet/GameplayStatics.h"
 
 UBinggyAttributeSet::UBinggyAttributeSet()
 {
@@ -107,16 +103,18 @@ bool UBinggyAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackDat
 void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+	// Stops all calculation when the actor dies, TODO: revive and refactor
+	if (bOutOfHealth)
+	{
+		return;
+	}
+	
 	FEffectProperties Props;
 	SetEffectProperty(Data, Props);
 
-	// Meta attribute for damage
-	const float LocalIncomingDamage = GetDamage();
-
 	// Extract Information
-	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
-	AActor* Instigator = EffectContext.GetOriginalInstigator();
-	AActor* Causer = EffectContext.GetEffectCauser();
+	AActor* Instigator = Props.EffectContextHandle.GetOriginalInstigator();
+	AActor* Causer = Props.EffectContextHandle.GetEffectCauser();
 
 	// GEngine->AddOnScreenDebugMessage(-1, 4.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
 	// Ensure Health and Mana do not go below 0 or above their max values
@@ -131,31 +129,7 @@ void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-
-		if (LocalIncomingDamage > 0.f)
-		{
-			const float NewHealth = GetHealth() - LocalIncomingDamage;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-			
-			// GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
-			const bool bFatal = NewHealth <= 0.f;
-			
-
-			if (!bFatal)
-			{
-				// TODO
-			}
-			// Show the damage text when damage > 0
-			// UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle)
-			ShowFloatingText(Props, LocalIncomingDamage, UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle));
-			
-			// Get Bone name and apply impulse according to damage
-			Props.EffectContextHandle.GetHitResult()->BoneName;
-			
-			
-			SetDamage(0.f);
-		}
-
+		HandleDamage(Props);
 	}
 	else if (Data.EvaluatedData.Attribute == GetHealingAttribute())
     	{
@@ -223,6 +197,7 @@ void UBinggyAttributeSet::SetEffectProperty(const FGameplayEffectModCallbackData
 		}
 	}
 
+	// Target is the owner
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid()) {
 		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
 		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
@@ -246,6 +221,71 @@ void UBinggyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float
 	}
 }
 
+void UBinggyAttributeSet::HandleDamage(const FEffectProperties& Props)
+{
+	// Meta attribute for damage
+	const float LocalIncomingDamage = GetDamage();
+
+	if (LocalIncomingDamage > 0.f)
+	{
+		const float NewHealth = GetHealth() - LocalIncomingDamage;
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			
+		// GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Character: %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth()));
+		const bool bFatal = NewHealth <= 0.f;
+			
+
+		if (!bFatal)
+		{
+			// TODO
+		}
+		// Show the damage text when damage > 0
+		// UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle)
+		ShowFloatingText(Props, LocalIncomingDamage, UUtilityLibrary::IsCriticalHit(Props.EffectContextHandle));
+			
+		// Get Bone name and apply impulse according to damage
+		Props.EffectContextHandle.GetHitResult()->BoneName;
+			
+		SetDamage(0.f);
+	}
+	
+	// Success debuff effect
+	if (UUtilityLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+	{
+		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+		FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext();
+		EffectContext.AddSourceObject(Props.SourceAvatarActor);
+		const FGameplayTag DamageType = UUtilityLibrary::GetDamageType(Props.EffectContextHandle);
+		const float DebuffDamage = UUtilityLibrary::GetDebuffDamage(Props.EffectContextHandle);
+		const float DebuffDuration = UUtilityLibrary::GetDebuffDuration(Props.EffectContextHandle);
+		const float DebuffFrequency = UUtilityLibrary::GetDebuffFrequency(Props.EffectContextHandle);
+		FString DebuffName = FString::Printf(TEXT("DynamicDebuff_%s"), *DamageType.ToString());
+		UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(DebuffName));
+		Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+		Effect->Period = DebuffFrequency;
+		Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
+		
+		Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+        Effect->StackLimitCount = 1;
+
+		int32 Idx = Effect->Modifiers.Num();
+		Effect->Modifiers.SetNum(Idx + 1);
+
+		FGameplayModifierInfo& InfoDamage = Effect->Modifiers[Idx];
+		InfoDamage.ModifierMagnitude = FScalableFloat(DebuffDamage);
+		InfoDamage.ModifierOp = EGameplayModOp::Additive;
+		InfoDamage.Attribute = GetDamageAttribute();
+		
+		FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f);
+		
+		MutableSpec->DynamicGrantedTags.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %s"), *GameplayTags.DamageTypesToDebuffs[DamageType].GetTagName().ToString()));
+		// TODO: we could change the level, need test on the granted tags
+		// Props.TargetASC->AddLooseGameplayTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+		Props.SourceASC->ApplyGameplayEffectSpecToTarget(*MutableSpec, Props.TargetASC);
+	}
+}
+
 void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UBinggyAttributeSet, Health, OldValue);
@@ -256,8 +296,8 @@ void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)
 	
 	if (CurrentHealth <= 0.0f)
 	{
-		// TODO: this is working twice
-		// OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+		// TODO: this is working twice, this is for the client ASC to broadcast
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
 	}
 
 	bOutOfHealth = (CurrentHealth <= 0.0f);

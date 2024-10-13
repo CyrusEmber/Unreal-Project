@@ -43,9 +43,41 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+
+	// Debuff damage
+	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+	for (auto& Pair : GameplayTags.DamageTypesToDebuffs)
+	{
+		const FGameplayTag& DamageType = Pair.Key;
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageType);
+		if (DamageTypeValue == 0.f) { continue; }
+		
+		
+		const float DebuffChance = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Chance);
+		const bool bDebuff = FMath::RandRange(0, 100) < DebuffChance;
+		
+		if (bDebuff)
+		{
+			// Success debuff
+			FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
+			const float DebuffDamage = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Damage);
+			const float DebuffDuration = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Duration);
+			const float DebuffFrequency = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Frequency);
+			UUtilityLibrary::SetIsSuccessfulDebuff(ContextHandle, true);
+			UUtilityLibrary::SetDamageType(ContextHandle, DamageType);
+			UUtilityLibrary::SetDebuffDamage(ContextHandle, DebuffDamage);
+			UUtilityLibrary::SetDebuffDuration(ContextHandle, DebuffDuration);
+			UUtilityLibrary::SetDebuffFrequency(ContextHandle, DebuffFrequency);
+		}
+		
+		
+	}
+	
+	
+	
 	
 
-	// Get Damage Set by Caller Magnitude
+	// Get Damage Set by Caller Magnitude TODO
 	float Damage = 0.f;
 	for (auto& Pair : FBinggyGameplayTags::Get().DamageTypesToResistanceTypes)
 	{

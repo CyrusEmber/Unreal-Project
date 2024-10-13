@@ -3,6 +3,8 @@
 
 #include "BinggyGameModeBase.h"
 
+#include "GameFramework/PlayerState.h"
+
 void ABinggyGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();

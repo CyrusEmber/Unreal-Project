@@ -33,7 +33,7 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 	
 }
 
-void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FGameplayEffectSpecHandle& ProjectileDamageSpecHandle)
+void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams)
 {
 	Super::Fire(HitTarget);
 	if (!HasAuthority()) {
@@ -55,7 +55,7 @@ void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FGameplayEff
 				// TODO: Defered Spawn?
 				AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
 				
-				Projectile->DamageEffectSpecHandle = ProjectileDamageSpecHandle;
+				Projectile->DamageEffectParams = ProjectileDamageEffectParams;
 			}
 		}
 	}

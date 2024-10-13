@@ -75,6 +75,10 @@ protected:
 	
 	virtual void InitAbilityActorInfo() override;
 
+	virtual void OnAbilitySystemInitialized() override;
+
+	virtual void OnAbilitySystemUninitialized() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBinggyUIComponent> UIComponent;
 
@@ -116,14 +120,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ElimMontage;
 
-	void PlayHitReactMontage();
+	// TODO? did I used it?
+	/*void PlayHitReactMontage();*/
 
-	// Elimination Need refactoring
+	/*// Elimination Need refactoring
 	bool bElimmed = false;
 	FTimerHandle ElimTimer;
 	UPROPERTY(EditDefaultsOnly)
 	float ElimDelay = 4.f;
-	void ElimTimerFinished();
+	void ElimTimerFinished();*/
 
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -133,7 +138,7 @@ public:
 	FORCEINLINE float GetAO_Pitch() const { return AO_Pitch; }
 
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	FORCEINLINE bool IsElimmed() const { return bElimmed; }
+	// FORCEINLINE bool IsElimmed() const { return bElimmed; }
 
 
 };

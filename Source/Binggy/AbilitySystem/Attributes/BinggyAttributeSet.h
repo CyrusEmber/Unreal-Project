@@ -194,7 +194,7 @@ private:
 	// Store the health before any changes 
 	float MaxHealthBeforeAttributeChange;
 	float HealthBeforeAttributeChange;
-	
+	void HandleDamage(const FEffectProperties& Props);
 	// Used to track when the health reaches 0.
 	bool bOutOfHealth;
 

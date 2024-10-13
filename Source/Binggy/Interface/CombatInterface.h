@@ -30,7 +30,7 @@ public:
 	virtual UAnimMontage* GetHitReactMontage();
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void Die() = 0;
+	virtual void Die(FVector ImpulseDirection, FName BoneName) = 0;
 
 	// TODO: this need refactoring?
 	UFUNCTION(BlueprintCallable)

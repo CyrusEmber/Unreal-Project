@@ -6,6 +6,8 @@
 #include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "Binggy/GameMode/BinggyGameMode.h"
 #include "Binggy/PlayerController/BinggyPlayerController.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
 #include "Binggy/Weapon/Weapon.h"
@@ -21,13 +23,23 @@ ABinggyCharacterBase::ABinggyCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+
 	// Initialize the component
 	HealthComponent = CreateDefaultSubobject<UBinggyHealthComponent>(TEXT("HealthComponent"));
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 
+	// Niagara components
+	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
+	BurnDebuffComponent->SetupAttachment(GetRootComponent());
+	BurnDebuffComponent->DebuffTag = GameplayTags.Debuff_Burn;
+
 	// Health bar
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+
+
+
 
 }
 
@@ -68,7 +80,7 @@ UAnimMontage* ABinggyCharacterBase::GetHitReactMontage()
 	return HitReactMontage;
 }
 
-void ABinggyCharacterBase::Die()
+void ABinggyCharacterBase::Die(FVector ImpulseDirection, FName BoneName)
 {
 	// ICombatInterface::Die();
 
@@ -76,20 +88,23 @@ void ABinggyCharacterBase::Die()
 		CombatComponent->EquippedWeapon->Drop();
 	}
 	
-	MulticastHandleDie();
+	MulticastHandleDie(ImpulseDirection, BoneName);
+
+	GetWorldTimerManager().SetTimer(ElimTimer, this, &ThisClass::ElimTimerFinished, ElimDelay);
 	
 	// TODO: not working
 	HealthBar->SetVisibility(false);
 	
 }
 
-void ABinggyCharacterBase::MulticastHandleDie_Implementation()
+void ABinggyCharacterBase::MulticastHandleDie_Implementation(FVector ImpulseDirection, FName BoneName)
 {
 	if (GetEquippedWeapon())
 	{
 		GetEquippedWeapon()->GetWeaponMesh()->SetSimulatePhysics(true);
-		GetMesh()->SetEnableGravity(true);
+		GetEquippedWeapon()->GetWeaponMesh()->SetEnableGravity(true);
 		GetEquippedWeapon()->GetWeaponMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		GetEquippedWeapon()->GetWeaponMesh()->AddImpulse(ImpulseDirection * 0.5, NAME_None, true);
 	}
 
 	GetCharacterMovement()->DisableMovement();
@@ -103,9 +118,9 @@ void ABinggyCharacterBase::MulticastHandleDie_Implementation()
 	GetMesh()->Stop();
 	GetMesh()->bPauseAnims = false;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
-
-	
+	// Impulse
+	GEngine->AddOnScreenDebugMessage(-3, 10.0f, FColor::Blue, FString::Printf(TEXT("Hit bone name: %s"), *ImpulseDirection.ToString()));
+	GetMesh()->AddImpulse(ImpulseDirection, BoneName, true);
 	this->ForceNetUpdate();
 }
 
@@ -115,19 +130,20 @@ void ABinggyCharacterBase::OnAbilitySystemInitialized()
 	check(ASC);
 	
 	HealthComponent->InitializeWithAbilitySystem(ASC);
+	BurnDebuffComponent->InitializeWithAbilitySystem(ASC);
 	// Initialize game tag here with a function TODO:
 }
 
 void ABinggyCharacterBase::OnAbilitySystemUninitialized()
 {
 	HealthComponent->UninitializeFromAbilitySystem();
+	BurnDebuffComponent->UninitializeFromAbilitySystem();
 }
 
 // Called when the game starts or when spawned
 void ABinggyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ABinggyCharacterBase::InitAbilityActorInfo()
@@ -184,6 +200,14 @@ void ABinggyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void ABinggyCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+}
+
+void ABinggyCharacterBase::ElimTimerFinished()
+{
+	ABinggyGameMode* BinggyGameMode = GetWorld()->GetAuthGameMode<ABinggyGameMode>();
+	if (BinggyGameMode) {
+		BinggyGameMode->RequestRespawn(this, Controller);
+	}
 }
 
 AWeapon* ABinggyCharacterBase::GetEquippedWeapon() const

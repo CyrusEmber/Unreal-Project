@@ -4,9 +4,11 @@
 #include "Binggy/Character/Component/BinggyHealthComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Binggy/UtilityLibrary.h"
 #include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "Binggy/AbilitySystem/FBinggyGameplayEffectContext.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/Interface/CombatInterface.h"
 #include "Binggy/PlayerState/BinggyPlayerState.h"
@@ -34,13 +36,14 @@ void UBinggyHealthComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCom
 	AbilitySystemComponent = InASC;
 	AbilitySet = AbilitySystemComponent->GetSet<UBinggyAttributeSet>();
 	AbilitySet->OnHealthChanged.AddUObject(this, &ThisClass::HandleHealthChanged);
+	//AbilitySet->OnMaxHealthChanged.AddUObject(this, &ThisClass::HandleMaxHealthChanged);
+	AbilitySet->OnOutOfHealth.AddUObject(this, &ThisClass::HandleOutOfHealth);
 	
 	// TODO: trade off
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 	AbilitySet->GetMaxHealthAttribute()).AddUObject(this, &UBinggyHealthComponent::HandleMaxHealthChanged);
 	
-	//AbilitySet->OnMaxHealthChanged.AddUObject(this, &ThisClass::HandleMaxHealthChanged);
-	AbilitySet->OnOutOfHealth.AddUObject(this, &ThisClass::HandleOutOfHealth);
+
 
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
 	OnHealthChanged.Broadcast(AbilitySet->GetHealth());
@@ -127,65 +130,87 @@ void UBinggyHealthComponent::HandleMaxHealthChanged(const FOnAttributeChangeData
 void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor* DamageCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
 	OnOutOfHealthChanged.Broadcast(NewValue);
-#if WITH_SERVER_CODE
+	
 	// Send the "GameplayEvent.Death" gameplay event through the owner's ability system.  This can be used to trigger a death gameplay ability.
-	{
+	/*{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("HandleOutOfHealth")); 
 		FGameplayEventData Payload;
 		Payload.EventTag = FBinggyGameplayTags::Get().GameplayEvent_Death;
-		/*Payload.Instigator = DamageInstigator;*/
+		/*Payload.Instigator = DamageInstigator;
 		Payload.Target = AbilitySystemComponent->GetAvatarActor();
-		/*Payload.OptionalObject = DamageEffectSpec->Def;
-		Payload.ContextHandle = DamageEffectSpec->GetEffectContext();
-		Payload.InstigatorTags = *DamageEffectSpec->CapturedSourceTags.GetAggregatedTags();
+		Payload.OptionalObject = DamageEffectSpec->Def;#1#
+		Payload.ContextHandle = EffectSpec->GetEffectContext();
+		/*Payload.InstigatorTags = *DamageEffectSpec->CapturedSourceTags.GetAggregatedTags();
 		Payload.TargetTags = *DamageEffectSpec->CapturedTargetTags.GetAggregatedTags();
-		Payload.EventMagnitude = DamageMagnitude;*/
+		Payload.EventMagnitude = DamageMagnitude;
 
 		FScopedPredictionWindow NewScopedWindow(AbilitySystemComponent, true);
-		/*GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Death Tag Sent"));
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Activated Ability: %i"), AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload)));
-		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);*/
-	}
+		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+	}*/
+	
+// Only compile in the server
+#if WITH_SERVER_CODE
+
 
 	// TODO: is it really health related problem?
 	// Send XP to instigator
 	// Send a gameplay event only when the actor has a combat interface, effect instigator is by default player state
-	
-	if (ABinggyPlayerState* PS = Cast<ABinggyPlayerState>(EffectInstigator))
+	// Only happens in the server because ApplyGameplayEffectToTarget only working with server version ASC
+	if (GetOwnerRole() == ROLE_Authority)
 	{
-		if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(PS->GetPawn()))
+		if (ABinggyPlayerState* PS = Cast<ABinggyPlayerState>(EffectInstigator))
 		{
-			// const int32 TargetLevel = CombatInterface->GetPlayerLevel();
-			// const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
-			/*const float XPReward = CombatInterface->GetKilledExperience();
-			const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
-			FGameplayEventData Payload;
-			Payload.EventTag = GameplayTags.Attributes_Meta_Exp;
-			Payload.EventMagnitude = XPReward;
-			// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PS->GetPawn(), Payload.EventTag, Payload);*/
-			// Changed from event to apply gameplay effect
-			UGameplayEffect* GEXP = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("XP")));
-			GEXP->DurationPolicy = EGameplayEffectDurationType::Instant;
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(PS->GetPawn()))
+			{
+				// const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+				// const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
+				/*const float XPReward = CombatInterface->GetKilledExperience();
+				const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+				FGameplayEventData Payload;
+				Payload.EventTag = GameplayTags.Attributes_Meta_Exp;
+				Payload.EventMagnitude = XPReward;
+				// AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(PS->GetPawn(), Payload.EventTag, Payload);*/
+				// Changed from event to apply gameplay effect
+				UGameplayEffect* GEXP = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("XP")));
+				GEXP->DurationPolicy = EGameplayEffectDurationType::Instant;
 
-			int32 Idx = GEXP->Modifiers.Num();
-			GEXP->Modifiers.SetNum(Idx + 1);
+				int32 Idx = GEXP->Modifiers.Num();
+				GEXP->Modifiers.SetNum(Idx + 1);
 
-			FGameplayModifierInfo& InfoXP = GEXP->Modifiers[Idx];
-			const float XPReward = CombatInterface->GetKilledExperience();
-			InfoXP.ModifierMagnitude = FScalableFloat(XPReward);
-			InfoXP.ModifierOp = EGameplayModOp::Additive;
-			InfoXP.Attribute = UBinggyExperienceSet::GetExperienceAttribute();
+				FGameplayModifierInfo& InfoXP = GEXP->Modifiers[Idx];
+				const float XPReward = CombatInterface->GetKilledExperience();
+				InfoXP.ModifierMagnitude = FScalableFloat(XPReward);
+				InfoXP.ModifierOp = EGameplayModOp::Additive;
+				InfoXP.Attribute = UBinggyExperienceSet::GetExperienceAttribute();
 
-			AbilitySystemComponent->ApplyGameplayEffectToTarget(GEXP, PS->GetAbilitySystemComponent(), 1.0f, AbilitySystemComponent->MakeEffectContext());
+				AbilitySystemComponent->ApplyGameplayEffectToTarget(GEXP, PS->GetAbilitySystemComponent(), 1.0f, AbilitySystemComponent->MakeEffectContext());
+			}
 		}
+		// Set Net Execution Policy
+		FGameplayEventData Payload;
+		
+		Payload.ContextHandle = EffectSpec->GetContext();
+		if (Payload.ContextHandle.GetHitResult())
+		
+		AbilitySystemComponent->HandleGameplayEvent(FBinggyGameplayTags::Get().GameplayEvent_Death, &Payload);
 	}
+
+
+
+
+
+
 	
-#endif // #if WITH_SERVER_CODE
-	
+#endif // #if WITH_SERVER_CODE			
 	// This directly activate the current Death ability owned by the ASC
-	FGameplayTagContainer TagContainer;
-	TagContainer.AddTag(FBinggyGameplayTags::Get().GameplayEvent_Death);
-	AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
+	/*FGameplayTagContainer TagContainer;
+	TagContainer.AddTag(FBinggyGameplayTags::Get().GameplayEvent_Death);*/
+	// AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
+
+	
+	// Get Dealth impluse
+	// 
 
 
 	// Create dynamic gameplay effect at runtime

@@ -59,13 +59,13 @@ struct  FBinggyGameplayTags
 	/* Damage Type Tag */
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Ice;
-	FGameplayTag Damage_Lighting;
+	FGameplayTag Damage_Lightning;
 	FGameplayTag Damage_Physical;
 
 	/* Resistance Type Tag */
 	FGameplayTag Resistance_Fire;
 	FGameplayTag Resistance_Ice;
-	FGameplayTag Resistance_Lighting;
+	FGameplayTag Resistance_Lightning;
 	FGameplayTag Resistance_Physical;
 	
 	/* Damage to resistance mapping */
@@ -75,10 +75,12 @@ struct  FBinggyGameplayTags
 	FGameplayTag Ability_None;
 	FGameplayTag Ability_Fire_FireBall;
 	FGameplayTag Ability_Lighting_LightingBall;
+	FGameplayTag Ability_Ice_IceBall;
 
 	/* Cooldowns */
 	FGameplayTag Cooldown_Fire_FireBall;
 	FGameplayTag Cooldown_Lighting_LightingBall;
+	FGameplayTag Cooldown_Ice_IceBall;
 
 	/* Ability Status Tag */
 	FGameplayTag Ability_Status_Locked;
@@ -86,6 +88,18 @@ struct  FBinggyGameplayTags
 	FGameplayTag Ability_Status_Equipped;
 
 	/* TODO Ability Type Tag */
+
+	/* Debuff Tag */
+	FGameplayTag Debuff_Burn;
+	FGameplayTag Debuff_Frost;
+
+	FGameplayTag Debuff_Chance;
+	FGameplayTag Debuff_Damage;
+	FGameplayTag Debuff_Duration;
+	FGameplayTag Debuff_Frequency;
+
+	/* Mapping damage type to debuff */
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 
 
 	/* Event Tag */

@@ -14,7 +14,8 @@
 				"GameplayAbilities",
 				"CoreUObject",
 				"EnhancedInput",
-				"AIModule"
+				"AIModule",
+				"Niagara"
 			]
 		}
 	],
@@ -37,6 +38,11 @@
 		{
 			"Name": "PhysicsControl",
 			"Enabled": true
+		},
+		{
+			"Name": "CustomizableInteractionPlugin",
+			"Enabled": true,
+			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/customizable-interaction-plugin"
 		}
 	]
 }
