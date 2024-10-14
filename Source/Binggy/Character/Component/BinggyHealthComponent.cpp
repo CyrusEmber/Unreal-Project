@@ -127,6 +127,7 @@ void UBinggyHealthComponent::HandleMaxHealthChanged(const FOnAttributeChangeData
 
 void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor* DamageCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
+	// TODO: broadcast effectspec
 	OnOutOfHealthChanged.Broadcast(NewValue);
 	
 	// Send the "GameplayEvent.Death" gameplay event through the owner's ability system.  This can be used to trigger a death gameplay ability.

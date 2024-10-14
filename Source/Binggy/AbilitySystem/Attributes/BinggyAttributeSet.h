@@ -191,6 +191,7 @@ public:
 private:
 	void SetEffectProperty(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
 	void ShowFloatingText(const FEffectProperties& Props, float InDamage, bool bIsCriticalHit) const;
+	void Debuff(const FEffectProperties& Props);
 	// Store the health before any changes 
 	float MaxHealthBeforeAttributeChange;
 	float HealthBeforeAttributeChange;

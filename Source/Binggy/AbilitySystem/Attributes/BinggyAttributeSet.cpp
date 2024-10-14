@@ -103,14 +103,18 @@ bool UBinggyAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackDat
 void UBinggyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-	// Stops all calculation when the actor dies, TODO: revive and refactor
-	if (bOutOfHealth)
-	{
-		return;
-	}
 	
 	FEffectProperties Props;
 	SetEffectProperty(Data, Props);
+
+	// Remove all damage or gameplay effects, TODO: refactor and remove even debuff without damage. Should use query
+	if (bOutOfHealth)
+	{
+		// Owing character
+		// Props.TargetASC->GetActiveEffects()
+		Props.TargetASC->RemoveActiveGameplayEffectBySourceEffect(Data.EffectSpec.Def->GetClass(), nullptr);
+		return;
+	}
 
 	// Extract Information
 	AActor* Instigator = Props.EffectContextHandle.GetOriginalInstigator();
@@ -221,6 +225,44 @@ void UBinggyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float
 	}
 }
 
+void UBinggyAttributeSet::Debuff(const FEffectProperties& Props)
+{
+	if (UUtilityLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+	{
+		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
+		FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext();
+		EffectContext.AddSourceObject(Props.SourceAvatarActor);
+		const FGameplayTag DamageType = UUtilityLibrary::GetDamageType(Props.EffectContextHandle);
+		const float DebuffDamage = UUtilityLibrary::GetDebuffDamage(Props.EffectContextHandle);
+		const float DebuffDuration = UUtilityLibrary::GetDebuffDuration(Props.EffectContextHandle);
+		const float DebuffFrequency = UUtilityLibrary::GetDebuffFrequency(Props.EffectContextHandle);
+		FString DebuffName = FString::Printf(TEXT("DynamicDebuff_%s"), *DamageType.ToString());
+		UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(DebuffName));
+		Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+		Effect->Period = DebuffFrequency;
+		Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
+		
+		Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+		Effect->StackLimitCount = 1;
+
+		int32 Idx = Effect->Modifiers.Num();
+		Effect->Modifiers.SetNum(Idx + 1);
+
+		FGameplayModifierInfo& InfoDamage = Effect->Modifiers[Idx];
+		InfoDamage.ModifierMagnitude = FScalableFloat(DebuffDamage);
+		InfoDamage.ModifierOp = EGameplayModOp::Additive;
+		InfoDamage.Attribute = GetDamageAttribute();
+		
+		FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f);
+		
+		MutableSpec->DynamicGrantedTags.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %s"), *GameplayTags.DamageTypesToDebuffs[DamageType].GetTagName().ToString()));
+		// TODO: we could change the level, need test on the granted tags
+		// Props.TargetASC->AddLooseGameplayTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+		Props.SourceASC->ApplyGameplayEffectSpecToTarget(*MutableSpec, Props.TargetASC);
+	}
+}
+
 void UBinggyAttributeSet::HandleDamage(const FEffectProperties& Props)
 {
 	// Meta attribute for damage
@@ -250,40 +292,7 @@ void UBinggyAttributeSet::HandleDamage(const FEffectProperties& Props)
 	}
 	
 	// Success debuff effect
-	if (UUtilityLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
-	{
-		const FBinggyGameplayTags& GameplayTags = FBinggyGameplayTags::Get();
-		FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext();
-		EffectContext.AddSourceObject(Props.SourceAvatarActor);
-		const FGameplayTag DamageType = UUtilityLibrary::GetDamageType(Props.EffectContextHandle);
-		const float DebuffDamage = UUtilityLibrary::GetDebuffDamage(Props.EffectContextHandle);
-		const float DebuffDuration = UUtilityLibrary::GetDebuffDuration(Props.EffectContextHandle);
-		const float DebuffFrequency = UUtilityLibrary::GetDebuffFrequency(Props.EffectContextHandle);
-		FString DebuffName = FString::Printf(TEXT("DynamicDebuff_%s"), *DamageType.ToString());
-		UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(DebuffName));
-		Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
-		Effect->Period = DebuffFrequency;
-		Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
-		
-		Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
-        Effect->StackLimitCount = 1;
-
-		int32 Idx = Effect->Modifiers.Num();
-		Effect->Modifiers.SetNum(Idx + 1);
-
-		FGameplayModifierInfo& InfoDamage = Effect->Modifiers[Idx];
-		InfoDamage.ModifierMagnitude = FScalableFloat(DebuffDamage);
-		InfoDamage.ModifierOp = EGameplayModOp::Additive;
-		InfoDamage.Attribute = GetDamageAttribute();
-		
-		FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f);
-		
-		MutableSpec->DynamicGrantedTags.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
-		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %s"), *GameplayTags.DamageTypesToDebuffs[DamageType].GetTagName().ToString()));
-		// TODO: we could change the level, need test on the granted tags
-		// Props.TargetASC->AddLooseGameplayTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
-		Props.SourceASC->ApplyGameplayEffectSpecToTarget(*MutableSpec, Props.TargetASC);
-	}
+	Debuff(Props);
 }
 
 void UBinggyAttributeSet::OnRep_Health(FGameplayAttributeData& OldValue)

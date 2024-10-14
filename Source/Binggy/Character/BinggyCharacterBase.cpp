@@ -119,8 +119,8 @@ void ABinggyCharacterBase::MulticastHandleDie_Implementation(FVector ImpulseDire
 	GetMesh()->bPauseAnims = false;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
-	// Handle ASC
-	OnAbilitySystemUninitialized();
+	// Handle ASC TODO: it stops the abilitysystem before the damage take place
+	// OnAbilitySystemUninitialized();
 	
 	// Impulse
 	GetMesh()->AddImpulse(ImpulseDirection, BoneName, true);

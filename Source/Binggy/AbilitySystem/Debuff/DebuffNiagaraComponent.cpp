@@ -44,8 +44,8 @@ void UDebuffNiagaraComponent::UninitializeFromAbilitySystem()
 
 void UDebuffNiagaraComponent::DebuffChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-
-	if (NewCount > 0)
+	const bool bOwnerValid = IsValid(GetOwner());
+	if (bOwnerValid && NewCount > 0)
 	{
 		Activate();
 	} else
@@ -56,7 +56,5 @@ void UDebuffNiagaraComponent::DebuffChanged(const FGameplayTag CallbackTag, int3
 
 void UDebuffNiagaraComponent::HandleOnOutOfHealth(float NewValue)
 {
-	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Death of Niagaracomponent")); 
-
 	Deactivate();
 }
