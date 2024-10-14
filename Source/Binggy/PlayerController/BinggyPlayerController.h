@@ -47,7 +47,9 @@ public:
 	ABinggyPlayerController();
 	
 	void SetHUDScore(float Score);
+	
 	virtual void OnPossess(APawn* InPawn) override;
+	// Client acknowledge, initialize client HUD
 	virtual void AcknowledgePossession(APawn* P) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;

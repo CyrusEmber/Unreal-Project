@@ -27,7 +27,7 @@ void ABinggyGameMode::PlayerElimiated(ABinggyCharacter* ElimmedCharacter, ABingg
 		AttackerPlayerState->AddToScore(-1.0f);
 	}
 	if (ElimmedCharacter) {
-		ElimmedCharacter->Elimination();
+		// ElimmedCharacter->Elimination();
 	}
 }
 
@@ -40,6 +40,11 @@ void ABinggyGameMode::RequestRespawn(ACharacter* ElimmedCharacter, AController* 
 	if (ElimmedController && PlayerStarts.Num() != 0) {
 		int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 		RestartPlayerAtPlayerStart(ElimmedController, PlayerStarts[RandomIndex]);
+		/*APawn* NewPawn = SpawnDefaultPawnFor(ElimmedController, PlayerStarts[RandomIndex]);
+		ElimmedController->Possess(NewPawn);*/
+		// ElimmedController now has the character, TODO: have I set the server ASC to all clients?
+		// Cast<ABinggyCharacter>(ElimmedController->GetPawn())->ClientInitializeASC();
+		
 	}
 }
 

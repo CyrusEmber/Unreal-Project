@@ -61,6 +61,7 @@ void UBinggyGameplayAbility_Spell::SpawnProjectile(const FVector TargetLocation)
 
 void UBinggyGameplayAbility_Spell::FireSpell(const FVector TargetLocation, const FGameplayEffectSpecHandle& SpecHandle)
 {
+	// GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Fire Spell Started"));
 	if (bCanFire)
 	{
 		bCanFire = false;

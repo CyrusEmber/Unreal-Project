@@ -201,7 +201,7 @@ void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCompo
 {
 	AbilitySystemComponent = InASC;
 	ExperienceSet = AbilitySystemComponent->GetSet<UBinggyExperienceSet>();
-	// TODO: Initialized 4 times?
+	// Initialized 4 times for a two players (client and server) game.
 
 	// Set experience variable
 	check(LevelInfo);
@@ -229,14 +229,11 @@ void UExperienceComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCompo
 
 void UExperienceComponent::UninitializeFromAbilitySystem()
 {
-	AbilitySystemComponent = nullptr;
-	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetExperienceAttribute()).RemoveAll(this);
-
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetLevelAttribute()).RemoveAll(this);
-
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetAttributePointsAttribute()).RemoveAll(this);
-
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ExperienceSet->GetSkillPointsAttribute()).RemoveAll(this);
+
+	AbilitySystemComponent = nullptr;
 }
 

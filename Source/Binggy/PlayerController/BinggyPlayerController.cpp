@@ -30,7 +30,11 @@ void ABinggyPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	check(DefaultMappingContext);
-	BinggyHUD = Cast<ABinggyHUD>(GetHUD());
+	if (!BinggyHUD)
+	{
+		BinggyHUD = Cast<ABinggyHUD>(GetHUD());
+	}
+	
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -50,13 +54,27 @@ void ABinggyPlayerController::OnPossess(APawn* InPawn)
 		BinggyPlayerState->AddToScore(0);
 	}
 
-	// Initialize HUD
-	// BinggyHUD->InitOverlay(GetPlayerState<ABinggyPlayerState>());
+	// Initialize HUD for server
+	if (!BinggyHUD) {
+		BinggyHUD = Cast<ABinggyHUD>(GetHUD());
+	}
+	if (IsLocalController())
+	{
+		BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
+	}
 }
 
 void ABinggyPlayerController::AcknowledgePossession(class APawn* P)
 {
 	Super::AcknowledgePossession(P);
+	if (IsLocalController())
+	{
+		// Initialize HUD
+		if (BinggyHUD) {
+			BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
+		}
+	}
+
 }
 
 void ABinggyPlayerController::Tick(float DeltaTime)

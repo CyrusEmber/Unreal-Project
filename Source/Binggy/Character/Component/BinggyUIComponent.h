@@ -13,6 +13,8 @@ class USkillMenuWidgetController;
 class UAttributeMenuWidgetController;
 class UOverlayWidgetController;
 
+
+// Not Used class, the widget controller is stored in the HUD
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BINGGY_API UBinggyUIComponent : public UActorComponent
 {

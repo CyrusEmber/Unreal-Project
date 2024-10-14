@@ -104,7 +104,7 @@ void ABinggyCharacterBase::MulticastHandleDie_Implementation(FVector ImpulseDire
 		GetEquippedWeapon()->GetWeaponMesh()->SetSimulatePhysics(true);
 		GetEquippedWeapon()->GetWeaponMesh()->SetEnableGravity(true);
 		GetEquippedWeapon()->GetWeaponMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		GetEquippedWeapon()->GetWeaponMesh()->AddImpulse(ImpulseDirection * 0.5, NAME_None, true);
+		// GetEquippedWeapon()->GetWeaponMesh()->AddImpulse(ImpulseDirection * 0.5, NAME_None, true);
 	}
 
 	GetCharacterMovement()->DisableMovement();
@@ -118,8 +118,11 @@ void ABinggyCharacterBase::MulticastHandleDie_Implementation(FVector ImpulseDire
 	GetMesh()->Stop();
 	GetMesh()->bPauseAnims = false;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	// Handle ASC
+	OnAbilitySystemUninitialized();
+	
 	// Impulse
-	GEngine->AddOnScreenDebugMessage(-3, 10.0f, FColor::Blue, FString::Printf(TEXT("Hit bone name: %s"), *ImpulseDirection.ToString()));
 	GetMesh()->AddImpulse(ImpulseDirection, BoneName, true);
 	this->ForceNetUpdate();
 }

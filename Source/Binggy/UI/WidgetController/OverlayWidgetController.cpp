@@ -24,7 +24,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	if (UBinggyAbilitySystemComponent* BinggyAbilitySystemComponent = GetBinggyAbilitySystemComponent())
 	{
 		// Add ability is executed in PossessedBy, and HUD initialization is afterward
-		BroadcastAbilityInfoForAllAbilities();
 		check(MessageWidgetDataTable);
 		
 		// Add a callback with lambda, output message information

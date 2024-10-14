@@ -156,7 +156,6 @@ void ABinggyCharacter::BeginPlay()
 	{
 		HealthBar->SetVisibility(false);
 	}
-	
 }
 
 void ABinggyCharacter::Tick(float DeltaTime)
@@ -196,62 +195,6 @@ void ABinggyCharacter::PlayElimMontage()
 	}
 }
 
-void ABinggyCharacter::Elimination()
-{
-	if (CombatComponent && CombatComponent->EquippedWeapon) {
-		CombatComponent->EquippedWeapon->Drop();
-	}
-	MulticastElimination();
-	// GetWorldTimerManager().SetTimer(ElimTimer, this, &ThisClass::ElimTimerFinished, ElimDelay);
-
-
-	// Avoid collision
-	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
-void ABinggyCharacter::MulticastElimination_Implementation()
-{
-	// bElimmed = true;
-	PlayElimMontage();
-
-	GetCharacterMovement()->DisableMovement();
-	GetCharacterMovement()->StopMovementImmediately();
-
-	if (ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController()) {
-		DisableInput(BinggyPlayerController);
-	}
-
-	// Stop any running animations
-	//if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
-	//{
-	//	AnimInstance->StopAllMontages(1.f); // Adjust blend out time as needed
-	//}
-
-	// Enable physics on the skeletal mesh
-	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
-	//// Disable hit event
-	////GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-	GetMesh()->SetAllBodiesSimulatePhysics(true);
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->WakeAllRigidBodies();
-	GetMesh()->bBlendPhysics = true;
-
-	// Handle ASC
-	OnAbilitySystemUninitialized();
-
-	// Optionally, apply an impulse to the ragdoll
-	//FVector Impulse = FVector(0, 0, 200.0f);
-	//GetMesh()->AddImpulseToAllBodiesBelow(Impulse, GetMesh()->GetBoneName(0), true);
-
-	// Enable ragdoll
-	//if (BinggyPlayerController) {
-	//	DisableInput(BinggyPlayerController);
-	//}
-}
-
-
-
 void ABinggyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -259,18 +202,16 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	// Make sure add ability first then initialize the overlay
 	AddCharacterAbilities();
 	InitAbilityActorInfo();
-	UBinggyAbilitySystemComponent* AbilitySystemComponent = GetBinggyAbilitySystemComponent();
 	// Fixme this is not working
 	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
-	// TODO: Refactoring
-	
-	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+	// TODO: Refactoring, remove duplicate event after respawn
+	/*AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &ThisClass::HitReactTagChanged
 	);
 
 	AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_Death, EGameplayTagEventType::NewOrRemoved).AddUObject(
 	this, &ThisClass::DeathTagChanged
-	);
+	);*/
 }
 
 void ABinggyCharacter::OnRep_PlayerState()
@@ -278,13 +219,6 @@ void ABinggyCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 	// Init ability actor info for the client
 	InitAbilityActorInfo();
-	
-}
-
-int32 ABinggyCharacter::GetPlayerLevel()
-{
-	ABinggyPlayerState* BinggyPlayerState = GetPlayerState<ABinggyPlayerState>();
-	return BinggyPlayerState->GetPlayerLevel();
 }
 
 // TODO: Potentially check the usage of ASC or AS
@@ -295,61 +229,25 @@ void ABinggyCharacter::InitAbilityActorInfo()
 	UBinggyAbilitySystemComponent* AbilitySystemComponent = Cast<UBinggyAbilitySystemComponent>(BinggyPlayerState->GetAbilitySystemComponent());
 	
 	AbilitySystemComponent->InitAbilityActorInfo(BinggyPlayerState, this);
-
-	// Debug
-	/*UGameplayEffect* GEDebug = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Bounty")));
-	GEDebug->DurationPolicy = EGameplayEffectDurationType::Instant;
-
-	int32 Idx = GEDebug->Modifiers.Num();
-	GEDebug->Modifiers.SetNum(Idx + 1);
-
-	FGameplayModifierInfo& AttributePoints = GEDebug->Modifiers[Idx];
-	AttributePoints.ModifierMagnitude = FScalableFloat(1.0f);
-	AttributePoints.ModifierOp = EGameplayModOp::Additive;
-	AttributePoints.Attribute = UBinggyExperienceSet::GetAttributePointsAttribute();*/
-
-	// AbilitySystemComponent->ApplyGameplayEffectToSelf(GEDebug, 1.0f, AbilitySystemComponent->MakeEffectContext());
-	//AbilitySystemComponent->AbilityActorInfoSet();
-
-	/*
-	if (!HasAuthority())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Client Character Avatar name: %s"), *this->GetName()));
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Client Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));
-	}
-	*/
+	
 	InitializeDefaultAttributes();
-
-	// Initialize the health and EXP component for all clients and server, for server, you need to initialize component for server and clients, for clients, initialize component for server and clients
-
-	// Only the server abilitysystem component can 
-	/*if (HasAuthority())
-	UIComponent->InitializeWithAbilitySystem(AbilitySystemComponent);*/
 	
-	
-	
-	
-	// AttributeSet = BinggyPlayerState->GetAttributeSet();
-	// Initialize the HUD with PS, however, the client ability system component version , should initial overlay with server version ASC
-	ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController();
-	if (BinggyPlayerController) {
-            if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
-            	// UIComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
-                BinggyHUD->InitOverlay(AbilitySystemComponent);
-            	/*GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetOwner()->GetName()));
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Init Character ASC name: %s"), *AbilitySystemComponent->GetAvatarActor()->GetName()));*/
-            }
+	if (IsLocallyControlled())
+	{
+		
+		ABinggyPlayerController* BinggyPlayerController = GetBinggyPlayerController();
+		if (BinggyPlayerController) {
+			// GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Pawn name: %s"), *BinggyPlayerController->GetPawn()->GetName()));
+			/*if (ABinggyHUD* BinggyHUD = Cast<ABinggyHUD>(BinggyPlayerController->GetHUD())) {
+				// UIComponent->InitializeWithAbilitySystem(AbilitySystemComponent);
+				BinggyHUD->InitOverlay(AbilitySystemComponent);
+			}*/
+		}
 	}
+	// When character respawned, the player controller is valid but the character may not be spawned.
+
 	
 	OnAbilitySystemInitialized();
-	
-	
-
-	// TODO: Refactor
-	/*if (GetController()->IsLocalPlayerController())
-	{
-		HealthBar->SetVisibility(false, true);
-	}*/
 }
 
 void ABinggyCharacter::OnAbilitySystemInitialized()
@@ -378,7 +276,7 @@ void ABinggyCharacter::OnAbilitySystemUninitialized()
 	}
 }*/
 
-// TODO
+// TODO Refactor
 void ABinggyCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	if (OverlappingWeapon) {

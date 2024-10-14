@@ -144,6 +144,7 @@ void AWeapon::ShowPickupWidget(bool bShowWidget)
 // Firing on all machines
 void AWeapon::Fire(const FVector& HitTarget)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Fire Debug")); 
 	if (FireAnimation) {
 		WeaponMesh->PlayAnimation(FireAnimation, false);
 	}

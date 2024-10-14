@@ -6,6 +6,7 @@
 #include "BinggyGameModeBase.h"
 #include "BinggyGameMode.generated.h"
 
+
 /**
  * 
  */
@@ -20,7 +21,6 @@ class BINGGY_API ABinggyGameMode : public ABinggyGameModeBase
 public:
 	virtual void PlayerElimiated(ABinggyCharacter* ElimmedCharacter, ABinggyPlayerController* VictimController, ABinggyPlayerController* AttackerController);
 	virtual void RequestRespawn(ACharacter* ElimmedCharacter, AController* ElimmedController);
-
 	
 
 protected:

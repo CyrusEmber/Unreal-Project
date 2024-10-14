@@ -36,22 +36,17 @@ public:
 	virtual void PostInitializeComponents() override;
 	void PlayFiringMontage(bool bAiming);
 	void PlayElimMontage();
-	// Only on server
-	UFUNCTION(BlueprintCallable)
-	void Elimination();
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastElimination();
 
 
 
-	// AbilitySystem
+	// Only execute in the server, since it needs server-authoritative
 	virtual void PossessedBy(AController* NewController) override;
 
 	// PlayerState Replication Notification Callback, Init ability actor info for the client
 	virtual void OnRep_PlayerState() override;
 
-	// CombatInterface
-	virtual int32 GetPlayerLevel() override;
+	// CombatInterface TODO Set it with attribute set
+	// virtual int32 GetPlayerLevel() override;
 
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	AWeapon* OverlappingWeapon;

@@ -87,19 +87,24 @@ void ABinggyHUD::InitOverlay(UBinggyAbilitySystemComponent* InASC)
 	AbilitySystemComponent = InASC;
 	checkf(OverlayWidgetClass, TEXT("CharacterOverlayClass not set"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass not set"));
+	// Handle respawn
+	if (OverlayWidget && OverlayWidget->IsInViewport())
+	{
+		OverlayWidget->RemoveFromParent();
+	}
+
 	OverlayWidget = CreateWidget<UBinggyUserWidget>(GetWorld(), OverlayWidgetClass);
+	// Add to the viewport first then initialize in the blueprint.
 	OverlayWidget->AddToViewport();
 	
-
 	OverlayWidgetController = GetOverlayWidgetController();
+	// Could there be duplicated callbacks added?, TODO: these are set in blueprint now.
 	OverlayWidget->SetWidgetController(OverlayWidgetController);
+	/*OverlayWidgetController->BindCallbacksToDependencies();
+	OverlayWidgetController->BroadcastInitialValue();*/
 
 	
-	OverlayWidgetController->BroadcastInitialValue();
-	// Could there be duplicated callbacks added?
-	OverlayWidgetController->BindCallbacksToDependencies();
 
-	OverlayWidget->AddToViewport();
 }
 
 

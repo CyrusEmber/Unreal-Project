@@ -42,8 +42,6 @@ void UBinggyHealthComponent::InitializeWithAbilitySystem(UBinggyAbilitySystemCom
 	// TODO: trade off
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 	AbilitySet->GetMaxHealthAttribute()).AddUObject(this, &UBinggyHealthComponent::HandleMaxHealthChanged);
-	
-
 
 	// Initialize default values, TODO: driven by a spread sheet and SetNumericAttributeBase in Lyra
 	OnHealthChanged.Broadcast(AbilitySet->GetHealth());

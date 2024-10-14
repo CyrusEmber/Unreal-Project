@@ -24,6 +24,8 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnASCSet);
+
 // Default class for AI or player character, it has a health component and a combat component. It also has some common functions for a character
 UCLASS(Abstract)
 class BINGGY_API ABinggyCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
