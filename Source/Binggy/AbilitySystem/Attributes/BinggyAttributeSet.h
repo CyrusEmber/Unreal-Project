@@ -59,7 +59,8 @@ class BINGGY_API UBinggyAttributeSet : public UAttributeSet
 
 public:
 	UBinggyAttributeSet();
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	// No need to define in the header file, since no external use.
+	// virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
