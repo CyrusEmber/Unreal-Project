@@ -276,7 +276,7 @@ FGameplayEffectContextHandle UUtilityLibrary::ApplyDamageEffect(const FDamageEff
 	EffectContexthandle.AddSourceObject(SourceAvatarActor);
 	SetImpulseDirection(EffectContexthandle, DamageEffectParams.ImpulseDirection);
 	EffectContexthandle.AddHitResult(DamageEffectParams.HitResult);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Hit bone name: %s"), *DamageEffectParams.HitResult.BoneName.ToString()));
+	
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
 	for (auto& Pair : DamageEffectParams.DamageTypes)
 	{

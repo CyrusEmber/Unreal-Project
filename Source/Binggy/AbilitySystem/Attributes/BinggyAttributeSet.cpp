@@ -243,7 +243,7 @@ void UBinggyAttributeSet::Debuff(const FEffectProperties& Props)
 		Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
 		
 		Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
-		Effect->StackLimitCount = 1;
+		Effect->StackLimitCount = 2;
 
 		int32 Idx = Effect->Modifiers.Num();
 		Effect->Modifiers.SetNum(Idx + 1);

@@ -28,10 +28,6 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* OverlappedComp, AActor* Other
 			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			DamageEffectParams.ImpulseDirection = ImpulseDirection;
 			UUtilityLibrary::ApplyDamageEffect(DamageEffectParams);
-			// TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("HitComponent: %s"), *OtherComp->GetName()));
-			
-			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Hit bone name: %s"), *HitResult.BoneName.ToString()));
 		}
 		
 	}

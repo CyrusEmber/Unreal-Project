@@ -73,7 +73,9 @@ struct  FBinggyGameplayTags
 
 	/* Abilities TODO: None ability */
 	FGameplayTag Ability_None;
+	/* Fire */
 	FGameplayTag Ability_Fire_FireBall;
+	FGameplayTag Ability_Fire_FireShield;
 	FGameplayTag Ability_Lighting_LightingBall;
 	FGameplayTag Ability_Ice_IceBall;
 

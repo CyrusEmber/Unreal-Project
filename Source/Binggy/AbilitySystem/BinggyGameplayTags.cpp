@@ -163,7 +163,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Abilities.Fire.FireBall"),
 	FString("FireBall Ability Tag")
 	);
-	
+
+	GameplayTags.Ability_Fire_FireShield = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Fire.FireShield"),
+	FString("FireShield Ability Tag")
+	);
+		
 	GameplayTags.Ability_Lighting_LightingBall = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Abilities.Lighting.LightingBall"),
 	FString("LightingBall Ability Tag")

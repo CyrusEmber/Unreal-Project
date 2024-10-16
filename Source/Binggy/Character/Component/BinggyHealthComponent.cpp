@@ -190,7 +190,7 @@ void UBinggyHealthComponent::HandleOutOfHealth(AActor* EffectInstigator, AActor*
 		FGameplayEventData Payload;
 		
 		Payload.ContextHandle = EffectSpec->GetContext();
-		if (Payload.ContextHandle.GetHitResult())
+		// The hit result could be none
 		
 		AbilitySystemComponent->HandleGameplayEvent(FBinggyGameplayTags::Get().GameplayEvent_Death, &Payload);
 	}

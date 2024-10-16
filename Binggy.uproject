@@ -43,6 +43,10 @@
 			"Name": "CustomizableInteractionPlugin",
 			"Enabled": true,
 			"MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/customizable-interaction-plugin"
+		},
+		{
+			"Name": "NiagaraFluids",
+			"Enabled": true
 		}
 	]
 }
