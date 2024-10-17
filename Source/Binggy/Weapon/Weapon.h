@@ -80,9 +80,10 @@ protected:
 		UPrimitiveComponent* OtherComponent,
 		int32 OtherBodyIndex
 	);
+	void SetMeshByWeaponState();
 	// TODO
 protected:
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon")
 	USkeletalMeshComponent* WeaponMesh;
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	USphereComponent* AreaSphere;

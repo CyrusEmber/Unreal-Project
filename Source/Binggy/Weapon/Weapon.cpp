@@ -24,6 +24,7 @@ AWeapon::AWeapon()
 	WeaponMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	//WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 
 	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
 	AreaSphere->SetupAttachment(RootComponent);
@@ -34,13 +35,19 @@ AWeapon::AWeapon()
 	PickupWidget->SetupAttachment(RootComponent);
 	PickupWidget->SetDrawAtDesiredSize(true);
 	PickupWidget->SetWidgetSpace(EWidgetSpace::Screen);
+
+	
 }
 
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	this->SetReplicateMovement(true);
+	
 	if (HasAuthority()) {
+		// TODO: Set it in Cpp?
+		// AreaSphere->SetCollisionObjectType(ECC_InvisibleArea);
 		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
@@ -80,12 +87,9 @@ void AWeapon::EndSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		BinggyCharacter->SetOverlappingWeapon(nullptr);
 	}
 }
-// Only excecute on clients
-void AWeapon::OnRep_WeaponState()
+
+void AWeapon::SetMeshByWeaponState()
 {
-	//UOverHeadWidget* DebugWidget = Cast<UOverHeadWidget>(PickupWidget);
-	//FText DebugText = DebugWidget->GetDisplayText();
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, DebugText.ToString());
 	switch(WeaponState) {
 	case(EWeaponState::EWS_Equipped):
 		ShowPickupWidget(false);
@@ -94,15 +98,25 @@ void AWeapon::OnRep_WeaponState()
 		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
 	case(EWeaponState::EWS_Dropped):
-		//ShowPickupWidget(true);
+		ShowPickupWidget(true);
 		WeaponMesh->SetSimulatePhysics(true);
 		WeaponMesh->SetEnableGravity(true);
 		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		// I don't want player to kick weapon away.
-		WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		WeaponMesh->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECollisionResponse::ECR_Ignore);
+	// I don't want player to kick weapon away.
+		WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		WeaponMesh->SetCollisionResponseToChannel(ECC_HitBox, ECR_Ignore);
+		WeaponMesh->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECR_Ignore);
 		break;
 	}
+}
+
+// Only excecute on clients
+void AWeapon::OnRep_WeaponState()
+{
+	//UOverHeadWidget* DebugWidget = Cast<UOverHeadWidget>(PickupWidget);
+	//FText DebugText = DebugWidget->GetDisplayText();
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, DebugText.ToString());
+	
 }
 
 // Only excecuted on server
@@ -110,27 +124,7 @@ void AWeapon::SetWeaponState(EWeaponState State)
 {
 	// Setting this variable will call the onrep function propagate to client
 	WeaponState = State;
-	switch (WeaponState) {
-	case(EWeaponState::EWS_Equipped):
-		ShowPickupWidget(false);
-		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		WeaponMesh->SetSimulatePhysics(false);
-		WeaponMesh->SetEnableGravity(false);
-		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		break;
-	case(EWeaponState::EWS_Dropped):
-		ShowPickupWidget(true);
-		if (HasAuthority()) {
-			AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		}
-		WeaponMesh->SetSimulatePhysics(true);
-		WeaponMesh->SetEnableGravity(true);
-		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		// I dont want the character to move the weapon but it is bugged
-		WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		WeaponMesh->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECollisionResponse::ECR_Ignore);
-		break;
-	}
+	SetMeshByWeaponState();
 }
 
 void AWeapon::ShowPickupWidget(bool bShowWidget)

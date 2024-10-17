@@ -116,6 +116,11 @@ struct  FBinggyGameplayTags
 	FGameplayTag GameplayEvent_Attributes_AttributePoint;
 	FGameplayTag GameplayEvent_Meta_Exp;
 
+	/* Inventory item status Tag */
+	FGameplayTag Status_Value;
+	FGameplayTag Status_Weight;
+	FGameplayTag Status_MagzineSize;
+
 
 
 

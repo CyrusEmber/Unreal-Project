@@ -19,7 +19,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, Const, Abstract)
 class BINGGY_API UBinggyInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()
@@ -36,13 +36,5 @@ public:
 	FSlateBrush Background;*/
 
 	// TODO equipment?Description
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Display)
-	FText Description;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Display)
-	float Weight;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Display)
-	float Value;
 	
 };

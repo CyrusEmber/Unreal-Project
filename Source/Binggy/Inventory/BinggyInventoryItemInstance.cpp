@@ -11,3 +11,12 @@ void UBinggyInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimePr
 
 	DOREPLIFETIME(ThisClass, ItemDef);
 }
+
+UBinggyInventoryItemInstance::UBinggyInventoryItemInstance()
+{
+}
+
+void UBinggyInventoryItemInstance::SetItemDef(TSubclassOf<UBinggyInventoryItemDefinition> InDef)
+{
+	ItemDef = InDef;
+}
