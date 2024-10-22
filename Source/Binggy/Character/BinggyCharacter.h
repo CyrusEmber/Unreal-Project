@@ -7,6 +7,7 @@
 #include "BinggyCharacter.generated.h"
 
 
+class UBinggyInventoryComponent;
 class UBinggyUIComponent;
 class AWeapon;
 class UBinggyAbilitySystemComponent;
@@ -74,8 +75,14 @@ protected:
 
 	virtual void OnAbilitySystemUninitialized() override;
 
+	// TODO Debug component, todo private assess?
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBinggyUIComponent> UIComponent;
+ 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBinggyInventoryComponent> InventoryComponent;
+
+	
 
 
 

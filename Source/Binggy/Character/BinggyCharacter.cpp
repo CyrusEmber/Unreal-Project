@@ -22,6 +22,7 @@
 #include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Binggy/AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "Binggy/Inventory/BinggyInventoryComponent.h"
 #include "Binggy/UI/HUD/BinggyHUD.h"
 #include "Component/BinggyHealthComponent.h"
 #include "Component/BinggyUIComponent.h"
@@ -97,6 +98,7 @@ ABinggyCharacter::ABinggyCharacter()
 	// Initialize the component
 	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("ExperienceComponent"));
 	UIComponent = CreateDefaultSubobject<UBinggyUIComponent>(TEXT("UIComponent"));
+	InventoryComponent = CreateDefaultSubobject<UBinggyInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -200,8 +202,9 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	// Init ability actor info for the server, set ability system component
 	// Make sure add ability first then initialize the overlay
-	AddCharacterAbilities();
 	InitAbilityActorInfo();
+	// Init actor info first please
+	AddCharacterAbilities();
 	// Fixme this is not working
 	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
 	// TODO: Refactoring, remove duplicate event after respawn

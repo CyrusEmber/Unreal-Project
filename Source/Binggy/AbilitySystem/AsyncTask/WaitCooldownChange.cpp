@@ -64,7 +64,7 @@ void UWaitCooldownChange::OnActiveEffectAddedCallback(UAbilitySystemComponent* T
 		CooldownStart.Broadcast(TimeRemaining);
 	}
 
-	// Could Add some replication
+	// Could Add some replication TODO:
 	/*if (ASC->GetOwnerRole() == ROLE_Authority)
 	{
 		// Player is Server

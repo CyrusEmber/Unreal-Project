@@ -83,10 +83,13 @@ UBinggyInventoryItemInstance* FBinggyInventoryList::AddEntry(TSubclassOf<UBinggy
 
 
 	FBinggyInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
+	
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Hit Location: %i"), Entries.Num()));
 	NewEntry.Instance = NewObject<UBinggyInventoryItemInstance>(OwnerComponent->GetOwner());  //@TODO: Using the actor instead of component as the outer due to UE-127172
 	NewEntry.Instance->SetItemDef(ItemDef);
 	for (UBinggyInventoryItemFragment* Fragment : GetDefault<UBinggyInventoryItemDefinition>(ItemDef)->Fragments)
 	{
+		// TODO: now it is not defined
 		if (Fragment != nullptr)
 		{
 			Fragment->OnInstanceCreated(NewEntry.Instance);
@@ -148,6 +151,7 @@ UBinggyInventoryItemInstance* UBinggyInventoryComponent::AddItemDefinition(
 		
 		if (IsUsingRegisteredSubObjectList() && IsReadyForReplication() && Result)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Replication Inventory!")); 
 			AddReplicatedSubObject(Result);
 		}
 	}

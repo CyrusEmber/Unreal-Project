@@ -69,7 +69,7 @@ void ABinggyPlayerController::AcknowledgePossession(class APawn* P)
 	Super::AcknowledgePossession(P);
 	if (IsLocalController())
 	{
-		// Initialize HUD
+		// Initialize HUD for client
 		if (BinggyHUD) {
 			BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
 		}
@@ -100,6 +100,7 @@ void ABinggyPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ABinggyPlayerController::CrouchPressed);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABinggyPlayerController::Aim);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABinggyPlayerController::StopAiming);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ABinggyPlayerController::InteractPressed);
 		// TODO
 		/*EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABinggyPlayerController::Fire);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABinggyPlayerController::StopFiring);*/
@@ -271,6 +272,12 @@ void ABinggyPlayerController::StopFiring(const FInputActionValue& Value)
 	{
 		ControlledCharacter->FireEnd();
 	}
+}
+
+// TODO: the delegate broadcasts interact ability
+void ABinggyPlayerController::InteractPressed(const FInputActionValue& Value)
+{
+	OnInteractKeyPressed.Broadcast();
 }
 
 void ABinggyPlayerController::AimOffset(float DeltaTime)

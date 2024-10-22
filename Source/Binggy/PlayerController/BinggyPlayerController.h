@@ -17,6 +17,8 @@ class UInputMappingContext;
 class UInputAction;
 class UCombatComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractKeyPressed);
+
 /**
  * 
  */
@@ -24,7 +26,7 @@ UCLASS()
 class BINGGY_API ABinggyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
+public:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -42,6 +44,9 @@ class BINGGY_API ABinggyPlayerController : public APlayerController
 	UInputAction* AimAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* FireAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
+
 
 public:
 	ABinggyPlayerController();
@@ -66,6 +71,10 @@ protected:
 	TSubclassOf<UDamageTextWidgetComponent> DamageTextComponentClass;
 
 private:
+	// TODO other ways?
+	UPROPERTY(BlueprintAssignable, Category = Input, meta = (AllowPrivateAccess = "true"))
+	FOnInteractKeyPressed OnInteractKeyPressed;
+	
 	ABinggyHUD* BinggyHUD;
 
 	UPROPERTY(VisibleAnywhere)
@@ -94,7 +103,9 @@ private:
 	void StopAiming(const FInputActionValue& Value);
 	void Fire(const FInputActionValue& Value);
 	void StopFiring(const FInputActionValue& Value);
+	void InteractPressed(const FInputActionValue& Value);
 	void AimOffset(float DeltaTime);
+	
 
 	// More inputs
 

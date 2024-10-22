@@ -27,5 +27,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
 	float MaximumStack;
+
+	// TODO DebugOnly
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Pickup|Mesh")
+	TObjectPtr<UStaticMesh> DebugDisplayMesh;
 	
 };

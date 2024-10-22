@@ -19,7 +19,8 @@ public:
 /**
  * 
  */
-UCLASS(Blueprintable, Const, Abstract)
+// TODO UCLASS(Blueprintable, Const, Abstract)
+UCLASS(Blueprintable)
 class BINGGY_API UBinggyInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()
@@ -34,6 +35,9 @@ public:
 	// The background
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
 	FSlateBrush Background;*/
+
+public:
+	const UBinggyInventoryItemFragment* FindFragmentByClass(TSubclassOf<UBinggyInventoryItemFragment> FragmentClass) const;
 
 	// TODO equipment?Description
 	

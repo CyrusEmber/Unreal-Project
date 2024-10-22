@@ -49,6 +49,7 @@ struct  FBinggyGameplayTags
 	FGameplayTag InputTag_2;
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
+	FGameplayTag InputTag_Interact;
 
 	/* Meta Attribute Tag */
 	FGameplayTag Damage;
@@ -116,10 +117,13 @@ struct  FBinggyGameplayTags
 	FGameplayTag GameplayEvent_Attributes_AttributePoint;
 	FGameplayTag GameplayEvent_Meta_Exp;
 
-	/* Inventory item status Tag */
+	/* Inventory item status Tag TODO? */
 	FGameplayTag Status_Value;
 	FGameplayTag Status_Weight;
 	FGameplayTag Status_MagzineSize;
+
+	/* Interaction Tag */
+	FGameplayTag Ability_Interaction_Active;
 
 
 

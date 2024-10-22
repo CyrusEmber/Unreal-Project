@@ -139,5 +139,5 @@ public:
 
 private:
 	UPROPERTY(Replicated)
-	FBinggyInventoryList InventoryList;
+	FBinggyInventoryList InventoryList = FBinggyInventoryList(this);
 };

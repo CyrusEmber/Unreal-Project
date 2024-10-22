@@ -91,6 +91,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 		FName("InputTag.4"),
 		FString("Input Tag for 4 key")
 		);
+
+	GameplayTags.InputTag_Interact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("InputTag.Interact"),
+	FString("Input Tag for Interact key")
+	);
 	
 	/* Meta Attribute Tag */
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -273,6 +278,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.GameplayEvent_Attributes_AttributePoint = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("GameplayEvent.Attributes.AttributePoint"),
 	FString("AttributePoint change")
+	);
+
+	// Interaction
+	GameplayTags.Ability_Interaction_Active = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Interaction.Active"),
+	FString("Ability Interaction Active change")
 	);
 
 
