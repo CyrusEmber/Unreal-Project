@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Binggy.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Binggy.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/Data/DA_CharacterClassInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/Data/DA_CharacterClassInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/Fire/FireBall/GA_FireBall.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/Fire/FireBall/GA_FireBall.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/Interaction/GA_Interact.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/Interaction/GA_Interact_Collect.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/BP_Collectable_Test.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/BP_Collectable_Test.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Input/DA_BinggyInputData.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Input/DA_BinggyInputData.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/PlayerController/BP_BinggyPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/PlayerController/BP_BinggyPlayerController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/UI/Menu/SkillMenu/WBP_SkillSlot_Draggable.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/UI/Menu/SkillMenu/WBP_SkillSlot_Draggable.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Item/Id/ID_Shit.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Materials/MI_PrototypeGrid_Gray.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Materials/MI_PrototypeGrid_TopDark.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Meshes/SM_ChamferCube.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Meshes/SM_Cube.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Meshes/SM_QuarterCylinder.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/LevelPrototyping/Meshes/SM_Ramp.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/B/EH/B2VBYAH12YRK0MGGRX5LXZ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/B/EH/B2VBYAH12YRK0MGGRX5LXZ.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Binggy.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Binggy.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractableTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractableTarget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractionOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractionOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryItemInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryItemInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryItemInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/BinggyInventoryItemInstance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/InventoryFragment_InventoryItem.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/InventoryFragment_InventoryItem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.h" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2nvmVdwnrQfLt9ksHg1n3j2LMPU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/UE/Binggy5.4/Doc",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\UE\Binggy5.4\Doc\source\InventorySystem" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Doc" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="" />
+      <created>1729861948541</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729861948541</updated>
+    </task>
+    <servers />
+  </component>
+</project>

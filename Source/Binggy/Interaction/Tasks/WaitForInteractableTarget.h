@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
+#include "Binggy/Interaction/InteractableTarget.h"
 #include "Binggy/Interaction/InteractionQuery.h"
 #include "WaitForInteractableTarget.generated.h"
 
@@ -35,7 +36,7 @@ protected:
 	static void LineTrace(FHitResult& OutHitResult, const UWorld* World, const FVector& Start, const FVector& End, FName ProfileName, const FCollisionQueryParams Params);
 
 	// Update options from InteractableTargets 
-	void UpdateInteractableOptions(const FInteractionQuery& InInteractQuery, const TArray<AActor*>& InteractableTargets);
+	void UpdateInteractableOptions(const FInteractionQuery& InInteractionQuery, const TArray<TScriptInterface<IInteractableTarget>>& InteractableTargets);
 	
 	// Clip the ray by ability range TODO: cannot use the function without static
 	static bool ClipCameraRayToAbilityRange(FVector CameraLocation, FVector CameraDirection, FVector AbilityCenter,
@@ -59,4 +60,6 @@ private:
 	bool bShowDebug = false;
 
 	FTimerHandle TimerHandle;
+
+	TArray<FInteractionOption> CurrentOptions;
 };

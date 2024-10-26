@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Binggy/Interaction/InteractionOption.h"
+#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h"
 #include "BinggyGameplayAbility_Interact.generated.h"
 
-struct FInteractionOption;
 class UUserWidget;
 /**
  *  Lyra used a indicator. 
@@ -24,13 +25,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateInteractions(const TArray<FInteractionOption>& InteractiveOptions);
 
-	UFUNCTION(BlueprintCallable)
-	void TriggerInteraction();
-
 protected:
 	// Define 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FInteractionOption> CurrentOptions;
+
+	// TODO: Seperate two classes?
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentInteractionOptionsInASC(TArray<FInteractionOption> Options) { GetBinggyAbilitySystemFromActorInfo()->SetCurrentInteractionOptions(Options); }
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FInteractionOption> GetCurrentInteractionOptionsInASC() { return GetBinggyAbilitySystemFromActorInfo()->GetCurrentInteractionOptions(); }
 
 protected:
 	UPROPERTY(EditDefaultsOnly)

@@ -8,7 +8,21 @@ public class Binggy : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "OnlineSubsystemSteam", "OnlineSubsystem", "GameplayAbilities", "PhysicsControl", "Niagara", "NetCore" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"EnhancedInput", 
+			"OnlineSubsystemSteam", 
+			"OnlineSubsystem", 
+			"GameplayAbilities", 
+			"PhysicsControl", 
+			"Niagara", 
+			"NetCore",
+			"GameplayMessageRuntime"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "AIModule" });
 

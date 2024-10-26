@@ -14,7 +14,7 @@ class BINGGY_API ABinggyWorldCollectable : public AActor, public IInteractableTa
 	GENERATED_BODY()
 	
 public:	
-	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, TArray<FInteractionOption>& Options) override;
+	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& OptionBuilder) override;
 	virtual FInventoryPickup GetPickupInventory() const override;
 
 	// TODO: setup static mesh using the definition?

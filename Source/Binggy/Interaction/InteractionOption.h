@@ -3,6 +3,7 @@
 
 #include "InteractionOption.generated.h"
 
+class IInteractableTarget;
 class UAbilitySystemComponent;
 class UGameplayAbility;
 
@@ -12,10 +13,9 @@ struct FInteractionOption
 	GENERATED_BODY()
 
 public:
-	// TODO TScriptInterface<IInteractableTarget>
 	/** The interactable target */
 	UPROPERTY(BlueprintReadWrite)
-	AActor* InteractableTarget;
+	TScriptInterface<IInteractableTarget> InteractableTarget;
 
 	/** Simple text the interaction might return */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -45,5 +45,34 @@ public:
 	/** The ability spec to activate on the object for this option. */
 	UPROPERTY(BlueprintReadOnly)
 	FGameplayAbilitySpecHandle TargetInteractionAbilityHandle;
+
+	// UI
+	//--------------------------------------------------------------
+
+	/** The widget to show for this kind of interaction. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<UUserWidget> InteractionWidgetClass;
+
+public:
+	FORCEINLINE bool operator==(const FInteractionOption& Other) const
+	{
+		return InteractableTarget == Other.InteractableTarget &&
+			InteractionAbilityToGrant == Other.InteractionAbilityToGrant&&
+			TargetAbilitySystem == Other.TargetAbilitySystem &&
+			TargetInteractionAbilityHandle == Other.TargetInteractionAbilityHandle &&
+			InteractionWidgetClass == Other.InteractionWidgetClass &&
+			Text.IdenticalTo(Other.Text) &&
+			SubText.IdenticalTo(Other.SubText);
+	}
+
+	FORCEINLINE bool operator!=(const FInteractionOption& Other) const
+	{
+		return !operator==(Other);
+	}
+
+	FORCEINLINE bool operator<(const FInteractionOption& Other) const
+	{
+		return InteractableTarget.GetInterface() < Other.InteractableTarget.GetInterface();
+	}
 
 };

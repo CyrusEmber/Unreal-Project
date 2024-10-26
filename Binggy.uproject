@@ -48,6 +48,6 @@
 		{
 			"Name": "NiagaraFluids",
 			"Enabled": true
-		}
+		},
 	]
 }

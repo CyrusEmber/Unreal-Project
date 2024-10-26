@@ -203,11 +203,14 @@ void ABinggyCharacter::PossessedBy(AController* NewController)
 	// Init ability actor info for the server, set ability system component
 	// Make sure add ability first then initialize the overlay
 	InitAbilityActorInfo();
+	// TODO: Refactoring, remove duplicate event after respawn
+	// Add Abilities
 	// Init actor info first please
 	AddCharacterAbilities();
-	// Fixme this is not working
+
+	// This is working properly
 	UUtilityLibrary::GiveStartupAbilities(this, GetAbilitySystemComponent());
-	// TODO: Refactoring, remove duplicate event after respawn
+	
 	/*AbilitySystemComponent->RegisterGameplayTagEvent(FBinggyGameplayTags::Get().GameplayEvent_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
 		this, &ThisClass::HitReactTagChanged
 	);

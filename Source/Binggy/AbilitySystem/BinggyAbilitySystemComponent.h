@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Binggy/Interaction/InteractionOption.h"
 #include "BinggyAbilitySystemComponent.generated.h"
+
 struct FAbilitySpecPair
 {
 	FGameplayAbilitySpec* AbilityTagSpec = nullptr;
@@ -52,17 +54,26 @@ public:
 	// The AbilityTag could be 0, then we are swapping between an equipped skill and an empty skill slot
 	FAbilityStatusChanged AbilityStatusChanged;
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentInteractionOptions(TArray<FInteractionOption> Options) { CurrentInteractionOptions = Options; }
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FInteractionOption> GetCurrentInteractionOptions() { return CurrentInteractionOptions; }
+
 
 protected:
 	void AffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle GameplayEffectHandle);
 
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
-
 	
-
 	// Clear the current ability slot for equipped ability
 	void ClearSlot(const FGameplayTag& InputTag);
+
+	// Update by GA_Interact
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FInteractionOption> CurrentInteractionOptions;
 	
 private:
 	// Map from AbilityTag to AbilitySpec pointer

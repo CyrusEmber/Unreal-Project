@@ -1,0 +1,7 @@
+0.0
+================
+
+Change Log:
+
+* Current stack is add to an inventory instance.
+    * Thus when adding items to the inventory, the system first looks for duplicated items before creating new instance.

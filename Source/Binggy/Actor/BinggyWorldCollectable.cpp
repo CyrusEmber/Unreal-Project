@@ -5,9 +5,9 @@
 
 
 void ABinggyWorldCollectable::GatherInteractionOptions(const FInteractionQuery& InteractQuery,
-	TArray<FInteractionOption>& Options)
+	FInteractionOptionBuilder& OptionBuilder)
 {
-	Options.Add_GetRef(Option);
+	OptionBuilder.AddInteractionOption(Option);
 }
 
 FInventoryPickup ABinggyWorldCollectable::GetPickupInventory() const

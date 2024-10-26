@@ -109,14 +109,17 @@ void UBinggyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& Inpu
 	{
 		return;
 	}
+	
 	for (auto& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
 			// Continue to fire 
-			TryActivateAbility(AbilitySpec.Handle);
-			/*if (!AbilitySpec.IsActive()) */
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
 		}
 	}
 }

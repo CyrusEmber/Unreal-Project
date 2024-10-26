@@ -26,10 +26,10 @@ public:
 	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
-	float MaximumStack;
+	int32 MaximumStack;
 
 	// TODO DebugOnly
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Pickup|Mesh")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debug|Pickup|Mesh")
 	TObjectPtr<UStaticMesh> DebugDisplayMesh;
 	
 };

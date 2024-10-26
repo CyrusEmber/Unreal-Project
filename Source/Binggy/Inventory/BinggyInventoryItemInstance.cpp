@@ -3,6 +3,7 @@
 
 #include "BinggyInventoryItemInstance.h"
 
+#include "BinggyInventoryItemDefinition.h"
 #include "Net/UnrealNetwork.h"
 
 void UBinggyInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -14,6 +15,17 @@ void UBinggyInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetimePr
 
 UBinggyInventoryItemInstance::UBinggyInventoryItemInstance()
 {
+}
+
+const UBinggyInventoryItemFragment* UBinggyInventoryItemInstance::FindFragmentByClass(
+	TSubclassOf<UBinggyInventoryItemFragment> FragmentClass) const
+{
+	if ((ItemDef != nullptr) && (FragmentClass != nullptr))
+	{
+		return GetDefault<UBinggyInventoryItemDefinition>(ItemDef)->FindFragmentByClass(FragmentClass);
+	}
+
+	return nullptr;
 }
 
 void UBinggyInventoryItemInstance::SetItemDef(TSubclassOf<UBinggyInventoryItemDefinition> InDef)

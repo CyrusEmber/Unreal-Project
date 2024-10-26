@@ -3,7 +3,11 @@
 
 #include "WaitForInteractableTarget.h"
 
+#include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
+#include "Binggy/Interaction/InteractableTarget.h"
+#include "Binggy/Interaction/InteractionBlueprintLibrary.h"
+#include "Binggy/Interaction/InteractionOption.h"
 
 void UWaitForInteractableTarget::Activate()
 {
@@ -94,12 +98,79 @@ void UWaitForInteractableTarget::LineTrace(FHitResult& OutHitResult, const UWorl
 	}
 }
 
-void UWaitForInteractableTarget::UpdateInteractableOptions(const FInteractionQuery& InInteractionQuery, const TArray<AActor*>& InteractableTargets)
+void UWaitForInteractableTarget::UpdateInteractableOptions(const FInteractionQuery& InInteractionQuery, const TArray<TScriptInterface<IInteractableTarget>>& InteractableTargets)
 {
-	// TArray<FInteractionOption> NewOptions;
-	// InteractableObjectsChanged.Broadcast(NewOptions);
-	// TArray<FInteractionOption> TempOptions; TODO:Bug
-	// InteractiveTarget->GatherInteractionOptions(InteractQuery, TempOptions);
+	TArray<FInteractionOption> NewOptions;
+	for (auto InteractiveTarget : InteractableTargets)
+	{
+		TArray<FInteractionOption> TempOptions;
+		FInteractionOptionBuilder InteractionBuilder(InteractiveTarget, TempOptions);
+		InteractiveTarget->GatherInteractionOptions(InInteractionQuery, InteractionBuilder);
+		for (FInteractionOption& Option : TempOptions)
+		{
+			FGameplayAbilitySpec* InteractionAbilitySpec = nullptr;
+			if (Option.InteractionAbilityToGrant)
+			{
+				
+				// TODO: option has target abiltysyste
+				if (Option.TargetAbilitySystem && Option.TargetInteractionAbilityHandle.IsValid())
+				{
+					// Find the spec
+					InteractionAbilitySpec = Option.TargetAbilitySystem->FindAbilitySpecFromHandle(Option.TargetInteractionAbilityHandle);
+				}
+				else if (Option.InteractionAbilityToGrant)
+				{
+					// Find the spec
+					InteractionAbilitySpec = AbilitySystemComponent->FindAbilitySpecFromClass(Option.InteractionAbilityToGrant);
+
+					if (InteractionAbilitySpec)
+					{
+						// update the option
+						Option.TargetAbilitySystem = AbilitySystemComponent.Get();
+						Option.TargetInteractionAbilityHandle = InteractionAbilitySpec->Handle;
+					}
+				}
+
+				if (InteractionAbilitySpec)
+				{
+					// Filter any options that we can't activate right now for whatever reason.
+					if (InteractionAbilitySpec->Ability->CanActivateAbility(InteractionAbilitySpec->Handle, AbilitySystemComponent->AbilityActorInfo.Get()))
+					{
+						NewOptions.Add(Option);
+					}
+				}
+			}
+		}
+		
+	}
+	
+	bool bOptionsChanged = false;
+	if (NewOptions.Num() == CurrentOptions.Num())
+	{
+		NewOptions.Sort();
+
+		for (int OptionIndex = 0; OptionIndex < NewOptions.Num(); OptionIndex++)
+		{
+			const FInteractionOption& NewOption = NewOptions[OptionIndex];
+			const FInteractionOption& CurrentOption = CurrentOptions[OptionIndex];
+
+			if (NewOption != CurrentOption)
+			{
+				bOptionsChanged = true;
+				break;
+			}
+		}
+	}
+	else
+	{
+		bOptionsChanged = true;
+	}
+
+	if (bOptionsChanged)
+	{
+		CurrentOptions = NewOptions;
+		InteractableObjectsChanged.Broadcast(CurrentOptions);
+	}
 }
 
 bool UWaitForInteractableTarget::ClipCameraRayToAbilityRange(FVector CameraLocation, FVector CameraDirection,
@@ -149,12 +220,12 @@ void UWaitForInteractableTarget::PerformTrace()
 	// TODO Trace profile name
 	FHitResult OutHitResult;
 	LineTrace(OutHitResult, World, TraceStart, TraceEnd, TraceProfile.Name, Params);
-	TArray<AActor*> InteractableTargets;
-	// Possible multiple hits?
-	if (OutHitResult.IsValidBlockingHit())
-	{
-		InteractableTargets.AddUnique(OutHitResult.GetActor());
-	}
+	TArray<TScriptInterface<IInteractableTarget>> InteractableTargets;
+	// TODO Possible multiple hits?
+	UInteractionBlueprintLibrary::AppendInteractableTargetsFromHitResult(OutHitResult, InteractableTargets);
+	
+	
+	
 	UpdateInteractableOptions(InteractionQuery, InteractableTargets);
 	
 #if WITH_EDITOR

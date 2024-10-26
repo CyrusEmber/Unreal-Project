@@ -4,6 +4,7 @@
 
 #include "BinggyInventoryItemInstance.generated.h"
 
+class UBinggyInventoryItemFragment;
 class UBinggyInventoryItemDefinition;
 /**
  * 
@@ -24,10 +25,18 @@ public:
 		return ItemDef;
 	}
 
+	UFUNCTION(BlueprintCallable, BlueprintPure=false, meta=(DeterminesOutputType=FragmentClass))
+	const UBinggyInventoryItemFragment* FindFragmentByClass(TSubclassOf<UBinggyInventoryItemFragment> FragmentClass) const;
+
+	// Some attributes
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Attributes)
+	int32 CurrentStack = 1;
+
 private:
 	void SetItemDef(TSubclassOf<UBinggyInventoryItemDefinition> InDef);
 
 	friend struct FBinggyInventoryList;
+	
 
 	
 	

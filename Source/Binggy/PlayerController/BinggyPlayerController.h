@@ -17,8 +17,6 @@ class UInputMappingContext;
 class UInputAction;
 class UCombatComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractKeyPressed);
-
 /**
  * 
  */
@@ -71,10 +69,6 @@ protected:
 	TSubclassOf<UDamageTextWidgetComponent> DamageTextComponentClass;
 
 private:
-	// TODO other ways?
-	UPROPERTY(BlueprintAssignable, Category = Input, meta = (AllowPrivateAccess = "true"))
-	FOnInteractKeyPressed OnInteractKeyPressed;
-	
 	ABinggyHUD* BinggyHUD;
 
 	UPROPERTY(VisibleAnywhere)
@@ -106,10 +100,8 @@ private:
 	void InteractPressed(const FInputActionValue& Value);
 	void AimOffset(float DeltaTime);
 	
-
 	// More inputs
-
-
+	
 	float AO_Yaw;
 	float AO_Pitch;
 	FRotator StartingAimRotation;

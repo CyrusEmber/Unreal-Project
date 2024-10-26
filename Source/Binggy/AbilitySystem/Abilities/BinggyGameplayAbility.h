@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "BinggyGameplayAbility.generated.h"
 
+class UBinggyAbilitySystemComponent;
 class ABinggyCharacter;
 /**
  * 
@@ -21,6 +22,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	ABinggyCharacter* GetBinggyCharacterFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	UBinggyAbilitySystemComponent* GetBinggyAbilitySystemFromActorInfo() const;
 
 protected:
 	

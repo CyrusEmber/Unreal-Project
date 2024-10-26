@@ -7,6 +7,7 @@
 #include "BinggyInventoryComponent.generated.h"
 
 
+class UInventoryFragment_InventoryItem;
 class UBinggyInventoryItemDefinition;
 class UBinggyInventoryComponent;
 class UBinggyInventoryItemInstance;
@@ -16,6 +17,32 @@ struct FBinggyInventoryList;
 struct FBinggyInventoryEntry;
 struct FNetDeltaSerializeInfo;
 struct FReplicationFlags;
+
+
+
+/** A message when an item is added to the inventory */
+USTRUCT(BlueprintType)
+struct FInventoryChange
+{
+	GENERATED_BODY()
+
+	//@TODO: Tag based names+owning actors for inventories instead of directly exposing the component?
+	/*UPROPERTY(BlueprintReadOnly, Category=Inventory)
+	TObjectPtr<UActorComponent> InventoryOwner = nullptr;*/
+
+	UPROPERTY(BlueprintReadOnly, Category = Inventory)
+	TObjectPtr<UBinggyInventoryItemInstance> Instance = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category=Inventory)
+	int32 NewCount = 0;
+
+	/*UPROPERTY(BlueprintReadOnly, Category=Inventory)
+	int32 Delta = 0;*/
+
+	// Index in the UI
+	UPROPERTY(BlueprintReadOnly, Category=Inventory)
+	int32 Index = 0;
+};
 
 /** A single entry in an inventory */
 USTRUCT(BlueprintType)
@@ -38,8 +65,12 @@ private:
 	UPROPERTY()
 	int32 StackCount = 0;
 
+	// TODO? What for?
 	UPROPERTY(NotReplicated)
 	int32 LastObservedCount = INDEX_NONE;
+
+	UPROPERTY()
+	int32 Index = INDEX_NONE;
 };
 
 
@@ -58,6 +89,20 @@ struct FBinggyInventoryList : public FFastArraySerializer
 		: OwnerComponent(InOwnerComponent)
 	{
 	}
+	// TODO saves
+	FBinggyInventoryList(UActorComponent* InOwnerComponent, int32 InventorySize)
+	: OwnerComponent(InOwnerComponent)
+	{
+		Entries.SetNum(InventorySize);
+		
+		// Set the Index property to match the array position
+		for (int32 i = 0; i < InventorySize; ++i)
+		{
+			Entries[i].Index = i;
+			// TODO how to make the array dirty?
+		}
+		MarkArrayDirty();
+	}
 
 	TArray<UBinggyInventoryItemInstance*> GetAllItems() const;
 
@@ -73,13 +118,24 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FBinggyInventoryEntry, FBinggyInventoryList>(Entries, DeltaParms, *this);
 	}
 
+	// Add to the NextAvailableSlotIndex
 	UBinggyInventoryItemInstance* AddEntry(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount);
 	void AddEntry(UBinggyInventoryItemInstance* Instance);
 
 	void RemoveEntry(UBinggyInventoryItemInstance* Instance);
 
+	
+
 private:
 	void BroadcastChangeMessage(FBinggyInventoryEntry& Entry, int32 OldCount, int32 NewCount);
+
+	// Try to add instance to the array, if there is any duplicated items, add to its stack until hit maximum stack.
+	void TryAddInstance(UBinggyInventoryItemInstance* QueryInstance);
+	const UInventoryFragment_InventoryItem* GetInventoryItemFromInstance(UBinggyInventoryItemInstance* Instance);
+
+	// TODO Initialize from saves and constructor
+	int32 NextAvailableSlotIndex = 0;
+	void UpdateNextAvailableSlotIndex();
 
 private:
 	friend UBinggyInventoryComponent;
@@ -99,9 +155,7 @@ struct TStructOpsTypeTraits<FBinggyInventoryList> : public TStructOpsTypeTraitsB
 	enum { WithNetDeltaSerializer = true };
 };
 
-
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryChange, FInventoryChange, InventoryChange);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BINGGY_API UBinggyInventoryComponent : public UActorComponent
@@ -126,6 +180,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure=false)
 	TArray<UBinggyInventoryItemInstance*> GetAllItems() const;
 
+	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure=false)
+	UBinggyInventoryItemInstance* GetItemByIndex(int32 Index) const;
+
 	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure)
 	UBinggyInventoryItemInstance* FindFirstItemStackByDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef) const;
 
@@ -137,7 +194,15 @@ public:
 	virtual void ReadyForReplication() override;
 	//~End of UObject interface
 
+	UPROPERTY(BlueprintAssignable)
+	FOnInventoryChange OnInventoryChange;
+
 private:
+	// TODO Saved
+	int32 InventorySize = 16;
+
+	friend FBinggyInventoryList;
+	
 	UPROPERTY(Replicated)
-	FBinggyInventoryList InventoryList = FBinggyInventoryList(this);
+	FBinggyInventoryList InventoryList = FBinggyInventoryList(this, InventorySize);
 };
