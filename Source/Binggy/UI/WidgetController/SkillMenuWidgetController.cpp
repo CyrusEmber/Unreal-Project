@@ -50,8 +50,8 @@ void USkillMenuWidgetController::EquipAbility(const FGameplayTag& AbilityToEquip
 	// AbilityToEquipAbilityTag is always valid if we set it in the skill menu
 	// Get According Spec
 	FGameplayAbilitySpec* AbilityToEquipSpec = AbilitySystemComponent->GetSpecFromAbilityTag(AbilityToEquipAbilityTag);
-	// AbilityToEquip is empty, disable drag in UI or equip HERE
-	if (!AbilityToEquipSpec)
+	// AbilityToEquip is empty or the input tag to equipped is null, disable drag in UI or equip HERE, also disabled in the UI
+	if (!AbilityToEquipSpec || !EquippedAbilityInputTag.IsValid())
 	{
 		return;
 	}

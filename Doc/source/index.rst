@@ -13,7 +13,13 @@ documentation for details.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: UI
+
+   UI/DraggableWidget
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Inventory System
 
    InventorySystem/Introduction
    InventorySystem/ChangeLog/0_0

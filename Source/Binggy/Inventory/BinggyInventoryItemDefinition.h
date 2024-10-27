@@ -13,6 +13,7 @@ class BINGGY_API UBinggyInventoryItemFragment : public UObject
 	GENERATED_BODY()
 
 public:
+	// TODO create something
 	virtual void OnInstanceCreated(UBinggyInventoryItemInstance* Instance) const {}
 };
 
@@ -40,5 +41,16 @@ public:
 	const UBinggyInventoryItemFragment* FindFragmentByClass(TSubclassOf<UBinggyInventoryItemFragment> FragmentClass) const;
 
 	// TODO equipment?Description
-	
+
+	// TODO: fragments not the same?
+	/*FORCEINLINE bool operator==(const UBinggyInventoryItemDefinition& Other) const
+	{
+		return DisplayName.IdenticalTo(Other.DisplayName) &&
+			Fragments.Num() == Other.Fragments.Num();
+	}
+
+	FORCEINLINE bool operator!=(const UBinggyInventoryItemDefinition& Other) const
+	{
+		return !operator==(Other);
+	}*/
 };

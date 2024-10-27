@@ -2,6 +2,87 @@
 ================
 
 Change Log:
+-----------
 
-* Current stack is add to an inventory instance.
-    * Thus when adding items to the inventory, the system first looks for duplicated items before creating new instance.
+Stack Management
+^^^^^^^^^^^^^^^^
+
+* **Current Stack is Added to an Inventory Instance**:
+
+  - When adding items to the inventory, the system first checks for duplicated items.
+  - If a duplicate item is found, the stack count is incremented up to the maximum stack limit rather than creating a new instance.
+
+Client-Server Replication
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Client-Side Replication**:
+
+  - Client-side replication is handled through ``PreReplicatedRemove``, ``PostReplicatedAdd``, and ``PostReplicatedChange`` functions, which keep the client's inventory in sync with the server.
+
+* **Server-Side Authority**:
+
+  - Server-side replication is only triggered when the server has authority (``HasAuthority() == true``), ensuring consistent, authoritative updates.
+
+Core Features
+^^^^^^^^^^^^^^^^^^
+
+* **Swapping Items**:
+
+  - Swapping items in the inventory is supported and can be triggered both on the server and the client.
+  - ``ServerSwapTwoInstancesByIndex`` provides a server-validated RPC for client-triggered swaps, ensuring secure network handling.
+
+* **Inventory Initialization and Slot Indexing**:
+  The ``FBinggyInventoryList`` class initializes the array size based on a specified inventory size. Each slot in ``Entries`` is indexed upon initialization, setting ``Index`` to match the array position for easy reference.
+
+* **Dynamic Addition and Stacking of Items**:
+  The functions ``AddEntry`` and ``TryAddItemDefinition`` handle item addition based on available stack capacity:
+
+  - ``TryAddItemDefinition`` attempts to stack items with existing instances up to a maximum stack limit (``MaximumStack``) before creating new entries.
+  - ``AddEntry`` creates a new ``UBinggyInventoryItemInstance`` only when stacking is not possible, thus efficiently managing inventory slots.
+
+
+
+Client-Side Features
+^^^^^^^^^^^^^^^^^^^^
+
+* **Client-Side Replication Management**:
+
+  - ``PreReplicatedRemove``, ``PostReplicatedAdd``, and ``PostReplicatedChange`` handle client-side synchronization of `Entries`.
+  - ``NetDeltaSerialize`` uses ``FastArrayDeltaSerialize`` to efficiently sync only modified entries to clients, reducing network load.
+
+Server-Side Inventory Management
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Server-Side Authority Management**:
+
+  - Inventory changes execute on the server only if ``OwningActor->HasAuthority()`` is ``true``, ensuring authoritative updates.
+  - ``BroadcastChangeMessage`` is called on the server after adding or stacking items, allowing server broadcasts of inventory updates.
+
+Replication and Sub-Object Tracking
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Sub-Object Replication and Registration**:
+
+  - The ``ReplicateSubobjects`` function replicates each ``UBinggyInventoryItemInstance`` in ``FBinggyInventoryEntry``, enabling independent synchronization across the network.
+  - ``ReadyForReplication`` registers existing item instances as sub-objects if ``IsUsingRegisteredSubObjectList()`` is enabled, ensuring that each item is tracked for replication efficiency.
+
+Blueprint and Networked Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* **Blueprint-Callable Functions**:
+
+  - Exposed Blueprint functions (``AddItemDefinition``, ``AddItemInstance``, ``RemoveItemInstance``, and ``SwapTwoInstancesByIndex``) provide an API for managing inventory from the editor or gameplay code.
+  - ``ServerSwapTwoInstancesByIndex`` is a server-only RPC that validates and handles swaps initiated by clients, ensuring network authority for actions.
+
+
+Known Bugs:
+^^^^^^^^^^^
+Instant add two entry to the inventory cause problem, unidentified bug
+
+TODO
+^^^^
+
+Now the server broadcast is complex, how to refactor it. They are marked with ``// The server``
+
+* **Fragment Integration**:
+  The system integrates item fragments via ``OnInstanceCreated`` to initialize newly created instances with properties or abilities defined in `UBinggyInventoryItemDefinition` fragments. Fragments are only applied to new instances.

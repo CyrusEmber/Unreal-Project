@@ -28,7 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, meta=(DeterminesOutputType=FragmentClass))
 	const UBinggyInventoryItemFragment* FindFragmentByClass(TSubclassOf<UBinggyInventoryItemFragment> FragmentClass) const;
 
-	// Some attributes
+	// Some attributes TODO: really need it?
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Attributes)
 	int32 CurrentStack = 1;
 

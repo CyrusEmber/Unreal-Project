@@ -14,10 +14,10 @@ class BINGGY_API UInventoryFragment_TradableItem : public UBinggyInventoryItemFr
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Attribute")
 	float Value;
 
 	// TODO: red pad color when you dont have enough money?
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
 	FLinearColor PadColor;
 };

@@ -98,7 +98,12 @@ ABinggyCharacter::ABinggyCharacter()
 	// Initialize the component
 	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("ExperienceComponent"));
 	UIComponent = CreateDefaultSubobject<UBinggyUIComponent>(TEXT("UIComponent"));
+
+	// TODO: Only the server has an inventory component.
+
 	InventoryComponent = CreateDefaultSubobject<UBinggyInventoryComponent>(TEXT("InventoryComponent"));
+	
+	
 }
 
 void ABinggyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -158,6 +163,8 @@ void ABinggyCharacter::BeginPlay()
 	{
 		HealthBar->SetVisibility(false);
 	}
+
+
 }
 
 void ABinggyCharacter::Tick(float DeltaTime)

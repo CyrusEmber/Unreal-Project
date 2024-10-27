@@ -16,16 +16,16 @@ class BINGGY_API UInventoryFragment_InventoryItem : public UBinggyInventoryItemF
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
 	FSlateBrush Brush;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
 	FText DisplayName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Appearance)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Attribute")
 	int32 MaximumStack;
 
 	// TODO DebugOnly

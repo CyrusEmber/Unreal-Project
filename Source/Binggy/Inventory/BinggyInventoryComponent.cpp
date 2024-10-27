@@ -85,7 +85,6 @@ UBinggyInventoryItemInstance* FBinggyInventoryList::AddEntry(TSubclassOf<UBinggy
 	AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor->HasAuthority());
 	
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Add in inventory: %i"), NextAvailableSlotIndex));
 	// Check if the inventory is full, TOOD will the owner not be the inventory component?
 	if (UBinggyInventoryComponent* BinggyInventoryComponent = Cast<UBinggyInventoryComponent>(OwnerComponent))
 	{
@@ -108,6 +107,11 @@ UBinggyInventoryItemInstance* FBinggyInventoryList::AddEntry(TSubclassOf<UBinggy
 	}
 	NewEntry.StackCount = StackCount;
 	Result = NewEntry.Instance;
+
+	if (OwnerComponent->GetOwner()->HasAuthority())
+	{
+		BroadcastChangeMessage(NewEntry, 0, NewEntry.StackCount);
+	}
 
 	//const ULyraInventoryItemDefinition* ItemCDO = GetDefault<ULyraInventoryItemDefinition>(ItemDef);
 	MarkItemDirty(NewEntry);
@@ -136,7 +140,8 @@ void FBinggyInventoryList::RemoveEntry(UBinggyInventoryItemInstance* Instance)
 
 void FBinggyInventoryList::TryAddInstance(UBinggyInventoryItemInstance* QueryInstance)
 {
-	const UInventoryFragment_InventoryItem* InventoryItem = GetInventoryItemFromInstance(QueryInstance);
+	unimplemented();
+	const UInventoryFragment_InventoryItem* InventoryItem = GetItemFromInstance(QueryInstance);
 	// Not likely to happen
 	if (InventoryItem == nullptr)
 	{
@@ -174,7 +179,86 @@ void FBinggyInventoryList::TryAddInstance(UBinggyInventoryItemInstance* QueryIns
 	QueryInstance->CurrentStack = QueryStack;
 }
 
-const UInventoryFragment_InventoryItem* FBinggyInventoryList::GetInventoryItemFromInstance(
+TArray<UBinggyInventoryItemInstance*> FBinggyInventoryList::TryAddItemDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount)
+{
+	TArray<UBinggyInventoryItemInstance*> Results;
+	UBinggyInventoryItemInstance* NewInstance = NewObject<UBinggyInventoryItemInstance>(OwnerComponent->GetOwner());
+	NewInstance->SetItemDef(ItemDef);
+	NewInstance->CurrentStack = StackCount;
+	
+	const UInventoryFragment_InventoryItem* InventoryItem = Cast<UInventoryFragment_InventoryItem>(GetDefault<UBinggyInventoryItemDefinition>(ItemDef)->FindFragmentByClass(UInventoryFragment_InventoryItem::StaticClass()));
+	// Not likely to happen
+	if (InventoryItem == nullptr)
+	{
+		return Results;
+	}
+	
+	int32 MaximumStack = InventoryItem->MaximumStack;
+	
+	for (FBinggyInventoryEntry& Entry : Entries)
+	{
+		if (!Entry.Instance || Entry.Instance->GetItemDef() != ItemDef)
+		{
+			continue;
+		}
+
+		int CurrentStack = Entry.StackCount;
+		// The slot is full
+		if (CurrentStack == MaximumStack)
+		{
+			continue;
+		}
+
+		int32 SpaceAvailable = MaximumStack - CurrentStack;
+		int32 AmountToStack = FMath::Min(SpaceAvailable, StackCount);
+		Entry.StackCount += AmountToStack;
+		StackCount -= AmountToStack;
+		Results.Add(Entry.Instance);
+
+		MarkItemDirty(Entry);
+
+		// The server
+		if (OwnerComponent->GetOwner()->HasAuthority())
+		{
+			BroadcastChangeMessage(Entry, 0, MaximumStack);
+		}
+
+		if (StackCount <= 0)
+		{
+			break;
+		}
+	}
+	
+	// Add new entry
+	if (StackCount != 0)
+	{
+		Results.Add(AddEntry(ItemDef, StackCount));
+	}
+	
+	return Results;
+		
+		/*// Fill the slot
+		if (MaximumStack - CurrentStack >= StackCount)
+		{
+			Entry.StackCount = CurrentStack + StackCount;
+			StackCount = 0;
+			MarkItemDirty(Entry);
+			Results.Add(Entry.Instance);
+			// The server
+            if (OwnerComponent->GetOwner()->HasAuthority())
+            {
+                BroadcastChangeMessage(Entry, 0, Entry.StackCount);
+            }
+			break;
+		}
+		// StackCount too much for the slot, continue to next slot.
+		StackCount = StackCount - (MaximumStack - CurrentStack);
+		Entry.StackCount = MaximumStack;
+		MarkItemDirty(Entry);
+		Results.Add(Entry.Instance);*/
+}
+
+const UInventoryFragment_InventoryItem* FBinggyInventoryList::GetItemFromInstance(
 	UBinggyInventoryItemInstance* Instance)
 {
 	const UInventoryFragment_InventoryItem* InventoryItem = Cast<UInventoryFragment_InventoryItem>(Instance->FindFragmentByClass(UInventoryFragment_InventoryItem::StaticClass()));
@@ -182,18 +266,66 @@ const UInventoryFragment_InventoryItem* FBinggyInventoryList::GetInventoryItemFr
 	return InventoryItem;
 }
 
+void FBinggyInventoryList::SwapTwoInstancesByIndex(int32 Index1, int32 Index2)
+{
+	if (Index1 == Index2)
+	{
+		return;
+	}
+	
+	FBinggyInventoryEntry& Entry1 = Entries[Index1];
+	FBinggyInventoryEntry& Entry2 = Entries[Index2];
+	
+	// Skip two empty objects
+	if (!Entry1.Instance && !Entry2.Instance)
+	{
+		return;
+	}
+	
+	Entry1.Index = Index2;
+	Entry2.Index = Index1;
+	Entries.Swap(Index1, Index2);
+
+	// The server
+	if (OwnerComponent->GetOwner()->HasAuthority())
+	{
+		BroadcastChangeMessage(Entry1, 0, Entry1.StackCount);
+		BroadcastChangeMessage(Entry2, 0, Entry2.StackCount);
+	}
+
+	MarkItemDirty(Entry1);
+	MarkItemDirty(Entry2);
+	
+	UpdateNextAvailableSlotIndex(Index2);
+	UpdateNextAvailableSlotIndex(Index1);
+}
+
 void FBinggyInventoryList::BroadcastChangeMessage(FBinggyInventoryEntry& Entry, int32 OldCount, int32 NewCount)
 {
 	FInventoryChange Message;
 	//Message.InventoryOwner = OwnerComponent;
 	Message.Instance = Entry.Instance;
-	Message.NewCount = NewCount;
+	Message.StackCount = NewCount;
+	Message.Index = Entry.Index;
+	
 	//Message.Delta = NewCount - OldCount;
 	if (UBinggyInventoryComponent* BinggyInventoryComponent = Cast<UBinggyInventoryComponent>(OwnerComponent))
 	{
 		BinggyInventoryComponent->OnInventoryChange.Broadcast(Message);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Broadcast: %i"), Entries.Num()));
+	
+}
+
+void FBinggyInventoryList::BroadcastInitialMessage()
+{
+	for (auto Entry : Entries)
+	{
+		// Slightly increase performance
+		if (Entry.StackCount != 0)
+		{
+			BroadcastChangeMessage(Entry, 0, Entry.StackCount);
+		}
+	}
 }
 
 void FBinggyInventoryList::UpdateNextAvailableSlotIndex()
@@ -217,12 +349,27 @@ void FBinggyInventoryList::UpdateNextAvailableSlotIndex()
 	}
 }
 
+void FBinggyInventoryList::UpdateNextAvailableSlotIndex(int32 Index)
+{
+	if (Entries[Index].Instance)
+	{
+		return;
+	}
+	
+	if (Index < NextAvailableSlotIndex)
+	{
+		NextAvailableSlotIndex = Index;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 // ULyraInventoryManagerComponent
 
 UBinggyInventoryComponent::UBinggyInventoryComponent()
 {
 	SetIsReplicatedByDefault(true);
+	// Replicate sub object list! TODO: It should only be true for character, not AI.
+	bReplicateUsingRegisteredSubObjectList = true;
 }
 
 void UBinggyInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -232,31 +379,31 @@ void UBinggyInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProp
 	DOREPLIFETIME(ThisClass, InventoryList);
 }
 
-UBinggyInventoryItemInstance* UBinggyInventoryComponent::AddItemDefinition(
+TArray<UBinggyInventoryItemInstance*> UBinggyInventoryComponent::AddItemDefinition(
 	TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount)
 {
-	UBinggyInventoryItemInstance* Result = nullptr;
+	TArray<UBinggyInventoryItemInstance*> Results;
 	if (ItemDef != nullptr)
 	{
-		Result = InventoryList.AddEntry(ItemDef, StackCount);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("AddItem definition")); 
-		if (IsUsingRegisteredSubObjectList() && IsReadyForReplication() && Result)
+		Results = InventoryList.TryAddItemDefinition(ItemDef, StackCount);
+		
+		for (auto Result : Results)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Replication Inventory Definition!")); 
-			AddReplicatedSubObject(Result);
+			if (IsUsingRegisteredSubObjectList() && IsReadyForReplication() && Result)
+			{
+				AddReplicatedSubObject(Result);
+			}
 		}
+
 	}
-	return Result;
+	return Results;
 }
 
 void UBinggyInventoryComponent::AddItemInstance(UBinggyInventoryItemInstance* ItemInstance)
 {
-	// InventoryList.AddEntry(ItemInstance);
 	InventoryList.TryAddInstance(ItemInstance);
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("AddItem instance")); 
 	if (IsUsingRegisteredSubObjectList() && IsReadyForReplication() && ItemInstance)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("Replication Inventory Instance!")); 
 		AddReplicatedSubObject(ItemInstance);
 	}
 }
@@ -269,6 +416,16 @@ void UBinggyInventoryComponent::RemoveItemInstance(UBinggyInventoryItemInstance*
 	{
 		RemoveReplicatedSubObject(ItemInstance);
 	}
+}
+
+void UBinggyInventoryComponent::SwapTwoInstancesByIndex(int32 Index1, int32 Index2)
+{
+	ServerSwapTwoInstancesByIndex(Index1, Index2);
+}
+
+void UBinggyInventoryComponent::ServerSwapTwoInstancesByIndex_Implementation(int32 Index1, int32 Index2)
+{
+	InventoryList.SwapTwoInstancesByIndex(Index1, Index2);
 }
 
 TArray<UBinggyInventoryItemInstance*> UBinggyInventoryComponent::GetAllItems() const
@@ -373,9 +530,10 @@ void UBinggyInventoryComponent::ReadyForReplication()
 {
 	Super::ReadyForReplication();
 
-	// Register existing ULyraInventoryItemInstance
+	// Register existing UBinggyInventoryItemInstance
 	if (IsUsingRegisteredSubObjectList())
 	{
+		
 		for (const FBinggyInventoryEntry& Entry : InventoryList.Entries)
 		{
 			UBinggyInventoryItemInstance* Instance = Entry.Instance;
@@ -386,6 +544,23 @@ void UBinggyInventoryComponent::ReadyForReplication()
 			}
 		}
 	}
+}
+
+void UBinggyInventoryComponent::BroadcastInitialMessage()
+{
+	InventoryList.BroadcastInitialMessage();
+}
+
+void UBinggyInventoryComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	// Initialize the inventory list at begin play to avoid issues
+	if (GetOwner()->HasAuthority())
+	{
+		InventoryList = FBinggyInventoryList(this, InventorySize);
+	}
+	
 }
 
 

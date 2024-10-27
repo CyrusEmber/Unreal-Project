@@ -34,7 +34,7 @@ struct FInventoryChange
 	TObjectPtr<UBinggyInventoryItemInstance> Instance = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category=Inventory)
-	int32 NewCount = 0;
+	int32 StackCount = 0;
 
 	/*UPROPERTY(BlueprintReadOnly, Category=Inventory)
 	int32 Delta = 0;*/
@@ -118,7 +118,7 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FBinggyInventoryEntry, FBinggyInventoryList>(Entries, DeltaParms, *this);
 	}
 
-	// Add to the NextAvailableSlotIndex
+	// Add to the NextAvailableSlotIndex, TODO: if the stack count is greater than the maximum stack count?
 	UBinggyInventoryItemInstance* AddEntry(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount);
 	void AddEntry(UBinggyInventoryItemInstance* Instance);
 
@@ -129,13 +129,20 @@ public:
 private:
 	void BroadcastChangeMessage(FBinggyInventoryEntry& Entry, int32 OldCount, int32 NewCount);
 
+	void BroadcastInitialMessage();
+
 	// Try to add instance to the array, if there is any duplicated items, add to its stack until hit maximum stack.
 	void TryAddInstance(UBinggyInventoryItemInstance* QueryInstance);
-	const UInventoryFragment_InventoryItem* GetInventoryItemFromInstance(UBinggyInventoryItemInstance* Instance);
+	TArray<UBinggyInventoryItemInstance*> TryAddItemDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount);
+	const UInventoryFragment_InventoryItem* GetItemFromInstance(UBinggyInventoryItemInstance* Instance);
+	
+	// Swap two instances in the array based on their index
+	void SwapTwoInstancesByIndex(int32 Index1, int32 Index2);
 
 	// TODO Initialize from saves and constructor
 	int32 NextAvailableSlotIndex = 0;
 	void UpdateNextAvailableSlotIndex();
+	void UpdateNextAvailableSlotIndex(int32 Index);
 
 private:
 	friend UBinggyInventoryComponent;
@@ -169,7 +176,7 @@ public:
 	bool CanAddItemDefinition(TSubclassOf<ULyraInventoryItemDefinition> ItemDef, int32 StackCount = 1);*/
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category=Inventory)
-	UBinggyInventoryItemInstance* AddItemDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount = 1);
+	TArray<UBinggyInventoryItemInstance*> AddItemDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount = 1);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category=Inventory)
 	void AddItemInstance(UBinggyInventoryItemInstance* ItemInstance);
@@ -177,9 +184,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category=Inventory)
 	void RemoveItemInstance(UBinggyInventoryItemInstance* ItemInstance);
 
+	// Calling server swap when initiated by client
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void SwapTwoInstancesByIndex(int32 Index1, int32 Index2);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSwapTwoInstancesByIndex(int32 Index1, int32 Index2);
+
 	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure=false)
 	TArray<UBinggyInventoryItemInstance*> GetAllItems() const;
 
+	// TODO Remove
 	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure=false)
 	UBinggyInventoryItemInstance* GetItemByIndex(int32 Index) const;
 
@@ -196,6 +211,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnInventoryChange OnInventoryChange;
+	
+	UFUNCTION(BlueprintCallable, Category=Inventory)
+	void BroadcastInitialMessage();
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	// TODO Saved
@@ -204,5 +225,5 @@ private:
 	friend FBinggyInventoryList;
 	
 	UPROPERTY(Replicated)
-	FBinggyInventoryList InventoryList = FBinggyInventoryList(this, InventorySize);
+	FBinggyInventoryList InventoryList;
 };
