@@ -3,8 +3,11 @@
 
 #include "BinggyInventoryComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "BinggyInventoryItemDefinition.h"
 #include "BinggyInventoryItemInstance.h"
+#include "InventoryFragment_ConsumableItem.h"
 #include "InventoryFragment_InventoryItem.h"
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
@@ -138,6 +141,25 @@ void FBinggyInventoryList::RemoveEntry(UBinggyInventoryItemInstance* Instance)
 	}
 }
 
+void FBinggyInventoryList::RemoveEntryByIndex(int32 Index)
+{
+	FBinggyInventoryEntry& Entry = Entries[Index];
+	Entry.Instance = nullptr;
+	Entry.StackCount = 0;
+	Entry.LastObservedCount = 0;
+
+	MarkItemDirty(Entry);
+
+	// The server
+	if (OwnerComponent->GetOwner()->HasAuthority())
+	{
+		BroadcastChangeMessage(Entry, 0, Entry.StackCount);
+	}
+	UpdateNextAvailableSlotIndex(Index);
+
+	// TODO server
+}
+
 void FBinggyInventoryList::TryAddInstance(UBinggyInventoryItemInstance* QueryInstance)
 {
 	unimplemented();
@@ -220,7 +242,7 @@ TArray<UBinggyInventoryItemInstance*> FBinggyInventoryList::TryAddItemDefinition
 		// The server
 		if (OwnerComponent->GetOwner()->HasAuthority())
 		{
-			BroadcastChangeMessage(Entry, 0, MaximumStack);
+			BroadcastChangeMessage(Entry, 0, Entry.StackCount);
 		}
 
 		if (StackCount <= 0)
@@ -481,18 +503,78 @@ int32 UBinggyInventoryComponent::GetTotalItemCountByDefinition(
 	return TotalCount;
 }
 
-bool UBinggyInventoryComponent::ConsumeItemsByDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef,
-	int32 NumToConsume)
+bool UBinggyInventoryComponent::ConsumeItemsByDefinition(UBinggyInventoryItemInstance* ItemInstance,
+	int32 NumToConsume, int32 Index)
+{
+	ServerConsumeItemsByDefinition(ItemInstance, NumToConsume, Index);
+	return true;
+}
+ 
+void UBinggyInventoryComponent::ServerConsumeItemsByDefinition_Implementation(
+	UBinggyInventoryItemInstance* ItemInstance, int32 NumToConsume, int32 Index)
 {
 	AActor* OwningActor = GetOwner();
-	if (!OwningActor || !OwningActor->HasAuthority())
+	if (!OwningActor || !OwningActor->HasAuthority() || !ItemInstance)
 	{
-		return false;
+		return;
 	}
 
 	//@TODO: N squared right now as there's no acceleration structure
-	int32 TotalConsumed = 0;
-	while (TotalConsumed < NumToConsume)
+	//@TODO: check if the TotalStack is < NumToConsume
+	TSubclassOf<UBinggyInventoryItemDefinition> ItemDef = ItemInstance->GetItemDef();
+	// TODO just for NumToConsume = 1 item consume change
+	if (Index >= 0)
+	{
+		FBinggyInventoryEntry& Entry = InventoryList.Entries[Index];
+		Entry.StackCount -= NumToConsume;
+		if (Entry.StackCount == 0)
+		{
+			
+			InventoryList.RemoveEntryByIndex(Index);
+			return;
+		}
+		// TODO: Apply the effect to self 
+		ApplyConsumableItemToSelf(Entry.Instance);
+		InventoryList.MarkItemDirty(Entry);
+
+		// The server TODO
+		if (GetOwner()->HasAuthority())
+		{
+			
+			InventoryList.BroadcastChangeMessage(Entry, 0, Entry.StackCount);
+		}
+	} else
+	{
+		for (FBinggyInventoryEntry& Entry : InventoryList.Entries)
+		{
+			if (!Entry.Instance || Entry.Instance->GetItemDef() != ItemDef)
+			{
+				continue;
+			}
+			// The CurrentStack available is always > 0 as long as the slot exists
+			int StackAvailable = Entry.StackCount;
+		
+			int32 AmountToStack = FMath::Min(StackAvailable, NumToConsume);
+			Entry.StackCount -= AmountToStack;
+			NumToConsume -= AmountToStack;
+		
+			InventoryList.MarkItemDirty(Entry);
+
+			// The server TODO
+			if (GetOwner()->HasAuthority())
+			{
+				InventoryList.BroadcastChangeMessage(Entry, 0, Entry.StackCount);
+			}
+
+			if (NumToConsume <= 0)
+			{
+				break;
+			}
+		}
+	}
+	
+	
+	/*while (TotalConsumed < NumToConsume)
 	{
 		if (UBinggyInventoryItemInstance* Instance = UBinggyInventoryComponent::FindFirstItemStackByDefinition(ItemDef))
 		{
@@ -503,13 +585,13 @@ bool UBinggyInventoryComponent::ConsumeItemsByDefinition(TSubclassOf<UBinggyInve
 		{
 			return false;
 		}
-	}
+	}*/
 
-	return TotalConsumed == NumToConsume;
+	// TODO: return type
 }
 
 bool UBinggyInventoryComponent::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch,
-	FReplicationFlags* RepFlags)
+                                                    FReplicationFlags* RepFlags)
 {
 	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
@@ -561,6 +643,20 @@ void UBinggyInventoryComponent::BeginPlay()
 		InventoryList = FBinggyInventoryList(this, InventorySize);
 	}
 	
+}
+
+void UBinggyInventoryComponent::ApplyConsumableItemToSelf(UBinggyInventoryItemInstance* ConsumableItemInstance)
+{
+	TSubclassOf<UGameplayEffect> ConsumableItemEffectClass = Cast<UInventoryFragment_ConsumableItem>(ConsumableItemInstance->FindFragmentByClass(UInventoryFragment_ConsumableItem::StaticClass()))->ConsumableItemEffectClass;
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner());
+
+	// TODO Apply some effect to others?
+	if (ASC && ConsumableItemEffectClass)
+	{
+		UGameplayEffect* ConsumableItemEffectInstance = NewObject<UGameplayEffect>(GetTransientPackage(), ConsumableItemEffectClass);
+		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+		ASC->ApplyGameplayEffectToSelf(ConsumableItemEffectInstance, 0.f, EffectContext);
+	}
 }
 
 

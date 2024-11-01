@@ -34,7 +34,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
-	virtual void FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams);
+	virtual void FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams, TSubclassOf<AProjectile>
+	                         InProjectileClass);
 	virtual void Drop();
 
 	// Texture for the weapon crosshairs

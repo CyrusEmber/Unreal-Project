@@ -7,6 +7,7 @@
 #include "BinggyInventoryComponent.generated.h"
 
 
+class UGameplayEffect;
 class UInventoryFragment_InventoryItem;
 class UBinggyInventoryItemDefinition;
 class UBinggyInventoryComponent;
@@ -121,8 +122,11 @@ public:
 	// Add to the NextAvailableSlotIndex, TODO: if the stack count is greater than the maximum stack count?
 	UBinggyInventoryItemInstance* AddEntry(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 StackCount);
 	void AddEntry(UBinggyInventoryItemInstance* Instance);
-
+	// Not used
 	void RemoveEntry(UBinggyInventoryItemInstance* Instance);
+
+	// Reset the entry and broadcast it.
+	void RemoveEntryByIndex(int32 Index);
 
 	
 
@@ -202,7 +206,13 @@ public:
 	UBinggyInventoryItemInstance* FindFirstItemStackByDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef) const;
 
 	int32 GetTotalItemCountByDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef) const;
-	bool ConsumeItemsByDefinition(TSubclassOf<UBinggyInventoryItemDefinition> ItemDef, int32 NumToConsume);
+
+	// It will first try to consume the items from certain index
+	UFUNCTION(BlueprintCallable, Category=Inventory, BlueprintPure=false)
+	bool ConsumeItemsByDefinition(UBinggyInventoryItemInstance* ItemInstance, int32 NumToConsume, int32 Index);
+	// TODO: return type
+	UFUNCTION(Server, Reliable)
+	void ServerConsumeItemsByDefinition(UBinggyInventoryItemInstance* ItemInstance, int32 NumToConsume, int32 Index);
 
 	//~UObject interface
 	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
@@ -226,4 +236,7 @@ private:
 	
 	UPROPERTY(Replicated)
 	FBinggyInventoryList InventoryList;
+
+	// Only used in server RPC
+	void ApplyConsumableItemToSelf(UBinggyInventoryItemInstance* ConsumableItemInstance);
 };

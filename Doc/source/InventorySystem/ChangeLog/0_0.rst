@@ -82,7 +82,10 @@ Instant add two entry to the inventory cause problem, unidentified bug
 TODO
 ^^^^
 
-Now the server broadcast is complex, how to refactor it. They are marked with ``// The server``
+* Now the server broadcast is complex, how to refactor it. They are marked with ``// The server``
 
 * **Fragment Integration**:
   The system integrates item fragments via ``OnInstanceCreated`` to initialize newly created instances with properties or abilities defined in `UBinggyInventoryItemDefinition` fragments. Fragments are only applied to new instances.
+
+* 	//@TODO: N squared right now as there's no acceleration structure
+*	//@TODO: check if the TotalStack is < NumToConsume

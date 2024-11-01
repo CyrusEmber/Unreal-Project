@@ -98,8 +98,12 @@ public:
 	// For Ability spec
 	static FGameplayTag GetAbilityStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
-	UFUNCTION(BlueprintCallable, Category = "DamageEffect")
+	UFUNCTION(BlueprintCallable, Category = "GameplayEffect|DamageEffect")
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
+
+	// Currently used for consumable effect TODO, make sure the input is valid
+	UFUNCTION(BlueprintCallable, Category = "GameplayEffect")
+	static FGameplayEffectContextHandle ApplyGameplayEffect(const TSubclassOf<UGameplayEffect> GameplayEffectClass, const AActor* ActorToApply, UAbilitySystemComponent* SourceASC);
 
 private:
 	static void ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes);

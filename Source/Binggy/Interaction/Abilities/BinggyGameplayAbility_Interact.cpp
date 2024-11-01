@@ -4,10 +4,11 @@
 #include "BinggyGameplayAbility_Interact.h"
 
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
 #include "Binggy/Interaction/InteractionBlueprintLibrary.h"
 #include "Binggy/Interaction/InteractionOption.h"
 #include "Binggy/Interaction/Tasks/AbilityTask_NearbyInteraction.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
 
 UBinggyGameplayAbility_Interact::UBinggyGameplayAbility_Interact()
 {
@@ -29,7 +30,38 @@ void UBinggyGameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpec
 
 void UBinggyGameplayAbility_Interact::UpdateInteractions(const TArray<FInteractionOption>& InteractiveOptions)
 {
-	// TODO it suppose to use ULyraIndicatorManagerComponent to show something on the actor
+
+	// TODO it suppose to show something on the actor
+	for (const FInteractionOption& InteractionOption : InteractiveOptions)
+	{
+		AActor* InteractableTargetActor = UInteractionBlueprintLibrary::GetActorFromInteractableTarget(InteractionOption.InteractableTarget);
+		/*DefaultInteractionWidgetClass.LoadSynchronous();*/
+		// TSoftClassPtr<UUserWidget> InteractionWidgetClass = InteractionOption.InteractionWidgetClass.IsNull() ? DefaultInteractionWidgetClass : InteractionOption.InteractionWidgetClass;
+		
+		
+		if (DefaultInteractionWidgetClass)
+		{
+			DebugWidgetComponent = InteractableTargetActor->FindComponentByClass<UWidgetComponent>();
+			if (DebugWidgetComponent)
+			{
+				// Update the widget class of the Widget Component
+				DebugWidgetComponent->SetWidgetClass(DefaultInteractionWidgetClass);
+
+				// Optional: Call InitWidget to refresh the Widget Component
+				DebugWidgetComponent->InitWidget();
+				
+				DebugWidgetComponent->SetVisibility(true);
+				DebugWidgetComponent->SetHiddenInGame(false);
+				DebugWidgetComponent->SetDrawSize(FVector2D(200, 200));
+			}
+		}
+	}
+
+	// TODO Debug
+	if (InteractiveOptions.Num() == 0)
+	{
+		DebugWidgetComponent->SetVisibility(false);
+	}
 
 	CurrentOptions = InteractiveOptions;
 	SetCurrentInteractionOptionsInASC(CurrentOptions);

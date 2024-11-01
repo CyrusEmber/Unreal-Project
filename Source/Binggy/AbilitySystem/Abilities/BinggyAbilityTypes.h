@@ -5,6 +5,7 @@
 #include "ScalableFloat.h"
 #include "BinggyAbilityTypes.generated.h"
 
+class AProjectile;
 class UAbilitySystemComponent;
 class UGameplayEffect;
 

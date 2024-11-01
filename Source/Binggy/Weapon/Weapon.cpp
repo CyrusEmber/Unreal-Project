@@ -155,7 +155,8 @@ void AWeapon::Fire(const FVector& HitTarget)
 	}
 }
 
-void AWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams)
+void AWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams, TSubclassOf<AProjectile>
+                          InProjectileClass)
 {
 }
 

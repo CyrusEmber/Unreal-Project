@@ -124,6 +124,7 @@ struct  FBinggyGameplayTags
 
 	/* Interaction Tag */
 	FGameplayTag Ability_Interaction_Active;
+	FGameplayTag Ability_Consume_Active;
 
 
 

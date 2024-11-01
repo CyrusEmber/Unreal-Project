@@ -286,6 +286,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FString("Ability Interaction Active change")
 	);
 
+	GameplayTags.Ability_Consume_Active = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Consume.Active"),
+	FString("Ability Consume Active")
+	);
+
 
 	
 	

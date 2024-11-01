@@ -293,6 +293,20 @@ FGameplayEffectContextHandle UUtilityLibrary::ApplyDamageEffect(const FDamageEff
 	return EffectContexthandle;
 }
 
+FGameplayEffectContextHandle UUtilityLibrary::ApplyGameplayEffect(const TSubclassOf<UGameplayEffect> GameplayEffectClass,
+	const AActor* ActorToApply, UAbilitySystemComponent* SourceASC)
+{
+	if (!SourceASC || !GameplayEffectClass)
+	{
+		return FGameplayEffectContextHandle();
+	}
+	FGameplayEffectContextHandle EffectContexthandle = SourceASC->MakeEffectContext();
+	EffectContexthandle.AddInstigator(SourceASC->GetOwnerActor(), SourceASC->GetOwnerActor());
+	EffectContexthandle.AddSourceObject(SourceASC);
+	return FGameplayEffectContextHandle();
+	
+}
+
 void UUtilityLibrary::ApplyAttributes(UAbilitySystemComponent* ASC, float Level, AActor* AvatarActor, TSubclassOf<UGameplayEffect> Attributes)
 {
 	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();

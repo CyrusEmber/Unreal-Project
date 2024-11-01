@@ -87,7 +87,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<USkillMenuWidgetController> SkillMenuWidgetControllerClass;
 	
-	UBinggyAbilitySystemComponent* AbilitySystemComponent;
+	TObjectPtr<UBinggyAbilitySystemComponent> AbilitySystemComponent;
 
 
 	// Template function

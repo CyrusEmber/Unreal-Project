@@ -59,7 +59,7 @@ void ABinggyPlayerController::OnPossess(APawn* InPawn)
 		BinggyHUD = Cast<ABinggyHUD>(GetHUD());
 	}
 	
-	if (IsLocalController())
+	if (IsLocalController() && IsValid(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent()))
 	{
 		BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
 	}

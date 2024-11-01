@@ -9,7 +9,7 @@ class UBinggyInventoryItemDefinition;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class BINGGY_API UBinggyInventoryItemInstance : public UObject
 {
 	GENERATED_BODY()

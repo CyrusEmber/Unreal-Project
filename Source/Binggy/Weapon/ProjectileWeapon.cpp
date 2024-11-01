@@ -35,7 +35,8 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 	
 }
 
-void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams)
+// TODO: change the project class
+void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FDamageEffectParams& ProjectileDamageEffectParams, TSubclassOf<AProjectile> InProjectileClass)
 {
 	/*Super::Fire(HitTarget);*/
 	if (!HasAuthority()) {
@@ -48,14 +49,14 @@ void AProjectileWeapon::FireAbility(const FVector& HitTarget, const FDamageEffec
 		// From muzzle to hit location from trace result
 		FVector ToTarget = HitTarget - SocketTransform.GetLocation();
 		FRotator ToTargetRotation = ToTarget.Rotation();
-		if (ProjectileClass && InstigatorPawn) {
+		if (InProjectileClass && InstigatorPawn) {
 			UWorld* World = GetWorld(); 
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = GetOwner();
 			SpawnParams.Instigator = InstigatorPawn;
 			if (World) {
 				// TODO: Defered Spawn?
-				AProjectile* Projectile = World->SpawnActor<AProjectile>(ProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
+				AProjectile* Projectile = World->SpawnActor<AProjectile>(InProjectileClass, SocketTransform.GetLocation(), ToTargetRotation, SpawnParams);
 				
 				Projectile->DamageEffectParams = ProjectileDamageEffectParams;
 			}

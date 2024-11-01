@@ -8,9 +8,10 @@
 #include "Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h"
 #include "BinggyGameplayAbility_Interact.generated.h"
 
+class UWidgetComponent;
 class UUserWidget;
 /**
- *  Lyra used a indicator. 
+ *  Lyra used a indicator, the class is a passive ability that scan the surrouding targets.
  */
 UCLASS()
 class BINGGY_API UBinggyGameplayAbility_Interact : public UBinggyGameplayAbility
@@ -44,7 +45,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float InteractionScanRange = 500;
 
-	// UI widget
+	// UI widget TODO: use TSoftClassPtr?
 	UPROPERTY(EditDefaultsOnly)
-	TSoftClassPtr<UUserWidget> DefaultInteractionWidgetClass;
+	TSubclassOf<UUserWidget> DefaultInteractionWidgetClass;
+
+	TObjectPtr<UUserWidget> DebugInteractionWidgetInstance;
+
+	// Debug
+	TObjectPtr<UWidgetComponent> DebugWidgetComponent;
 };

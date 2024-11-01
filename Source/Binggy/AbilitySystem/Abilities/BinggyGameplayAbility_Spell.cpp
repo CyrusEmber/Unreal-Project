@@ -68,7 +68,7 @@ void UBinggyGameplayAbility_Spell::FireSpell(const FVector TargetLocation, const
 
 		if (ABinggyCharacter* BinggyCharacter = GetBinggyCharacterFromActorInfo()) {
 			BinggyCharacter->PlayFiringMontage(false);
-			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(TargetLocation, MakeDamageEffectParamsFromClassDefaults());
+			BinggyCharacter->GetCombatComponent()->EquippedWeapon->FireAbility(TargetLocation, MakeDamageEffectParamsFromClassDefaults(), ProjectileClass);
 		}
 		StartFireTimer();
 	}
