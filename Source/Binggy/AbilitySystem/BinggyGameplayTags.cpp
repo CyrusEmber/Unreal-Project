@@ -96,6 +96,11 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("InputTag.Interact"),
 	FString("Input Tag for Interact key")
 	);
+
+	GameplayTags.InputTag_Build = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("InputTag.Build"),
+	FString("Input Tag for Build key")
+	);
 	
 	/* Meta Attribute Tag */
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(

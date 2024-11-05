@@ -43,7 +43,7 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	this->SetReplicateMovement(true);
+	SetReplicateMovement(true);
 	
 	if (HasAuthority()) {
 		// TODO: Set it in Cpp?

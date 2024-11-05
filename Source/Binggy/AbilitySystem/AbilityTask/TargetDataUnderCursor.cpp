@@ -12,7 +12,7 @@ UTargetDataUnderCursor* UTargetDataUnderCursor::CreateTargetDataUnderMouse(UGame
 	return MyObj;
 }
 
-void UTargetDataUnderCursor::Activate()
+void UTargetDataUnderCursor::UpdateTargetData()
 {
 	const bool bIsLocallyControlled = Ability->GetCurrentActorInfo()->IsLocallyControlled();
 	if (bIsLocallyControlled)
@@ -29,6 +29,16 @@ void UTargetDataUnderCursor::Activate()
 			SetWaitingOnRemotePlayerData();
 		}
 	}
+}
+
+void UTargetDataUnderCursor::Activate()
+{
+	UWorld* World = GetWorld();
+	UpdateTargetData();
+	/*if (World)
+	{
+		World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::UpdateTargetData, MeshLocationUpdateRate, true);
+	}*/
 }
 
 void UTargetDataUnderCursor::SendMouseCursorData()
@@ -73,19 +83,18 @@ void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHi
 		CrosshairWorldPosition,
 		CrosshairWorldDirection
 	);
+	
 	if (bScreenToWorld) {
 		float TraceLength = 80000.f;
 		FVector Start = CrosshairWorldPosition;
 		FVector End = Start + CrosshairWorldDirection * TraceLength;
 
-		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECollisionChannel::ECC_Visibility);
+		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECC_Visibility);
 
 		if (!TraceHitResult.bBlockingHit) {
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No Blocking Hit")); 
 			TraceHitResult.ImpactPoint = End;
 		}
-		//else {
-		//	DrawDebugSphere(GetWorld(), TraceHitResult.ImpactPoint, 12.f, 12, FColor::Red);
-		//}
 	}
 }
 

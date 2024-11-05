@@ -14,7 +14,11 @@ void UWaitForInteractableTarget::Activate()
 	SetWaitingOnAvatar();
 
 	UWorld* World = GetWorld();
-	World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::PerformTrace, InteractionScanRate, true);
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::PerformTrace, InteractionScanRate, true);
+	}
+	
 }
 
 
