@@ -19,10 +19,10 @@ protected:
 	// Handle is like a pointer
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Defaults")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Binggy|Defaults")
 	TSubclassOf<AProjectile> ProjectileClass;
 
-	UFUNCTION(BlueprintCallable, Category="Projectile")
+	UFUNCTION(BlueprintCallable, Category="Binggy|Projectile")
 	void SpawnProjectile(FVector TargetLocation);
 
 	// Combat 

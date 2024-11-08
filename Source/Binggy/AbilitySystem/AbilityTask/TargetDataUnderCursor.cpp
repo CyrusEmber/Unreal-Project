@@ -6,10 +6,35 @@
 #include "AbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-UTargetDataUnderCursor* UTargetDataUnderCursor::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
+UTargetDataUnderCursor* UTargetDataUnderCursor::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility, bool bIsLoop)
 {
 	UTargetDataUnderCursor* MyObj = NewAbilityTask<UTargetDataUnderCursor>(OwningAbility);
+	MyObj->bIsLoop = bIsLoop;
 	return MyObj;
+}
+
+void UTargetDataUnderCursor::Activate()
+{
+	BindCallbackToASC();
+	UpdateTargetData();
+	if (bIsLoop)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::UpdateTargetData, MeshLocationUpdateRate, true);
+		}
+	}
+}
+
+
+void UTargetDataUnderCursor::OnDestroy(bool AbilityEnded)
+{
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(TimerHandle);
+	}
+	Super::OnDestroy(AbilityEnded);
 }
 
 void UTargetDataUnderCursor::UpdateTargetData()
@@ -21,8 +46,6 @@ void UTargetDataUnderCursor::UpdateTargetData()
 	}
 	else
 	{
-		// Bind target data callback
-		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(GetAbilitySpecHandle(), GetActivationPredictionKey()).AddUObject(this, &UTargetDataUnderCursor::OnTargetDataReplicatedCallback);
 		const bool bCalledDelegate = AbilitySystemComponent.Get()->CallReplicatedTargetDataDelegatesIfSet(GetAbilitySpecHandle(), GetActivationPredictionKey());
 		if (!bCalledDelegate)
 		{
@@ -31,21 +54,21 @@ void UTargetDataUnderCursor::UpdateTargetData()
 	}
 }
 
-void UTargetDataUnderCursor::Activate()
+void UTargetDataUnderCursor::BindCallbackToASC()
 {
-	UWorld* World = GetWorld();
-	UpdateTargetData();
-	/*if (World)
+	const bool bIsLocallyControlled = Ability->GetCurrentActorInfo()->IsLocallyControlled();
+	if (!bIsLocallyControlled)
 	{
-		World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::UpdateTargetData, MeshLocationUpdateRate, true);
-	}*/
+		// Bind target data callback
+		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(GetAbilitySpecHandle(), GetActivationPredictionKey()).AddUObject(this, &UTargetDataUnderCursor::OnTargetDataReplicatedCallback);
+	}
 }
 
 void UTargetDataUnderCursor::SendMouseCursorData()
 {
 	FScopedPredictionWindow ScopedPrediction(AbilitySystemComponent.Get());
 	
-	APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
+	// APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
 	FHitResult TraceHitResult;
 	TraceUnderCrosshairByVisibility(TraceHitResult);
 

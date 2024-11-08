@@ -25,3 +25,11 @@ documentation for details.
    InventorySystem/ChangeLog/0_0
    InventorySystem/Concepts
 
+.. toctree::
+   :maxdepth: 2
+   :caption: General
+
+   Build/Build
+   AbilitySystem/Ability
+   Weapon/Weapon
+

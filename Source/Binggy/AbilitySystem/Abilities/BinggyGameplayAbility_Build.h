@@ -18,6 +18,10 @@ class BINGGY_API UBinggyGameplayAbility_Build : public UBinggyGameplayAbility
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	// TODO: separate spawn and update
+	UFUNCTION(BlueprintCallable, Category="Build")
+	void SpawnBuildable(UStaticMesh* InBuildStaticMesh);
+	
 	// Select the correct static mesh from UI
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void UpdateBuildMesh(UStaticMesh* InBuildStaticMesh);
@@ -35,6 +39,9 @@ private:
 	TObjectPtr<ABinggyWorldBuildable> CurrentBuildable;
 
 	FRotator DeltaRotation = FRotator(0, 20, 0);
+	
+	UPROPERTY(EditDefaultsOnly, Category="Binggy|Build", meta=(AllowPrivateAccess=true))
+	TSubclassOf<ABinggyWorldBuildable> BuildableClass;
 
 	
 };

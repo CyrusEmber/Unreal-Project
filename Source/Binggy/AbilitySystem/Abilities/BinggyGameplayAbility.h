@@ -17,13 +17,13 @@ class BINGGY_API UBinggyGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Input")
 	FGameplayTag StartUpInputTag;
 
-	UFUNCTION(BlueprintCallable, Category = "Ability")
+	UFUNCTION(BlueprintCallable, Category = "Binggy|Ability")
 	ABinggyCharacter* GetBinggyCharacterFromActorInfo() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Ability")
+	UFUNCTION(BlueprintCallable, Category = "Binggy|Ability")
 	UBinggyAbilitySystemComponent* GetBinggyAbilitySystemFromActorInfo() const;
 
 protected:

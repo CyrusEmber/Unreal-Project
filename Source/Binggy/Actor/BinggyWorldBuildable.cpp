@@ -3,32 +3,40 @@
 
 #include "BinggyWorldBuildable.h"
 
+#include "Net/UnrealNetwork.h"
+
 ABinggyWorldBuildable::ABinggyWorldBuildable()
 {
 	// TODO: Change this when the build is done.
-	bStaticMeshReplicateMovement = true;
+	PrimaryActorTick.bCanEverTick = true;
+	// Spawn on the server and replicate to the client
+	bReplicates = true;
+	
 	SetMobility(EComponentMobility::Movable);
 	// Ready for overlap
 	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
 	GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
 
-	bReplicates = true;
+	// SetMobility(EComponentMobility::Static);
+	// GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	GetStaticMeshComponent()->SetIsReplicated(true);
+	/*bReplicates = true;
 	// SetReplicates(true);
-	SetReplicatingMovement(true);
+	SetReplicatingMovement(true);*/
+}
+
+void ABinggyWorldBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABinggyWorldBuildable, BuildableState);
 }
 
 void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& InteractQuery,
-	FInteractionOptionBuilder& OptionBuilder)
+                                                     FInteractionOptionBuilder& OptionBuilder)
 {
 	OptionBuilder.AddInteractionOption(Option);
-}
-
-void ABinggyWorldBuildable::SetBuildMode()
-{
-	bStaticMeshReplicateMovement = false;
-	SetMobility(EComponentMobility::Static);
-	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ABinggyWorldBuildable::SetBuildMesh(UStaticMesh* BuildMesh)
@@ -44,30 +52,98 @@ void ABinggyWorldBuildable::UpdateMeshLocation(FVector TargetLocation)
 void ABinggyWorldBuildable::UpdateMeshRotation(FRotator TargetRotation)
 {
 	SetActorRotation(TargetRotation);
-	
+}
+
+void ABinggyWorldBuildable::OnConstructionCompleted()
+{
+	SetBuildableState(EBuildableState::Placed);
+}
+
+void ABinggyWorldBuildable::OnConstructionBegin()
+{
+	SetBuildableState(EBuildableState::Building);
 }
 
 void ABinggyWorldBuildable::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
+	
+	if (BuildableState == EBuildableState::Placed)
+	{
+		return;
+	}
+	
+#if WITH_EDITOR
+	if (!HasAuthority()) // Server-only
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("NotifyActorBeginOverlap Execute in client! Bug!")); 
+	}
+#endif
+	
+
+	OverlappingActorCount++;
+	SetBuildableState(EBuildableState::Blocked);
+	
 }
 
-void ABinggyWorldBuildable::BeginPlay()
+void ABinggyWorldBuildable::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	Super::BeginPlay();
-    if (GetStaticMeshComponent())
-    {
-        GetStaticMeshComponent()->SetVisibility(true);         // Ensure visibility
-        GetStaticMeshComponent()->SetHiddenInGame(false);      // Make sure it's not hidden
-    }
-	if (GetLocalRole() == ROLE_AutonomousProxy || GetLocalRole() == ROLE_SimulatedProxy)
+	Super::NotifyActorEndOverlap(OtherActor);
+	if (BuildableState == EBuildableState::Placed)
 	{
-		// This is the client
-		UE_LOG(LogTemp, Log, TEXT("Actor is now visible on the client!"));
+		return;
 	}
-	else if (HasAuthority())
+
+	OverlappingActorCount--;
+	if (OverlappingActorCount == 0)
 	{
-		// This is the server
-		UE_LOG(LogTemp, Log, TEXT("Actor is on the server."));
+		SetBuildableState(EBuildableState::Clear);
 	}
+	
+}
+
+void ABinggyWorldBuildable::OnRep_BuildableState(EBuildableState OldBuildableState)
+{
+	if (BuildableState == OldBuildableState)
+	{
+		return;
+	}
+	
+	SetBuildableState(BuildableState);
+}
+
+void ABinggyWorldBuildable::SetBuildableState(EBuildableState NewBuildableState)
+{
+	BuildableState = NewBuildableState;
+	switch (NewBuildableState)
+	{
+		case (EBuildableState::Building):
+			SetMeshOverlayMaterial(GreenOverlayMaterial);
+			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
+			break;
+
+		case (EBuildableState::Clear):
+			SetMeshOverlayMaterial(GreenOverlayMaterial);
+			break;
+
+		case (EBuildableState::Blocked):
+			SetMeshOverlayMaterial(RedOverlayMaterial);
+			break;
+
+		// Should still generate overlap events
+		case (EBuildableState::Placed):
+			GetStaticMeshComponent()->SetOverlayMaterial(nullptr);
+			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			break;
+
+		default:
+			break;
+	}
+}
+
+
+void ABinggyWorldBuildable::SetMeshOverlayMaterial(UMaterialInterface* InOverlayMaterial)
+{
+	GetStaticMeshComponent()->SetOverlayMaterial(InOverlayMaterial);
 }

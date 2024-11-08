@@ -61,6 +61,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<FInteractionOption> GetCurrentInteractionOptions() { return CurrentInteractionOptions; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentHitResult(TArray<FInteractionOption> Options) { CurrentInteractionOptions = Options; }
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FInteractionOption> GetCurrentHitResult() { return CurrentInteractionOptions; }
+
 
 protected:
 	void AffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle GameplayEffectHandle);
@@ -74,6 +80,10 @@ protected:
 	// Update by GA_Interact
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FInteractionOption> CurrentInteractionOptions;
+
+	// Update by GA_Interact
+	UPROPERTY(BlueprintReadWrite)
+	FHitResult CurrentHitResult;
 	
 private:
 	// Map from AbilityTag to AbilitySpec pointer

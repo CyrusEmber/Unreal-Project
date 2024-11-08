@@ -12,6 +12,7 @@ struct FInteractionOption;
 class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableObjectsChangedEvent, const TArray<FInteractionOption>&, InteractableOptions);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitResultChangedEvent);
 
 /**
  * 
@@ -24,15 +25,19 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FInteractableObjectsChangedEvent InteractableObjectsChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FHitResultChangedEvent HitResultChanged;
+
 public:
 	virtual void Activate() override;
 
 	UFUNCTION(BlueprintCallable, Category="Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UWaitForInteractableTarget* WaitForInteractableTarget(UGameplayAbility* OwningAbility, FCollisionProfileName TraceProfile, FInteractionQuery InInteractionQuery, FGameplayAbilityTargetingLocationInfo StartLocation, float InteractionScanRange = 100, float InteractionScanRate = 0.100, bool bShowDebug = false);
+	static UWaitForInteractableTarget* WaitForInteractableTarget(UGameplayAbility* OwningAbility, FCollisionProfileName TraceProfile, FInteractionQuery InInteractionQuery, FGameplayAbilityTargetingLocationInfo StartLocation, TSubclassOf<UInterface> TargetInterfaceClass, float InteractionScanRange = 100, float InteractionScanRate = 0.100, bool bShowDebug = false);
 
 protected:
 	void AimWithPlayerController(const AActor* InSourceActor, FCollisionQueryParams Params, const FVector& TraceStart, float MaxRange, FVector& OutTraceEnd, bool bIgnorePitch = false) const;
 
+	// Perform line trace
 	static void LineTrace(FHitResult& OutHitResult, const UWorld* World, const FVector& Start, const FVector& End, FName ProfileName, const FCollisionQueryParams Params);
 
 	// Update options from InteractableTargets 
@@ -55,11 +60,15 @@ private:
 
 	FCollisionProfileName TraceProfile;
 
+	TSubclassOf<UInterface> TargetInterfaceClass;
+
 	float InteractionScanRange = 100;
 	float InteractionScanRate = 0.100;
 	bool bShowDebug = false;
 
 	FTimerHandle TimerHandle;
 
+	// Current results
 	TArray<FInteractionOption> CurrentOptions;
+	FHitResult CurrentHitResult;
 };

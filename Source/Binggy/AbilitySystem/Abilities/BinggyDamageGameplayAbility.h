@@ -19,28 +19,29 @@ public:
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 	
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Binggy|Damage")
     TSubclassOf<UGameplayEffect> DamageEffectClass;
-    
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-    FScalableFloat Damage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	// Depreciated use damage types for damage calculation.
+    /*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Binggy|Damage")
+    FScalableFloat Damage;*/
+
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypes;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	float DebuffChance = 20.f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	float DebuffDamage = 5.f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	float DebuffFrequency = 1.f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	float DebuffDuration = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Binggy|Damage")
 	float ImpulseMagnitude = 60.f;
 
 

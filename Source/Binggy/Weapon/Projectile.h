@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEffectTypes.h"
 #include "Binggy/AbilitySystem/Abilities/BinggyAbilityTypes.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"

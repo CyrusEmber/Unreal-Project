@@ -32,7 +32,8 @@ void UWaitForInteractableTarget::OnDestroy(bool AbilityEnded)
 }
 
 UWaitForInteractableTarget* UWaitForInteractableTarget::WaitForInteractableTarget(UGameplayAbility* OwningAbility,
-	FCollisionProfileName TraceProfile, FInteractionQuery InInteractionQuery, FGameplayAbilityTargetingLocationInfo StartLocation, float InteractionScanRange,
+	FCollisionProfileName TraceProfile, FInteractionQuery InInteractionQuery, FGameplayAbilityTargetingLocationInfo
+	StartLocation, TSubclassOf<UInterface> TargetInterfaceClass, float InteractionScanRange,
 	float InteractionScanRate, bool bShowDebug)
 {
 	UWaitForInteractableTarget* MyObj = NewAbilityTask<UWaitForInteractableTarget>(OwningAbility);
@@ -42,6 +43,7 @@ UWaitForInteractableTarget* UWaitForInteractableTarget::WaitForInteractableTarge
 	MyObj->TraceProfile = TraceProfile;
 	MyObj->InteractionQuery = InInteractionQuery;
 	MyObj->bShowDebug = bShowDebug;
+	MyObj->TargetInterfaceClass = TargetInterfaceClass;
 
 	return MyObj;
 }
@@ -107,6 +109,11 @@ void UWaitForInteractableTarget::UpdateInteractableOptions(const FInteractionQue
 	TArray<FInteractionOption> NewOptions;
 	for (auto InteractiveTarget : InteractableTargets)
 	{
+		// Check for specific interface
+		if (TargetInterfaceClass && !InteractiveTarget.GetObject()->GetClass()->ImplementsInterface(TargetInterfaceClass))
+		{
+			break;
+		}
 		TArray<FInteractionOption> TempOptions;
 		FInteractionOptionBuilder InteractionBuilder(InteractiveTarget, TempOptions);
 		InteractiveTarget->GatherInteractionOptions(InInteractionQuery, InteractionBuilder);
@@ -116,7 +123,7 @@ void UWaitForInteractableTarget::UpdateInteractableOptions(const FInteractionQue
 			if (Option.InteractionAbilityToGrant)
 			{
 				
-				// TODO: option has target abiltysyste
+				// TODO: option has target abiltysystem
 				if (Option.TargetAbilitySystem && Option.TargetInteractionAbilityHandle.IsValid())
 				{
 					// Find the spec
@@ -227,8 +234,13 @@ void UWaitForInteractableTarget::PerformTrace()
 	TArray<TScriptInterface<IInteractableTarget>> InteractableTargets;
 	// TODO Possible multiple hits?
 	UInteractionBlueprintLibrary::AppendInteractableTargetsFromHitResult(OutHitResult, InteractableTargets);
-	
-	
+
+	// Possible of broadcast empty hit result
+	/*FGameplayAbilityTargetDataHandle DataHandle;
+	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
+	Data->HitResult = OutHitResult;
+	DataHandle.Add(Data);*/
+	HitResultChanged.Broadcast();
 	
 	UpdateInteractableOptions(InteractionQuery, InteractableTargets);
 	
