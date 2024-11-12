@@ -16,7 +16,8 @@
 				"EnhancedInput",
 				"AIModule",
 				"Niagara",
-				"GameplayTasks"
+				"GameplayTasks",
+				"CommonUI"
 			]
 		}
 	],
@@ -55,6 +56,26 @@
 		},
 		{
 			"Name": "CommonUI",
+			"Enabled": true
+		},
+		{
+			"Name": "UIExtension",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonUser",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonGame",
+			"Enabled": true
+		},
+		{
+			"Name": "ModularGameplayActors",
+			"Enabled": true
+		},
+		{
+			"Name": "ModularGameplay",
 			"Enabled": true
 		}
 	]

@@ -21,10 +21,22 @@ public class Binggy : ModuleRules
 			"PhysicsControl", 
 			"Niagara", 
 			"NetCore",
-			"GameplayMessageRuntime"
+			"GameplayMessageRuntime",
+			"CommonUI",
+			"ModularGameplayActors"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "GameplayTasks", "AIModule" });
+		PrivateDependencyModuleNames.AddRange(new string[]
+		{
+			"GameplayTags", 
+			"GameplayTasks", 
+			"AIModule",
+			"UIExtension",
+			"CommonGame",
+			"CommonUser"
+			
+			
+		});
 
 		// Uncomment if you are using Slate UI
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

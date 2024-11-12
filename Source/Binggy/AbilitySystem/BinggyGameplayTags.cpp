@@ -285,16 +285,39 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FString("AttributePoint change")
 	);
 
-	// Interaction
+	// Interaction tags
 	GameplayTags.Ability_Interaction_Active = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Ability.Interaction.Active"),
-	FString("Ability Interaction Active change")
+	FString("Ability Interaction Active status change")
 	);
 
 	GameplayTags.Ability_Consume_Active = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Ability.Consume.Active"),
 	FString("Ability Consume Active")
 	);
+	// End of Interaction tags
+
+	// Common UI tags
+	GameplayTags.UI_Layer_Game = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("UI.Layer.Game"),
+	FString("Like HUD")
+	);
+
+	GameplayTags.UI_Layer_GameMenu = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("UI.Layer.GameMenu"),
+	FString("Like inventory, map, quest multi-tabs menu")
+	);
+
+	GameplayTags.UI_Layer_MainMenu = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("UI.Layer.GameMenu"),
+	FString("Settings")
+	);
+
+	GameplayTags.UI_Layer_Modal = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("UI.Layer.Modal"),
+	FString("Confirmation or dialog popups")
+	);
+	// End of Common UI tags
 
 
 	
