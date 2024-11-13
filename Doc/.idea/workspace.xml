@@ -5,49 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/source/UI/CommonUI.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Binggy.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.uproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Binggy.uproject.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.uproject.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Config/DefaultGame.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../Config/DefaultGame.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/PlayerController/BP_BinggyPlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/PlayerController/BP_BinggyPlayerController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/UI/UI_Loading.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/UI/UI_Loading.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Maps/MainMenu.umap" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Maps/MainMenu.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Character/Enemy/BP_TestEnemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Character/Enemy/BP_TestEnemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Character/Enemy/BP_TestEnemy1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Character/Enemy/BP_TestEnemy1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/GameMode/BP_BinggyGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/GameMode/BP_BinggyGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/GameMode/BP_LobbyGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/GameMode/BP_LobbyGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/PlayerController/BP_BinggyPlayerController.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/PlayerState/BP_BinggyPlayerState.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Maps/Test/TestUI.umap" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Maps/Test/TestUI.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/BP_CommonInputData.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/BP_CommonInputData.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/DraggableBase/BPI_DraggableInterface.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/DraggableBase/WBP_DragWidgetBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/DraggableBase/WBP_DraggableSlot_Base.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/DraggableBase/WidgetDragBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/ProgressBar/WBP_OverHeadHealthBar.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/ProgressBar/WBP_ProgressBar.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/ProgressBar/WBP_ProgressBarBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Common/ProgressBar/WBP_XPBar.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/CommonUI/BP_Test.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Content/UI/DT_UniversalActions.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/DT_UniversalActions.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_AttributeMenu.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_AttributePointRow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_Button.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_FramedValue.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_TextValueButton.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/AttributeMenu/WBP_TextValueRow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/InventoryMenu/Popup/WBP_InventoryPopup.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/InventoryMenu/WBP_InventoryMenu.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/InventoryMenu/WBP_InventorySlot_Draggable.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/Legacy/SkillWidgetDrag.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/Legacy/WBP_SkillDragWidget.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/Legacy/WBP_SkillSlotDisplay_Draggable.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/Legacy/WBP_SkillSlotEquip_Draggable.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/Legacy/WBP_SkillSlot_Draggable.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillEquipped.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillMenu.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillPointRow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillSlot_Display.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillSlot_Draggable.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/SkillMenu/WBP_SkillSlot_Equipped.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/WBP_AddPointRow.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Menu/WBP_SpellBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Buttons/ButtonStyle-Clear.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Foundation/Buttons/ButtonStyle-Clear.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Buttons/W_ButtonTab.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Widgets/BottomBar/W_BoundActionButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Foundation/Widgets/BottomBar/W_BoundActionButton.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/InventoryMenu/WBP_InventorySlot_Draggable.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/InventoryMenu/WBP_InventorySlot_Draggable.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/Legacy/WBP_SkillSlot_Draggable.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/Legacy/WBP_SkillSlot_Draggable.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillSlot_Display.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillSlot_Display.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillSlot_Draggable.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillSlot_Draggable.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/TabMenu/W_TabMenu.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/TabMenu/W_TestTab1.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/TabMenu/W_TestTab2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/TabbedView/W_HorizontalTabList.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/TabbedView/W_HorizontalTabList.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/TabbedView/W_HorizontalTabList_Binggy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/TabbedView/W_HorizontalTabList_Binggy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/W_GameMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/W_GameMenu.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/W_Inventory.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/W_Map.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/W_Weapons.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Input/CommonInput_KeyboardMouse.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Input/CommonInput_KeyboardMouse.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Input/Mouse2_T.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Input/Mouse2_T.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Lagecy/WBP_CharacterOverlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Lagecy/WBP_CharacterOverlay.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/MainMenu/BP_TestMenuGM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/MainMenu/BP_TestMenuGM.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/MainMenu/BP_TestPC.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/MainMenu/BP_TestTabMenu.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/MainMenu/W_Layer_Menu.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/UI_Loading.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/WBP_CharacterOverlay.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/WBP_OverHeadWidget.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/WBP_PickupWidget.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Weapons/BP_AssaultRifle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Weapons/BP_AssaultRifle.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Weapons/BP_Weapon.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Weapons/BP_Weapon.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyGameplayTags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyGameplayTags.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyGameplayTags.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyGameplayTags.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Binggy.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Binggy.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/UI/CommonUI.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/UI/CommonUI.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/index.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabListWidgetBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabListWidgetBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabListWidgetBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabListWidgetBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyButtonBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyButtonBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyPrimaryGameLayout.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyPrimaryGameLayout.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyPrimaryGameLayout.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyPrimaryGameLayout.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

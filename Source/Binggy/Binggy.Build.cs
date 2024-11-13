@@ -7,6 +7,12 @@ public class Binggy : ModuleRules
 	public Binggy(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
+		PublicIncludePaths.AddRange(
+			new string[] {
+				"Binggy"
+			}
+		);
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{

@@ -4,7 +4,7 @@
 #include "BinggyUIPolicy.h"
 
 #include "BinggyPrimaryGameLayout.h"
-#include "Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h"
+#include "UI/Subsystem/BinggyUIManagerSubsystem.h"
 
 UBinggyUIPolicy* UBinggyUIPolicy::GetGameUIPolicy(const UObject* WorldContextObject)
 {
@@ -93,6 +93,21 @@ TSubclassOf<UBinggyPrimaryGameLayout> UBinggyUIPolicy::GetLayoutWidgetClass(ULoc
 
 void UBinggyUIPolicy::NotifyPlayerAdded(ULocalPlayer* LocalPlayer)
 {
+	// Add binding to play
+	LocalPlayer->OnPlayerControllerChanged().AddWeakLambda(this, [this, LocalPlayer](APlayerController* PlayerController)
+	{
+		NotifyPlayerRemoved(LocalPlayer);
+
+		if (FBinggyRootViewportLayoutInfo* LayoutInfo = RootViewportLayouts.FindByKey(LocalPlayer))
+		{
+			AddLayoutToViewport(LocalPlayer, LayoutInfo->RootLayout);
+			LayoutInfo->bAddedToViewport = true;
+		}
+		else
+		{
+			CreateLayoutWidget(LocalPlayer);
+		}
+	});
 	// TODO On player controller set??
 	// NotifyPlayerRemoved(LocalPlayer);
 

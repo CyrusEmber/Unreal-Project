@@ -38,6 +38,20 @@ UBinggyPrimaryGameLayout::UBinggyPrimaryGameLayout(const FObjectInitializer& Obj
 {
 }
 
+void UBinggyPrimaryGameLayout::FindAndRemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget)
+{
+	// We're not sure what layer the widget is on so go searching.
+	for (const auto& LayerKVP : Layers)
+	{
+		LayerKVP.Value->RemoveWidget(*ActivatableWidget);
+	}
+}
+
+UCommonActivatableWidgetContainerBase* UBinggyPrimaryGameLayout::GetLayerWidget(FGameplayTag LayerName)
+{
+	return Layers.FindRef(LayerName);
+}
+
 void UBinggyPrimaryGameLayout::RegisterLayer(FGameplayTag LayerTag, UCommonActivatableWidgetContainerBase* LayerWidget)
 {
 	if (!IsDesignTime())

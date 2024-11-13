@@ -3,6 +3,7 @@
 
 #include "BinggyTabListWidgetBase.h"
 #include "CommonAnimatedSwitcher.h"
+#include "Groups/CommonButtonGroupBase.h"
 #include "CommonButtonBase.h"
 
 bool UBinggyTabListWidgetBase::GetPreregisteredTabInfo(const FName TabNameId, FBinggyTabDescriptor& OutTabInfo)
@@ -22,7 +23,7 @@ bool UBinggyTabListWidgetBase::GetPreregisteredTabInfo(const FName TabNameId, FB
 	return true;
 }
 
-bool UBinggyTabListWidgetBase::RegisterDynamicTab(const FBinggyTabDescriptor& TabDescriptor)
+/*bool UBinggyTabListWidgetBase::RegisterDynamicTab(const FBinggyTabDescriptor& TabDescriptor)
 {
 	// If it's hidden we just ignore it.
 	if (TabDescriptor.bHidden)
@@ -33,11 +34,17 @@ bool UBinggyTabListWidgetBase::RegisterDynamicTab(const FBinggyTabDescriptor& Ta
 	PendingTabLabelInfoMap.Add(TabDescriptor.TabId, TabDescriptor);
 
 	return RegisterTab(TabDescriptor.TabId, TabDescriptor.TabButtonType, TabDescriptor.CreatedTabContentWidget);
-}
+}*/
 
 void UBinggyTabListWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	// I select the tab when setup the tab. So no need to select it.
+	if (TabButtonGroup)
+	{
+		TabButtonGroup->SetSelectionRequired(false);
+	}
+	OnTabSelected.AddDynamic(this, &UBinggyTabListWidgetBase::OnTabSelectedHandler);
 }
 
 void UBinggyTabListWidgetBase::NativeConstruct()
@@ -49,7 +56,7 @@ void UBinggyTabListWidgetBase::NativeConstruct()
 void UBinggyTabListWidgetBase::NativeDestruct()
 {
 	// TODO? Exception
-	/*for (FBinggyTabDescriptor& TabInfo : PreregisteredTabInfoArray)
+	for (FBinggyTabDescriptor& TabInfo : PreregisteredTabInfoArray)
 	{
 		
 		if (TabInfo.CreatedTabContentWidget)
@@ -58,7 +65,8 @@ void UBinggyTabListWidgetBase::NativeDestruct()
 			TabInfo.CreatedTabContentWidget->RemoveFromParent();
 			TabInfo.CreatedTabContentWidget = nullptr;
 		}
-	}*/
+	}
+
 	Super::NativeDestruct();
 }
 
@@ -94,10 +102,10 @@ void UBinggyTabListWidgetBase::HandleTabCreation_Implementation(FName TabId, UCo
 	{
 		TabInfoPtr = &TabInfo;
 	}
-	else
+	/*else
 	{
 		TabInfoPtr = PendingTabLabelInfoMap.Find(TabId);
-	}
+	}*/
 	
 	if (TabButton->GetClass()->ImplementsInterface(UBinggyTabButtonInterface::StaticClass()))
 	{
@@ -107,7 +115,7 @@ void UBinggyTabListWidgetBase::HandleTabCreation_Implementation(FName TabId, UCo
 		}
 	}
 
-	PendingTabLabelInfoMap.Remove(TabId);
+	/*PendingTabLabelInfoMap.Remove(TabId);*/
 }
 
 void UBinggyTabListWidgetBase::SetupTabs()

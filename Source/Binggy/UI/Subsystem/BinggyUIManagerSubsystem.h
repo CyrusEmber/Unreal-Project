@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "BinggyUIManagerSubsystem.generated.h"
 
+class UCommonActivatableWidget;
 class UBinggyActivatableWidget;
 class UCommonLocalPlayer;
 class UBinggyUIPolicy;
@@ -29,6 +32,15 @@ public:
 	virtual void NotifyPlayerAdded(ULocalPlayer* LocalPlayer);
 	virtual void NotifyPlayerRemoved(ULocalPlayer* LocalPlayer);
 	virtual void NotifyPlayerDestroyed(ULocalPlayer* LocalPlayer);
+
+	// TODO use aync action, or add some init function
+	// Push Widget to certain layer
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
+	void PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass);
+
+	// Remove the first widget from the layers
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
+	void RemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget);
 
 protected:
 	void SwitchToPolicy(UBinggyUIPolicy* InPolicy);
@@ -68,4 +80,22 @@ private:
 	UPROPERTY(config)
 	TSoftClassPtr<UBinggyActivatableWidget> ErrorDialogClass;
 	
+};
+
+UCLASS()
+class BINGGY_API UUIBlueprintLibrary : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+
+public:
+
+	// Get the subsystem in the game instance and add the widget to the specific layer
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
+	static void PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName, UClass* ActivatableWidgetClass);
+	
+	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
+	static void RemoveWidgetFromLayer(APlayerController* PC, UCommonActivatableWidget* ActivatableWidget);
+
+private:
+	static UBinggyUIManagerSubsystem* GetUIManagerSubsystem(APlayerController* PC);
 };

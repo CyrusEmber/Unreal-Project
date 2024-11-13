@@ -4,9 +4,9 @@
 #include "BinggyGameplayAbility_Interact.h"
 
 #include "AbilitySystemComponent.h"
-#include "Binggy/Interaction/InteractionBlueprintLibrary.h"
-#include "Binggy/Interaction/InteractionOption.h"
-#include "Binggy/Interaction/Tasks/AbilityTask_NearbyInteraction.h"
+#include "Interaction/InteractionBlueprintLibrary.h"
+#include "Interaction/InteractionOption.h"
+#include "Interaction/Tasks/AbilityTask_NearbyInteraction.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
 

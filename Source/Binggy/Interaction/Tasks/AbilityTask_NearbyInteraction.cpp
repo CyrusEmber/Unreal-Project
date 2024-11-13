@@ -4,7 +4,7 @@
 #include "AbilityTask_NearbyInteraction.h"
 
 #include "AbilitySystemComponent.h"
-#include "Binggy/Interaction/InteractionOption.h"
+#include "Interaction/InteractionOption.h"
 
 void UAbilityTask_NearbyInteraction::Activate()
 {

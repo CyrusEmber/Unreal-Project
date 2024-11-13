@@ -3,9 +3,9 @@
 
 #include "TestCharacter.h"
 
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "Component/BinggyHealthComponent.h"
 
 ATestCharacter::ATestCharacter()

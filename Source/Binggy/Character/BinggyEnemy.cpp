@@ -5,13 +5,11 @@
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
-#include "Binggy/AI/BinggyAIController.h"
-#include "Component/ExperienceComponent.h"
-#include "Components/WidgetComponent.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/Attributes/BinggyExperienceSet.h"
+#include "AI/BinggyAIController.h"
 
 
 ABinggyEnemy::ABinggyEnemy()

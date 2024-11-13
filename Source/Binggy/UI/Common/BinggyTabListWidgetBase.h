@@ -35,7 +35,7 @@ public:
 
 	//TODO NDarnell - This should become a TSoftClassPtr<>, the underlying common tab list needs to be able to handle lazy tab content construction.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UCommonUserWidget> TabContentType;
+	TSubclassOf<UUserWidget> TabContentType;
 
 	// The content ptr
 	UPROPERTY(Transient)
@@ -73,9 +73,9 @@ public:
 	/** TODO Helper method to get at all the preregistered tab infos */
 	// const TArray<FBinggyTabDescriptor>& GetAllPreregisteredTabInfos() { return PreregisteredTabInfoArray; }
 
-	// It registers tab with switcher based on the TabDescriptor
-	UFUNCTION(BlueprintCallable, Category = "Tab List")
-	bool RegisterDynamicTab(const FBinggyTabDescriptor& TabDescriptor);
+	// It registers tab with switcher based on the TabDescriptor TODO: not used
+	/*UFUNCTION(BlueprintCallable, Category = "Tab List")
+	bool RegisterDynamicTab(const FBinggyTabDescriptor& TabDescriptor);*/
 
 	/** Delegate broadcast when a new tab is created. Allows hook ups after creation. */
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTabContentCreated, FName, TabId, UCommonUserWidget*, TabWidget);
@@ -93,6 +93,7 @@ protected:
 	virtual void NativeDestruct() override;
 	// End UUserWidget
 
+	// Register tab to switcher when switcher changes
 	virtual void HandlePreLinkedSwitcherChanged() override;
 	virtual void HandlePostLinkedSwitcherChanged() override;
 
@@ -115,11 +116,12 @@ private:
 	// TODO: activate the menu with a key and go straight to the specific tab
 
 	// Callback function for OnTabSelected
+	UFUNCTION()
 	void OnTabSelectedHandler(FName TabId);
 
 	FName LastActiveTabID;
 
-	// Where I store all the tab info
+	// Where I store all the tab info in the designer
 	UPROPERTY(EditAnywhere, meta=(TitleProperty="TabId"), Category = TabList)
 	TArray<FBinggyTabDescriptor> PreregisteredTabInfoArray;
 	
@@ -127,7 +129,7 @@ private:
 	 * Stores label info for tabs that have been registered at runtime but not yet created. 
 	 * Elements are removed once they are created.
 	 */
-	UPROPERTY()
-	TMap<FName, FBinggyTabDescriptor> PendingTabLabelInfoMap;
+	/*UPROPERTY()
+	TMap<FName, FBinggyTabDescriptor> PendingTabLabelInfoMap;*/
 	
 };

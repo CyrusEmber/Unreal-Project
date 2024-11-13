@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
-#include "Binggy/Character/BinggyCharacterBase.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "Character/BinggyCharacterBase.h"
 #include "TestCharacter.generated.h"
 
 class UBinggyHealthComponent;

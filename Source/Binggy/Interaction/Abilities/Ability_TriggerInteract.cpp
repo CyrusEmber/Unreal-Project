@@ -3,9 +3,9 @@
 
 #include "Ability_TriggerInteract.h"
 
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-#include "Binggy/Interaction/InteractionBlueprintLibrary.h"
-#include "Binggy/Interaction/InteractionOption.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
+#include "Interaction/InteractionBlueprintLibrary.h"
+#include "Interaction/InteractionOption.h"
 
 void UAbility_TriggerInteract::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,

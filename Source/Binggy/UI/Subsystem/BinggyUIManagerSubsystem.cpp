@@ -3,6 +3,8 @@
 
 #include "BinggyUIManagerSubsystem.h"
 
+#include "CommonActivatableWidget.h"
+#include "Binggy/UI/Foundation/BinggyPrimaryGameLayout.h"
 #include "Binggy/UI/Foundation/BinggyUIPolicy.h"
 
 void UBinggyUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -63,6 +65,24 @@ void UBinggyUIManagerSubsystem::NotifyPlayerDestroyed(ULocalPlayer* LocalPlayer)
 	}
 }
 
+void UBinggyUIManagerSubsystem::PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass)
+{
+	if (const UBinggyUIPolicy* Policy = GetCurrentUIPolicy())
+	{
+		UBinggyPrimaryGameLayout* RootLayout = Policy->GetRootLayout(GetFirstLocalPlayer());
+		RootLayout->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
+	}
+}
+
+void UBinggyUIManagerSubsystem::RemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget)
+{
+	if (const UBinggyUIPolicy* Policy = GetCurrentUIPolicy())
+	{
+		UBinggyPrimaryGameLayout* RootLayout = Policy->GetRootLayout(GetFirstLocalPlayer());
+		RootLayout->FindAndRemoveWidgetFromLayer(ActivatableWidget);
+	}
+}
+
 void UBinggyUIManagerSubsystem::SwitchToPolicy(UBinggyUIPolicy* InPolicy)
 {
 	if (CurrentPolicy != InPolicy)
@@ -77,6 +97,34 @@ ULocalPlayer* UBinggyUIManagerSubsystem::GetFirstLocalPlayer()
 	if (LocalPlayers.Num() > 0)
 	{
 		return LocalPlayers[0];
+	}
+	return nullptr;
+}
+
+// UUIBlueprintLibrary
+
+void UUIBlueprintLibrary::PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName,
+	UClass* ActivatableWidgetClass)
+{
+	if (UBinggyUIManagerSubsystem* UIManager = GetUIManagerSubsystem(PC))
+	{
+		UIManager->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
+	}
+}
+
+void UUIBlueprintLibrary::RemoveWidgetFromLayer(APlayerController* PC, UCommonActivatableWidget* ActivatableWidget)
+{
+	if (UBinggyUIManagerSubsystem* UIManager = GetUIManagerSubsystem(PC))
+	{
+		UIManager->RemoveWidgetFromLayer(ActivatableWidget);
+	}
+}
+
+UBinggyUIManagerSubsystem* UUIBlueprintLibrary::GetUIManagerSubsystem(APlayerController* PC)
+{
+	if (PC)
+	{
+		return PC->GetGameInstance()->GetSubsystem<UBinggyUIManagerSubsystem>();
 	}
 	return nullptr;
 }

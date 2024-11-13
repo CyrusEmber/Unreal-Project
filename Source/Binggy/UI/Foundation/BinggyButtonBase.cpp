@@ -28,7 +28,6 @@ void UBinggyButtonBase::SetButtonText(const FText& InText)
 {
 	// If the input is empty then the button text can be overridden.
 	bOverride_ButtonText = InText.IsEmpty();
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, InText.ToString());
 	ButtonText = InText;
 	RefreshButtonText();
 }

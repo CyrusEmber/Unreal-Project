@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "GameplayTagContainer.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
 #include "BinggyPrimaryGameLayout.generated.h"
 
+class UCommonActivatableWidget;
 class UCommonActivatableWidgetContainerBase;
 /**
  *  Stores the layout of different Stacks. And you can register layer with widget.
@@ -26,6 +28,33 @@ public:
 	
 public:
 	UBinggyPrimaryGameLayout(const FObjectInitializer& ObjectInitializer);
+
+public:
+	// Push widget without initialize function
+	template <typename ActivatableWidgetT = UCommonActivatableWidget>
+	ActivatableWidgetT* PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass)
+	{
+		return PushWidgetToLayerStack<ActivatableWidgetT>(LayerName, ActivatableWidgetClass, [](ActivatableWidgetT&) {});
+	}
+
+	template <typename ActivatableWidgetT = UCommonActivatableWidget>
+	ActivatableWidgetT* PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass, TFunctionRef<void(ActivatableWidgetT&)> InitInstanceFunc)
+	{
+		static_assert(TIsDerivedFrom<ActivatableWidgetT, UCommonActivatableWidget>::IsDerived, "Only CommonActivatableWidgets can be used here");
+
+		if (UCommonActivatableWidgetContainerBase* Layer = GetLayerWidget(LayerName))
+		{
+			return Layer->AddWidget<ActivatableWidgetT>(ActivatableWidgetClass, InitInstanceFunc);
+		}
+
+		return nullptr;
+	}
+
+	// Find the widget if it exists on any of the layers and remove it from the layer.
+	void FindAndRemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget);
+
+	// Get the layer widget for the given layer tag.
+	UCommonActivatableWidgetContainerBase* GetLayerWidget(FGameplayTag LayerName);
 
 protected:
 	/** Register a layer that widgets can be pushed onto. */

@@ -5,9 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbilityTargetTypes.h"
-#include "Binggy/Interaction/InteractableTarget.h"
-#include "Binggy/Interaction/InteractionBlueprintLibrary.h"
-#include "Binggy/Interaction/InteractionOption.h"
+#include "Interaction/InteractableTarget.h"
+#include "Interaction/InteractionBlueprintLibrary.h"
+#include "Interaction/InteractionOption.h"
 
 void UWaitForInteractableTarget::Activate()
 {

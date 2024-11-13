@@ -66,8 +66,7 @@ protected:
 	virtual void OnRootLayoutAddedToViewport(ULocalPlayer* LocalPlayer, UBinggyPrimaryGameLayout* Layout);
 	virtual void OnRootLayoutRemovedFromViewport(ULocalPlayer* LocalPlayer, UBinggyPrimaryGameLayout* Layout);
 	virtual void OnRootLayoutReleased(ULocalPlayer* LocalPlayer, UBinggyPrimaryGameLayout* Layout);
-
-	// 
+	
 	void CreateLayoutWidget(ULocalPlayer* LocalPlayer);
 	// Return the default LayoutClass
 	TSubclassOf<UBinggyPrimaryGameLayout> GetLayoutWidgetClass(ULocalPlayer* LocalPlayer);

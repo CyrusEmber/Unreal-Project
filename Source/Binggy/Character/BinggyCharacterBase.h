@@ -4,7 +4,7 @@
  
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "Binggy/Interface/CombatInterface.h"
+#include "Interface/CombatInterface.h"
 #include "GameFramework/Character.h"
 #include "BinggyCharacterBase.generated.h"
 

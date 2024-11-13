@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BinggyUserWidget.h"
+#include "UI/Widget/BinggyUserWidget.h"
 
 void UBinggyUserWidget::SetWidgetController(UObject* InWidgetController)
 {
