@@ -4,8 +4,8 @@
 #include "OverlayWidgetController.h"
 
 #include "SkillMenuWidgetController.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 
 void UOverlayWidgetController::BroadcastInitialValue()

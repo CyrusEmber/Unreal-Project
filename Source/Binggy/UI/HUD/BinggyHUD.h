@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "GameFramework/HUD.h"
 #include "BinggyHUD.generated.h"
 
+class UBinggyActivatableMenu;
 class USkillMenuWidgetController;
 class UAttributeMenuWidgetController;
 class USkillMenuWidgetController;
@@ -67,10 +68,10 @@ private:
 	
 	// Set WidgetController
 	UPROPERTY()
-	TObjectPtr<UBinggyUserWidget> OverlayWidget;
+	TObjectPtr<UBinggyActivatableMenu> OverlayWidget;
 
-	UPROPERTY(EditAnywhere, Category = "Player Stats")
-	TSubclassOf<UBinggyUserWidget> OverlayWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UBinggyActivatableMenu> OverlayWidgetClass;
 	
 	UPROPERTY()
 	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
@@ -86,7 +87,8 @@ private:
 	TObjectPtr<USkillMenuWidgetController> SkillMenuWidgetController;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<USkillMenuWidgetController> SkillMenuWidgetControllerClass;
-	
+
+	// Used when initialize the WidgetController
 	TObjectPtr<UBinggyAbilitySystemComponent> AbilitySystemComponent;
 
 

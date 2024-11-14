@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BinggyGameplayAbility.h"
+#include "AbilitySystem/Abilities/BinggyGameplayAbility.h"
 #include "BinggyGameplayAbility_Build.generated.h"
 
 class ABinggyWorldBuildable;

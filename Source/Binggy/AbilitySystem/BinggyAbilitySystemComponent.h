@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/Interaction/InteractionOption.h"
+#include "Interaction/InteractionOption.h"
 #include "BinggyAbilitySystemComponent.generated.h"
 
 struct FAbilitySpecPair

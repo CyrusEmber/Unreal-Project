@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.h"
-#include "Binggy/Interaction/InteractionOption.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Abilities/BinggyGameplayAbility.h"
+#include "Interaction/InteractionOption.h"
 #include "Ability_TriggerInteract.generated.h"
 
 /**

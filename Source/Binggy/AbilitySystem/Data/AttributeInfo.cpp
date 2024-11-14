@@ -3,7 +3,7 @@
 
 #include "AttributeInfo.h"
 
-#include "Binggy/BinggyLogChannel.h"
+#include "BinggyLogChannel.h"
 
 FBinggyAttributeInfo UAttributeInfo::GetAttributeInfoByTag(FGameplayTag AttributeTag, bool bLogNotFound)
 {

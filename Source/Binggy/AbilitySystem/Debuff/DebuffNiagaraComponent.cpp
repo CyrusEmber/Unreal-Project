@@ -5,8 +5,8 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/Character/Component/BinggyHealthComponent.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "Character/Component/BinggyHealthComponent.h"
 
 UDebuffNiagaraComponent::UDebuffNiagaraComponent()
 {

@@ -2,15 +2,15 @@
 
 
 #include "CombatComponent.h"
-#include "Binggy/Weapon/Weapon.h"
-#include "Binggy/Character/BinggyCharacter.h"
-#include "Binggy/PlayerController/BinggyPlayerController.h"
+#include "Weapon/Weapon.h"
+#include "Character/BinggyCharacter.h"
+#include "PlayerController/BinggyPlayerController.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
-#include "Binggy/UI/HUD/BinggyHUD.h"
+#include "UI/HUD/BinggyHUD.h"
 #include "Camera/CameraComponent.h"
 #include "TimerManager.h"
 

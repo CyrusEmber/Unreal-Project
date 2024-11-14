@@ -2,11 +2,11 @@
 
 
 #include "BinggyGameMode.h"
-#include "Binggy/PlayerController/BinggyPlayerController.h"
-#include "Binggy/Character/BinggyCharacter.h"
+#include "PlayerController/BinggyPlayerController.h"
+#include "Character/BinggyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
-#include "Binggy/PlayerState/BinggyPlayerState.h"
+#include "PlayerState/BinggyPlayerState.h"
 
 
 void ABinggyGameMode::BeginPlay()

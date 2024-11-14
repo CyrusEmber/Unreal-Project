@@ -4,14 +4,14 @@
 #include "Weapon.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Binggy/Character/BinggyCharacter.h"
+#include "Character/BinggyCharacter.h"
 #include "Net/UnrealNetwork.h"
 #include "Animation/AnimationAsset.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Casing.h"
 #include "Engine/SkeletalMeshSocket.h"
-#include "Binggy/Binggy.h"
-#include "Binggy/AbilitySystem/Abilities/BinggyAbilityTypes.h"
+#include "Binggy.h"
+#include "AbilitySystem/Abilities/BinggyAbilityTypes.h"
 
 AWeapon::AWeapon()
 {

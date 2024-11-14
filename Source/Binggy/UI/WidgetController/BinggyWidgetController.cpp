@@ -3,10 +3,10 @@
 
 #include "BinggyWidgetController.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 void UBinggyWidgetController::InitializeWithAbilitySystem(UBinggyAbilitySystemComponent* InASC)
 {

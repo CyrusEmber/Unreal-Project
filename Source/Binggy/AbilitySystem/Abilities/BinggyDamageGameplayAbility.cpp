@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/AbilitySystem/Abilities/BinggyDamageGameplayAbility.h"
+#include "AbilitySystem/Abilities/BinggyDamageGameplayAbility.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
 
 FDamageEffectParams UBinggyDamageGameplayAbility::MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor) const
 {

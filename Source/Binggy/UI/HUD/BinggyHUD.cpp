@@ -3,10 +3,15 @@
 
 #include "BinggyHUD.h"
 #include "GameFramework/PlayerController.h"
-#include "Binggy/UI/Widget/BinggyUserWidget.h"
-#include "Binggy/UI/WidgetController/AttributeMenuWidgetController.h"
-#include "Binggy/UI/WidgetController/OverlayWidgetController.h"
-#include "Binggy/UI/WidgetController/SkillMenuWidgetController.h"
+#include "UI/Foundation/BinggyActivatableMenu.h"
+#include "UI/Subsystem/BinggyUIManagerSubsystem.h"
+#include "CommonUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
+#include "UI/WidgetController/SkillMenuWidgetController.h"
+#include "NativeGameplayTags.h"
+
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_UI_LAYER_GAME, "UI.Layer.Game");
 
 
 
@@ -90,16 +95,28 @@ void ABinggyHUD::InitOverlay(UBinggyAbilitySystemComponent* InASC)
 	// Handle respawn
 	if (OverlayWidget && OverlayWidget->IsInViewport())
 	{
-		OverlayWidget->RemoveFromParent();
+		UUIBlueprintLibrary::RemoveWidgetFromLayer(GetOwningPlayerController(), OverlayWidget);
 	}
+	/*FInputModeGameOnly InputMode;
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
+    PlayerController->SetInputMode(InputMode);*/
 
-	OverlayWidget = CreateWidget<UBinggyUserWidget>(GetWorld(), OverlayWidgetClass);
+	
+	OverlayWidget = Cast<UBinggyActivatableMenu>(UUIBlueprintLibrary::PushWidgetToLayerStack(GetOwningPlayerController(), TAG_UI_LAYER_GAME, OverlayWidgetClass));
+	// GetOwningPlayerController()->SetInputMode(FInputModeGameOnly());
+	// Otherwise the input could hit the overlay
+	OverlayWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	OverlayWidget->SetWidgetController(GetOverlayWidgetController());
+	
+	
+	/*OverlayWidget = CreateWidget<UBinggyUserWidget>(GetWorld(), OverlayWidgetClass);
 	// Add to the viewport first then initialize in the blueprint.
 	OverlayWidget->AddToViewport();
 	
 	OverlayWidgetController = GetOverlayWidgetController();
 	// Could there be duplicated callbacks added?, TODO: these are set in blueprint now.
-	OverlayWidget->SetWidgetController(OverlayWidgetController);
+	OverlayWidget->SetWidgetController(OverlayWidgetController);*/
+	
 	/*OverlayWidgetController->BindCallbacksToDependencies();
 	OverlayWidgetController->BroadcastInitialValue();*/
 

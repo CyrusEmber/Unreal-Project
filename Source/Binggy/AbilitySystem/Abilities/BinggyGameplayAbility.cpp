@@ -3,8 +3,8 @@
 
 #include "BinggyGameplayAbility.h"
 
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/Character/BinggyCharacter.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "Character/BinggyCharacter.h"
 
 ABinggyCharacter* UBinggyGameplayAbility::GetBinggyCharacterFromActorInfo() const
 {

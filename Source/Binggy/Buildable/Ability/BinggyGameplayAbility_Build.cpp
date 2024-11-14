@@ -1,13 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Build.h"
+#include "BinggyGameplayAbility_Build.h"
 
-#include "Binggy/Actor/BinggyWorldBuildable.h"
+
+#include "Actor/BinggyWorldBuildable.h"
 
 void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* TriggerEventData)
+                                                   const FGameplayAbilityActorInfo* ActorInfo,
+                                                   const FGameplayAbilityActivationInfo ActivationInfo,
+                                                   const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	// TODO Set it in here, when in battle, not allowed to activate
@@ -17,7 +19,8 @@ void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHan
 void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh)
 {
 	// Only spawn the buildable in server
-	if (!GetOwningActorFromActorInfo()->HasAuthority()) {
+	if (!GetOwningActorFromActorInfo()->HasAuthority())
+	{
 		return;
 	}
 	if (!CurrentBuildable)
@@ -46,15 +49,15 @@ void UBinggyGameplayAbility_Build::UpdateBuildMesh(UStaticMesh* InBuildStaticMes
 void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(FVector TargetLocation)
 {
 	// Only spawn the buildable in server
-	if (!GetOwningActorFromActorInfo()->HasAuthority()) {
+	if (!GetOwningActorFromActorInfo()->HasAuthority())
+	{
 		return;
 	}
-	
+
 	if (CurrentBuildable)
 	{
 		CurrentBuildable->SetActorLocation(TargetLocation);
 	}
-	
 }
 
 void UBinggyGameplayAbility_Build::RotateBuildMeshRotation(bool bIsPositive)
@@ -67,18 +70,18 @@ void UBinggyGameplayAbility_Build::RotateBuildMeshRotation(bool bIsPositive)
 }
 
 void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle Handle,
-                                              const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                              const FGameplayAbilityActorInfo* ActorInfo,
+                                              const FGameplayAbilityActivationInfo ActivationInfo,
                                               bool bReplicateEndAbility, bool bWasCancelled)
 {
 	if (CurrentBuildable)
 	{
-		if (GetOwningActorFromActorInfo()->HasAuthority()) {
+		if (GetOwningActorFromActorInfo()->HasAuthority())
+		{
 			CurrentBuildable->OnConstructionCompleted();
 		}
 	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	// Destroy the cached actor
 	// CurrentBuildStaticMeshActor->Destroy();
-
-	
 }

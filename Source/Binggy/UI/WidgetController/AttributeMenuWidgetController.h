@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BinggyWidgetController.h"
-#include "Binggy/AbilitySystem/Data/AttributeInfo.h"
+#include "AbilitySystem/Data/AttributeInfo.h"
 #include "AttributeMenuWidgetController.generated.h"
 
 

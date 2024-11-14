@@ -2,12 +2,12 @@
 
 
 #include "BinggyPlayerState.h"
-#include "Binggy/PlayerController/BinggyPlayerController.h"
-#include "Binggy/Character/BinggyCharacter.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "PlayerController/BinggyPlayerController.h"
+#include "Character/BinggyCharacter.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
+#include "AbilitySystem/Attributes/BinggyExperienceSet.h"
 #include "Net/UnrealNetwork.h"
 
 ABinggyPlayerState::ABinggyPlayerState()

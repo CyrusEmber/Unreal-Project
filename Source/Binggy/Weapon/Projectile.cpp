@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
-#include "Binggy/Binggy.h"
+#include "Binggy.h"
 
 
 AProjectile::AProjectile()

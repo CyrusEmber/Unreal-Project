@@ -3,7 +3,7 @@
 
 #include "BinggyExperienceSet.h"
 #include "GameplayEffectExtension.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 // TODO place holder

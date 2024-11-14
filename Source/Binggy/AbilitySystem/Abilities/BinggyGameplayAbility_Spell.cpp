@@ -5,12 +5,12 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-// #include "Binggy/Character/Component/CombatComponent.h"
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/Character/BinggyCharacter.h"
-#include "Binggy/Character/Component/CombatComponent.h"
-#include "Binggy/Weapon/Weapon.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
+// #include "Character/Component/CombatComponent.h"
+#include "UtilityLibrary.h"
+#include "Character/BinggyCharacter.h"
+#include "Character/Component/CombatComponent.h"
+#include "Weapon/Weapon.h"
 #include "Kismet/GameplayStatics.h"
 
 #define LINE_TRACE_LENGTH 80000.f

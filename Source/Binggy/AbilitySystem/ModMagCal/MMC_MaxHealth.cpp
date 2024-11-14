@@ -2,9 +2,9 @@
 
 
 #include "MMC_MaxHealth.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
-#include "Binggy/Interface/CombatInterface.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/Attributes/BinggyExperienceSet.h"
+#include "Interface/CombatInterface.h"
 
 UMMC_MaxHealth::UMMC_MaxHealth()
 {

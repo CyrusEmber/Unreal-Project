@@ -5,7 +5,7 @@
 #include "BinggyCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Binggy/Weapon/Weapon.h"
+#include "Weapon/Weapon.h"
 
 void UBinggyAnimInstance::NativeInitializeAnimation()
 {

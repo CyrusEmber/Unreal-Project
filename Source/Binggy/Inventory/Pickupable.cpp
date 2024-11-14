@@ -1,4 +1,4 @@
-﻿#include "Binggy/Inventory/Pickupable.h"
+﻿#include "Inventory/Pickupable.h"
 
 #include "BinggyInventoryComponent.h"
 

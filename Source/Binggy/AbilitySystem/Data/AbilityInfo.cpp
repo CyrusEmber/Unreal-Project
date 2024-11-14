@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
-#include "Binggy/BinggyLogChannel.h"
+#include "BinggyLogChannel.h"
 
 FBinggyAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& AbilityTag, bool bLogNotFound)
 {

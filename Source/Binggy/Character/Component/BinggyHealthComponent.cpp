@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/Character/Component/BinggyHealthComponent.h"
+#include "Character/Component/BinggyHealthComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-#include "Binggy/AbilitySystem/FBinggyGameplayEffectContext.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyExperienceSet.h"
-#include "Binggy/Interface/CombatInterface.h"
-#include "Binggy/PlayerState/BinggyPlayerState.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
+#include "AbilitySystem/FBinggyGameplayEffectContext.h"
+#include "AbilitySystem/Attributes/BinggyExperienceSet.h"
+#include "Interface/CombatInterface.h"
+#include "PlayerState/BinggyPlayerState.h"
 
 // Sets default values for this component's properties
 UBinggyHealthComponent::UBinggyHealthComponent()

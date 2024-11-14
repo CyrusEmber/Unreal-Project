@@ -3,11 +3,11 @@
 
 #include "SkillMenuWidgetController.h"
 
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
-#include "Binggy/AbilitySystem/Data/AbilityInfo.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 void USkillMenuWidgetController::BroadcastInitialValue()
 {

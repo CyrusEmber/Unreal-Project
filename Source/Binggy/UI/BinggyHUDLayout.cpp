@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/UI/BinggyHUDLayout.h"
+#include "UI/BinggyHUDLayout.h"
 
 #include "NativeGameplayTags.h"
 #include "CommonUIExtensions.h"

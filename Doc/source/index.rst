@@ -16,6 +16,8 @@ documentation for details.
    :caption: UI
 
    UI/DraggableWidget
+   UI/CommonUI
+   UI/HUD
 
 .. toctree::
    :maxdepth: 2
@@ -29,8 +31,8 @@ documentation for details.
    :maxdepth: 2
    :caption: General
 
-   Build/Build
+   BuildSystem/Build
    AbilitySystem/Ability
    Weapon/Weapon
-   UI/CommonUI
+
 

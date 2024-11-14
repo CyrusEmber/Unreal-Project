@@ -36,7 +36,7 @@ public:
 	// TODO use aync action, or add some init function
 	// Push Widget to certain layer
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
-	void PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass);
+	UCommonActivatableWidget* PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass);
 
 	// Remove the first widget from the layers
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
@@ -91,7 +91,7 @@ public:
 
 	// Get the subsystem in the game instance and add the widget to the specific layer
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
-	static void PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName, UClass* ActivatableWidgetClass);
+	static UCommonActivatableWidget* PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName, UClass* ActivatableWidgetClass);
 	
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic)
 	static void RemoveWidgetFromLayer(APlayerController* PC, UCommonActivatableWidget* ActivatableWidget);

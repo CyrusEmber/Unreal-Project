@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Binggy/Interaction/InteractableTarget.h"
-#include "Binggy/Interaction/InteractionOption.h"
-#include "Binggy/Inventory/Pickupable.h"
+#include "Interaction/InteractableTarget.h"
+#include "Interaction/InteractionOption.h"
+#include "Inventory/Pickupable.h"
 #include "GameFramework/Actor.h"
 #include "BinggyWorldCollectable.generated.h"
 

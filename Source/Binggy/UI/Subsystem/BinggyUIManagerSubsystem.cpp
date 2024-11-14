@@ -4,8 +4,8 @@
 #include "BinggyUIManagerSubsystem.h"
 
 #include "CommonActivatableWidget.h"
-#include "Binggy/UI/Foundation/BinggyPrimaryGameLayout.h"
-#include "Binggy/UI/Foundation/BinggyUIPolicy.h"
+#include "UI/Foundation/BinggyPrimaryGameLayout.h"
+#include "UI/Foundation/BinggyUIPolicy.h"
 
 void UBinggyUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -65,13 +65,15 @@ void UBinggyUIManagerSubsystem::NotifyPlayerDestroyed(ULocalPlayer* LocalPlayer)
 	}
 }
 
-void UBinggyUIManagerSubsystem::PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass)
+UCommonActivatableWidget* UBinggyUIManagerSubsystem::PushWidgetToLayerStack(FGameplayTag LayerName, UClass* ActivatableWidgetClass)
 {
+	
 	if (const UBinggyUIPolicy* Policy = GetCurrentUIPolicy())
 	{
 		UBinggyPrimaryGameLayout* RootLayout = Policy->GetRootLayout(GetFirstLocalPlayer());
-		RootLayout->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
+		return RootLayout->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
 	}
+	return nullptr;
 }
 
 void UBinggyUIManagerSubsystem::RemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget)
@@ -103,13 +105,14 @@ ULocalPlayer* UBinggyUIManagerSubsystem::GetFirstLocalPlayer()
 
 // UUIBlueprintLibrary
 
-void UUIBlueprintLibrary::PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName,
+UCommonActivatableWidget* UUIBlueprintLibrary::PushWidgetToLayerStack(APlayerController* PC, FGameplayTag LayerName,
 	UClass* ActivatableWidgetClass)
 {
 	if (UBinggyUIManagerSubsystem* UIManager = GetUIManagerSubsystem(PC))
 	{
-		UIManager->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
+		return UIManager->PushWidgetToLayerStack(LayerName, ActivatableWidgetClass);
 	}
+	return nullptr;
 }
 
 void UUIBlueprintLibrary::RemoveWidgetFromLayer(APlayerController* PC, UCommonActivatableWidget* ActivatableWidget)

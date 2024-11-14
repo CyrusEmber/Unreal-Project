@@ -3,10 +3,10 @@
 
 #include "WeaponSpawner.h"
 
-#include "Binggy/Inventory/BinggyInventoryComponent.h"
-#include "Binggy/Inventory/BinggyInventoryItemDefinition.h"
-#include "Binggy/Inventory/InventoryFragment_InventoryItem.h"
-#include "Binggy/Inventory/InventoryFragment_PickupItem.h"
+#include "Inventory/BinggyInventoryComponent.h"
+#include "Inventory/BinggyInventoryItemDefinition.h"
+#include "Inventory/InventoryFragment_InventoryItem.h"
+#include "Inventory/InventoryFragment_PickupItem.h"
 #include "Components/CapsuleComponent.h"
 
 class UInventoryFragment_PickupItem;

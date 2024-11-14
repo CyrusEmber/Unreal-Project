@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/AbilitySystem/Abilities/BinggyDamageGameplayAbility.h"
+#include "AbilitySystem/Abilities/BinggyDamageGameplayAbility.h"
 #include "BinggyGameplayAbility_Spell.generated.h"
 
 class AProjectile;

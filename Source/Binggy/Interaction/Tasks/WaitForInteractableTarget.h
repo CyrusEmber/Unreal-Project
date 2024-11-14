@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/Tasks/AbilityTask.h"
-#include "Binggy/Interaction/InteractableTarget.h"
-#include "Binggy/Interaction/InteractionQuery.h"
+#include "Interaction/InteractableTarget.h"
+#include "Interaction/InteractionQuery.h"
 #include "WaitForInteractableTarget.generated.h"
 
 struct FInteractionOption;

@@ -7,7 +7,7 @@
 #include "BinggyGameplayTags.h"
 #include "Abilities/BinggyGameplayAbility.h"
 #include "Attributes/BinggyExperienceSet.h"
-#include "Binggy/UtilityLibrary.h"
+#include "UtilityLibrary.h"
 #include "Data/AbilityInfo.h"
 
 struct FBinggyAbilityInfo;

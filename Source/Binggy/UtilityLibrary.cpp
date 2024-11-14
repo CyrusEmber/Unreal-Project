@@ -10,7 +10,7 @@
 #include "AbilitySystem/FBinggyGameplayEffectContext.h"
 #include "AbilitySystem/Abilities/BinggyAbilityTypes.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
-#include "Binggy/UI/HUD/BinggyHUD.h"
+#include "UI/HUD/BinggyHUD.h"
 #include "GameMode/BinggyGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerState/BinggyPlayerState.h"

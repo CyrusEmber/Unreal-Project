@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Binggy/Interaction/InteractableTarget.h"
+#include "Interaction/InteractableTarget.h"
 #include "Engine/StaticMeshActor.h"
 #include "BinggyWorldBuildable.generated.h"
 

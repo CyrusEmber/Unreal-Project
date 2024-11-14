@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BinggyWidgetController.h"
-#include "Binggy/AbilitySystem/BinggyAbilitySystemComponent.h"
+#include "AbilitySystem/BinggyAbilitySystemComponent.h"
 #include "OverlayWidgetController.generated.h"
 
 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BinggyCharacterBase.h"
-#include "Binggy/AbilitySystem/Data/CharacterClassInfo.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "BinggyEnemy.generated.h"
 
 class UBinggyExperienceSet;

@@ -3,8 +3,8 @@
 
 #include "BinggyGameInstance.h"
 
-#include "Binggy/PlayerController/BinggyPlayerController.h"
-#include "Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h"
+#include "PlayerController/BinggyPlayerController.h"
+#include "UI/Subsystem/BinggyUIManagerSubsystem.h"
 
 class UBinggyUIManagerSubsystem;
 

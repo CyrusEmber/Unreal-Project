@@ -3,10 +3,10 @@
 
 #include "BinggyUIComponent.h"
 
-#include "Binggy/UI/Widget/BinggyUserWidget.h"
-#include "Binggy/UI/WidgetController/OverlayWidgetController.h"
-#include "Binggy/UI/WidgetController/SkillMenuWidgetController.h"
-#include "Binggy/UI/WidgetController/AttributeMenuWidgetController.h"
+#include "UI/Widget/BinggyUserWidget.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
+#include "UI/WidgetController/SkillMenuWidgetController.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 
 // Sets default values for this component's properties
 UBinggyUIComponent::UBinggyUIComponent()

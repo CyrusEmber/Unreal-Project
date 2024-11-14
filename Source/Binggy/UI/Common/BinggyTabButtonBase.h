@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BinggyTabListWidgetBase.h"
-#include "Binggy/UI/Foundation/BinggyButtonBase.h"
+#include "UI/Foundation/BinggyButtonBase.h"
 #include "BinggyTabButtonBase.generated.h"
 
 /**

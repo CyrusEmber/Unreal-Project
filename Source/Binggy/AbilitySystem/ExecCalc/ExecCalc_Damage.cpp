@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Binggy/AbilitySystem/ExecCalc/ExecCalc_Damage.h"
+#include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 
-#include "Binggy/UtilityLibrary.h"
-#include "Binggy/AbilitySystem/BinggyGameplayTags.h"
-#include "Binggy/AbilitySystem/Attributes/BinggyAttributeSet.h"
+#include "UtilityLibrary.h"
+#include "AbilitySystem/BinggyGameplayTags.h"
+#include "AbilitySystem/Attributes/BinggyAttributeSet.h"
 
 struct BinggyDamageStatics
 {

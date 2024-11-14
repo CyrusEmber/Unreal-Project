@@ -5,7 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 //#include "AbilitySystemInterface.h"
-//#include "Binggy/AbilitySystem/BinggyAttributeSet.h"
+//#include "AbilitySystem/BinggyAttributeSet.h"
 //#include "Components/SphereComponent.h"
 
 ABinggyEffectActor::ABinggyEffectActor()
