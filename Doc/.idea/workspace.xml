@@ -5,69 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/source/UI/HUD.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/AttributeMenu/WBP_AttributeMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/AttributeMenu/WBP_AttributeMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/InventoryMenu/WBP_InventoryMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/InventoryMenu/WBP_InventoryMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/SkillMenu/WBP_SkillMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/Animations/Animation.rst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/index.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AI/BinggyAIController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AI/BinggyAIController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyDamageGameplayAbility.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyDamageGameplayAbility.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Build.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Build.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Spell.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Spell.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Spell.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Abilities/BinggyGameplayAbility_Spell.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/TargetDataUnderCursor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/TargetDataUnderCursor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Attributes/BinggyAttributeSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Attributes/BinggyAttributeSet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Attributes/BinggyExperienceSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Attributes/BinggyExperienceSet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemGlobals.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/BinggyAbilitySystemGlobals.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Data/AbilityInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Data/AbilityInfo.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Data/AttributeInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Data/AttributeInfo.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Debuff/DebuffNiagaraComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/Debuff/DebuffNiagaraComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/ExecCalc/ExecCalc_Damage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/ExecCalc/ExecCalc_Damage.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/ModMagCal/MMC_MaxHealth.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/ModMagCal/MMC_MaxHealth.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyEffectActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyEffectActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyAnimInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyAnimInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyEnemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/BinggyEnemy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyHealthComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyHealthComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyUIComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyUIComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyWidgetComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/Component/BinggyWidgetComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/Component/CombatComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/Component/CombatComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Character/Component/ExperienceComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Character/Component/ExperienceComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/GameMode/BinggyGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/GameMode/BinggyGameMode.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/Ability_TriggerInteract.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/Ability_TriggerInteract.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/Pickupable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/Pickupable.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/PlayerState/BinggyPlayerState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/PlayerState/BinggyPlayerState.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/System/BinggyGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/System/BinggyGameInstance.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/BinggyHUDLayout.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/BinggyHUDLayout.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabButtonBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyTabButtonBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Subsystem/BinggyUIManagerSubsystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Widget/DamageTextWidgetComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Widget/DamageTextWidgetComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/AttributeMenuWidgetController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/AttributeMenuWidgetController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/AttributeMenuWidgetController.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/AttributeMenuWidgetController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/BinggyWidgetController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/BinggyWidgetController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/OverlayWidgetController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/OverlayWidgetController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/OverlayWidgetController.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/OverlayWidgetController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/SkillMenuWidgetController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/WidgetController/SkillMenuWidgetController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UtilityLibrary.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UtilityLibrary.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/Projectile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/Projectile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/Projectile.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/Projectile.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/ProjectileBullet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/ProjectileBullet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/Weapon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/Weapon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/Weapon.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/Weapon.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Weapon/WeaponSpawner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Weapon/WeaponSpawner.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

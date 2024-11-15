@@ -82,11 +82,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBinggyInventoryComponent> InventoryComponent;
 
-	
-
-
-
-	
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
