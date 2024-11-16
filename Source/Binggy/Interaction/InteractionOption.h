@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "GameplayAbilitySpecHandle.h"
-
+#include "Abilities/GameplayAbility.h"
 #include "InteractionOption.generated.h"
 
 class IInteractableTarget;

@@ -21,6 +21,18 @@ enum class EBuildableState : uint8 {
 };
 
 /**
+ *	Defines the blocks it can attach to.
+ */
+UENUM(BlueprintType)
+enum class EBuildableSurfaceType : uint8 {
+	Floor,
+	Wall,
+	Ceiling,
+	NonEvenSurface
+};
+
+
+/**
  * 
  */
 UCLASS(Blueprintable)
@@ -29,35 +41,39 @@ class BINGGY_API ABinggyWorldBuildable : public AStaticMeshActor, public IIntera
 	GENERATED_BODY()
 public:
 	ABinggyWorldBuildable();
+	
+
+
+	// Server execute function
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void OnConstructionCompleted();
+
+	// Server execute function
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void OnConstructionBegin();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& OptionBuilder) override;
 
-	void SetBuildMesh(UStaticMesh* BuildMesh);
+	// TODO update mesh at runtime with animation
+	void InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh);
 
-	UFUNCTION(BlueprintCallable, Category="Build")
-	void UpdateMeshLocation(FVector TargetLocation);
+	// Update location and rotation
+	void UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal);
 	
-	UFUNCTION(BlueprintCallable, Category="Build")
-	void UpdateMeshRotation(FRotator TargetRotation);
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void UpdateMeshRotation(const FRotator& TargetRotation, const FVector& HitNormal);
 
-	// Server execute function
-	UFUNCTION(BlueprintCallable, Category="Build")
-	void OnConstructionCompleted();
-
-	// Server execute function
-	UFUNCTION(BlueprintCallable, Category="Build")
-	void OnConstructionBegin();
-
+	
 protected:
 	// Turn red when there are overlap
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-	
-	
 
+	virtual void BeginPlay() override;
+	
 	// Client updates
 	UFUNCTION()
 	virtual void OnRep_BuildableState(EBuildableState OldBuildableState);
@@ -65,14 +81,20 @@ protected:
 	// Respond to different states change.
 	void SetBuildableState(EBuildableState NewBuildableState);
 
+	
 private:
-	UPROPERTY(EditAnywhere, Category = "Default")
+	UPROPERTY(EditAnywhere, Category = "Buildable")
 	FInteractionOption Option;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Binggy|Materials", meta = (AllowPrivateAccess = "true"))
+	// Properties
+	// Define a set of surfaces this buildable can attach to
+	UPROPERTY(EditDefaultsOnly, Category = "Buildable")
+	TSet<EBuildableSurfaceType> AttachableSurfaces;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable|Materials", meta = (AllowPrivateAccess = "true"))
 	UMaterialInterface* RedOverlayMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Binggy|Materials", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable|Materials", meta = (AllowPrivateAccess = "true"))
 	UMaterialInterface* GreenOverlayMaterial;
 
 	int32 OverlappingActorCount = 0;
@@ -83,6 +105,21 @@ private:
 
 	void SetMeshOverlayMaterial(UMaterialInterface* InOverlayMaterial);
 
+	// The offset from the initial spawn point (actor center) and the actual spawn point.
+	FVector CalculateOffsetSpawnPoint(AActor* CombinedActor);
+
+	// Update the rotation based on HitResult's norm and EBuildableSurfaceType, clamping is made. With a tolerance
+	FRotator GetBaseRotation(const FVector& HitNormal, const float VerticalTolerance = 0.01f);
+
+	// Helper function
+	bool CanAttachToSurface(EBuildableSurfaceType SurfaceType) const
+	{
+		return AttachableSurfaces.Contains(SurfaceType);
+	}
+
+	FVector PlacementOffset;
+
+	// TODO
 	/*// The definition we use to create the item mesh
 	UPROPERTY(EditAnywhere, Category = "Default")
 	FBuildItemDefinition BuildItemDef;*/

@@ -28,6 +28,8 @@ Set Brush for ``TabButton``.
 
 Store tabs hidden somewhere.
 
+* Reactivate the menu widget create a new widget with tab
+
 Workflow:
 =========
 

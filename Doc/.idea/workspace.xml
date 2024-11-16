@@ -5,8 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/source/Animations/Animation.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.idea.Binggy.dir/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.vsconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../.vsconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Binggy.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/Data/DA_CharacterClassInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/Data/DA_CharacterClassInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/BP_Collectable_Test.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/BP_Collectable_Test.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Character/BP_BinggyCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Abilities/GA_Interact_Collect.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Abilities/GA_Interact_Scan.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Abilities/GA_Interact_Trigger.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/BP_CollectTest.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/BP_CollectTest.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/Consumable/BP_HealthPotion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/Consumable/BP_HealthPotion.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/Consumable/GE_HealthPotion.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/Consumable/ID_HealthPotion.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/Consumable/T_HealthPotion.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/Item/Pickupable/ID_CollectTest.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/UI/UI_CIP_ExampleInteractionIndicator_Circular.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/UI/UI_CIP_ExampleInteractionIndicator_Square.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/Interaction/UI/WBP_InteractionIndicatorTest.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/BuildSystem/Build.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/BuildSystem/Build.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/UI/CommonUI.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/UI/CommonUI.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractionOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/InteractionOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,14 +51,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/UE/Binggy5.4/Doc&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Color Scheme Font&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/UE/Binggy/Doc",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\UE\Binggy5.4\Doc\source\InventorySystem" />

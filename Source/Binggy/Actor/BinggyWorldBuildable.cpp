@@ -16,8 +16,7 @@ ABinggyWorldBuildable::ABinggyWorldBuildable()
 	// Ready for overlap
 	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
-	GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
-
+	
 	// SetMobility(EComponentMobility::Static);
 	// GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
@@ -39,19 +38,24 @@ void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& In
 	OptionBuilder.AddInteractionOption(Option);
 }
 
-void ABinggyWorldBuildable::SetBuildMesh(UStaticMesh* BuildMesh)
+void ABinggyWorldBuildable::InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh)
 {
-	GetStaticMeshComponent()->SetStaticMesh(BuildMesh);
+	GetStaticMeshComponent()->SetStaticMesh(InBuildStaticMesh);
+	PlacementOffset = CalculateOffsetSpawnPoint(this);
 }
 
-void ABinggyWorldBuildable::UpdateMeshLocation(FVector TargetLocation)
+void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal)
 {
-	SetActorLocation(TargetLocation);
+	FRotator Rotation =  GetBaseRotation(HitNormal);
+	FVector ForwardVector = -HitNormal * PlacementOffset.Z;
+	SetActorLocation(TargetLocation + ForwardVector);
+	SetActorRotation(Rotation);
 }
 
-void ABinggyWorldBuildable::UpdateMeshRotation(FRotator TargetRotation)
+void ABinggyWorldBuildable::UpdateMeshRotation(const FRotator& TargetRotation, const FVector& HitNormal)
 {
 	SetActorRotation(TargetRotation);
+	SetActorRotation(GetBaseRotation(HitNormal));
 }
 
 void ABinggyWorldBuildable::OnConstructionCompleted()
@@ -63,6 +67,66 @@ void ABinggyWorldBuildable::OnConstructionBegin()
 {
 	SetBuildableState(EBuildableState::Building);
 }
+
+FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
+{
+	FVector ActorOrigin, ActorBoxExtent;
+	CombinedActor->GetActorBounds(true, ActorOrigin, ActorBoxExtent);
+
+	float MinZ = ActorOrigin.Z;
+	
+	for (UActorComponent* Component : CombinedActor->GetComponents())
+	{
+		if (UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Component))
+		{
+			FVector Origin, BoxExtent;
+			MeshComponent->GetLocalBounds(Origin, BoxExtent);
+            
+			FVector ComponentBottom = MeshComponent->GetComponentLocation() - FVector(0, 0, BoxExtent.Z);
+
+			// Track the lowest Z value
+			if (ComponentBottom.Z < MinZ)
+			{
+				MinZ = ComponentBottom.Z;
+			}
+		}
+	}
+
+	return FVector(ActorOrigin.X, ActorOrigin.Y, MinZ);
+}
+
+FRotator ABinggyWorldBuildable::GetBaseRotation(const FVector& HitNormal, const float VerticalTolerance)
+{
+	FRotator PlacementRotation;
+	if (FMath::IsNearlyEqual(HitNormal.Z, 1.0f, VerticalTolerance)) {
+		// This is a floor
+		if (CanAttachToSurface(EBuildableSurfaceType::Floor))
+		{
+			PlacementRotation = FRotator(0, 0, 0); 
+		}
+	} else if (FMath::IsNearlyEqual(HitNormal.Z, -1.0f, VerticalTolerance)) {
+		// This is a ceiling
+		if (CanAttachToSurface(EBuildableSurfaceType::Ceiling))
+		{
+			PlacementRotation = FRotator(180, 0, 0); 
+		}
+	} else if (FMath::IsNearlyZero(HitNormal.Z, VerticalTolerance)) {
+		// This is a wall
+		if (CanAttachToSurface(EBuildableSurfaceType::Wall))
+		{
+			PlacementRotation = HitNormal.Rotation();
+			PlacementRotation.Pitch = 0; 
+		}
+	} else {
+		// Possibly a sloped or uneven surface
+		if (CanAttachToSurface(EBuildableSurfaceType::NonEvenSurface))
+		{
+			PlacementRotation = HitNormal.Rotation();
+		}
+	}
+	return PlacementRotation;
+}
+
 
 void ABinggyWorldBuildable::NotifyActorBeginOverlap(AActor* OtherActor)
 {
@@ -102,6 +166,18 @@ void ABinggyWorldBuildable::NotifyActorEndOverlap(AActor* OtherActor)
 	
 }
 
+void ABinggyWorldBuildable::BeginPlay()
+{
+	Super::BeginPlay();
+	// Generate overlap events only for server
+	if (HasAuthority())
+	{
+		GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
+	}
+	
+
+}
+
 void ABinggyWorldBuildable::OnRep_BuildableState(EBuildableState OldBuildableState)
 {
 	if (BuildableState == OldBuildableState)
@@ -121,6 +197,11 @@ void ABinggyWorldBuildable::SetBuildableState(EBuildableState NewBuildableState)
 			SetMeshOverlayMaterial(GreenOverlayMaterial);
 			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
+			if (HasAuthority())
+			{
+				GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
+			}
+			GetStaticMeshComponent()->SetCastShadow(false);
 			break;
 
 		case (EBuildableState::Clear):
@@ -131,10 +212,17 @@ void ABinggyWorldBuildable::SetBuildableState(EBuildableState NewBuildableState)
 			SetMeshOverlayMaterial(RedOverlayMaterial);
 			break;
 
-		// Should still generate overlap events
+		// Should not respond overlap events
 		case (EBuildableState::Placed):
 			GetStaticMeshComponent()->SetOverlayMaterial(nullptr);
 			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			// TODO set correct channel
+			GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Block);
+			if (HasAuthority())
+			{
+				GetStaticMeshComponent()->SetGenerateOverlapEvents(false);
+			}
+			GetStaticMeshComponent()->SetCastShadow(true);
 			break;
 
 		default:

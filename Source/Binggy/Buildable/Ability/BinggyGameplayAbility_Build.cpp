@@ -16,7 +16,7 @@ void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHan
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
 
-void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh)
+void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation, FHitResult& HitResult)
 {
 	// Only spawn the buildable in server
 	if (!GetOwningActorFromActorInfo()->HasAuthority())
@@ -33,20 +33,12 @@ void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh
 
 			CurrentBuildable = World->SpawnActor<ABinggyWorldBuildable>(BuildableClass, FVector::ZeroVector, Rotation);
 			CurrentBuildable->OnConstructionBegin();
+			CurrentBuildable->InitializeMeshAndOffset(InBuildStaticMesh);
 		}
 	}
-	UpdateBuildMesh(InBuildStaticMesh);
 }
 
-void UBinggyGameplayAbility_Build::UpdateBuildMesh(UStaticMesh* InBuildStaticMesh)
-{
-	if (CurrentBuildable)
-	{
-		CurrentBuildable->SetBuildMesh(InBuildStaticMesh);
-	}
-}
-
-void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(FVector TargetLocation)
+void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(const FVector& TargetLocation, const FVector& HitNormal)
 {
 	// Only spawn the buildable in server
 	if (!GetOwningActorFromActorInfo()->HasAuthority())
@@ -56,7 +48,7 @@ void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(FVector TargetLocatio
 
 	if (CurrentBuildable)
 	{
-		CurrentBuildable->SetActorLocation(TargetLocation);
+		CurrentBuildable->UpdatePreviewMeshPosition(TargetLocation, HitNormal);
 	}
 }
 

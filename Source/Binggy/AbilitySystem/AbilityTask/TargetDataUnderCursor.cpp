@@ -115,7 +115,6 @@ void UTargetDataUnderCursor::TraceUnderCrosshairByVisibility(FHitResult& TraceHi
 		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECC_Visibility);
 
 		if (!TraceHitResult.bBlockingHit) {
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No Blocking Hit")); 
 			TraceHitResult.ImpactPoint = End;
 		}
 	}

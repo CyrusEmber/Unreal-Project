@@ -20,15 +20,15 @@ public:
 
 	// TODO: separate spawn and update
 	UFUNCTION(BlueprintCallable, Category="Build")
-	void SpawnBuildable(UStaticMesh* InBuildStaticMesh);
+	void SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation, FHitResult& HitResult);
 	
 	// Select the correct static mesh from UI
-	UFUNCTION(BlueprintCallable, Category="Build")
-	void UpdateBuildMesh(UStaticMesh* InBuildStaticMesh);
+	/*UFUNCTION(BlueprintCallable, Category="Build")
+	void UpdateBuildMesh(UStaticMesh* InBuildStaticMesh);*/
 
-	// TODO a little problematic, how to get the target location correctly, or create a preview mesh
+	// Update the location based on its EBuildableSurfaceType and target location
 	UFUNCTION(BlueprintCallable, Category="Build")
-	void UpdateBuildMeshLocation(FVector TargetLocation);
+	void UpdateBuildMeshLocation(const FVector& TargetLocation, const FVector& HitNormal);
 
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void RotateBuildMeshRotation(bool bIsPositive);
