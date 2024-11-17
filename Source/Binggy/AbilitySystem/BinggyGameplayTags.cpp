@@ -295,6 +295,12 @@ void FBinggyGameplayTags::InitializeNativeGameplayTags()
 	FName("Ability.Consume.Active"),
 	FString("Ability Consume Active")
 	);
+	
+	GameplayTags.Ability_Build_Active = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Ability.Build.Active"),
+	FString("Ability Build Active")
+	);
+	
 	// End of Interaction tags
 
 	// Common UI tags

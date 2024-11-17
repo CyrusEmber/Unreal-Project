@@ -29,3 +29,7 @@ TODO
 * The buildable should implement Interactable interface
 
 * Moving and rotating with an interpolation
+
+Bug:
+----
+* Only the server is capable of rotate buildable

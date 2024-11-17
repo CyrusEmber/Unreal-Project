@@ -60,10 +60,7 @@ public:
 	void InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh);
 
 	// Update location and rotation
-	void UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal);
-	
-	UFUNCTION(BlueprintCallable, Category="Buildable")
-	void UpdateMeshRotation(const FRotator& TargetRotation, const FVector& HitNormal);
+	void UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal);
 
 	
 protected:

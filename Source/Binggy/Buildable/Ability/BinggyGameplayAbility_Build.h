@@ -30,15 +30,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void UpdateBuildMeshLocation(const FVector& TargetLocation, const FVector& HitNormal);
 
+	// Value only being 1 or -1
 	UFUNCTION(BlueprintCallable, Category="Build")
-	void RotateBuildMeshRotation(bool bIsPositive);
+	void UpdateMeshRotationAroundNormal(bool bIsRight);
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 private:
 	TObjectPtr<ABinggyWorldBuildable> CurrentBuildable;
 
-	FRotator DeltaRotation = FRotator(0, 20, 0);
+	FRotator DeltaRotation = FRotator(0, 15, 0);
+
+	float LerpSpeed = 120.f;
+
+	FRotator RotationAroundNormal = FRotator(0, 0, 0);
 	
 	UPROPERTY(EditDefaultsOnly, Category="Binggy|Build", meta=(AllowPrivateAccess=true))
 	TSubclassOf<ABinggyWorldBuildable> BuildableClass;

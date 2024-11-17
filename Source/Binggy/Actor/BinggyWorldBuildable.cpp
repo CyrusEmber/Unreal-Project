@@ -44,18 +44,16 @@ void ABinggyWorldBuildable::InitializeMeshAndOffset(UStaticMesh* InBuildStaticMe
 	PlacementOffset = CalculateOffsetSpawnPoint(this);
 }
 
-void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal)
+void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal)
 {
-	FRotator Rotation =  GetBaseRotation(HitNormal);
+	
 	FVector ForwardVector = -HitNormal * PlacementOffset.Z;
 	SetActorLocation(TargetLocation + ForwardVector);
-	SetActorRotation(Rotation);
-}
 
-void ABinggyWorldBuildable::UpdateMeshRotation(const FRotator& TargetRotation, const FVector& HitNormal)
-{
-	SetActorRotation(TargetRotation);
-	SetActorRotation(GetBaseRotation(HitNormal));
+	FRotator Rotation =  GetBaseRotation(HitNormal);
+	FQuat NewQuat = FQuat(HitNormal, FMath::DegreesToRadians(RotationAroundNormal.Yaw));
+	FRotator NewRotation = (NewQuat * Rotation.Quaternion()).Rotator();
+	SetActorRotation(NewRotation);
 }
 
 void ABinggyWorldBuildable::OnConstructionCompleted()

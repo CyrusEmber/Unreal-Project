@@ -48,16 +48,18 @@ void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(const FVector& Target
 
 	if (CurrentBuildable)
 	{
-		CurrentBuildable->UpdatePreviewMeshPosition(TargetLocation, HitNormal);
+		CurrentBuildable->UpdatePreviewMeshPosition(TargetLocation, HitNormal, RotationAroundNormal);
 	}
 }
 
-void UBinggyGameplayAbility_Build::RotateBuildMeshRotation(bool bIsPositive)
+void UBinggyGameplayAbility_Build::UpdateMeshRotationAroundNormal(bool bIsRight)
 {
 	if (CurrentBuildable)
 	{
-		FRotator NewRotation = CurrentBuildable->GetActorRotation() + (bIsPositive ? 1 : -1) * DeltaRotation;
-		CurrentBuildable->SetActorRotation(NewRotation);
+		FRotator TargetRotation = RotationAroundNormal;
+		TargetRotation = TargetRotation + (bIsRight ? -1 : 1) * DeltaRotation;
+		
+		RotationAroundNormal = TargetRotation;
 	}
 }
 

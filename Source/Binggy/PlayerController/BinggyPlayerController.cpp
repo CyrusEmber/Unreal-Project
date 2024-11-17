@@ -4,6 +4,7 @@
 #include "BinggyPlayerController.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "CommonActivatableWidget.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/BinggyAbilitySystemComponent.h"
@@ -15,6 +16,10 @@
 #include "UI/Widget/DamageTextWidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/Subsystem/BinggyUIManagerSubsystem.h"
+#include "NativeGameplayTags.h"
+
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_UI_LAYER_GAME, "UI.Layer.Game");
 
 ABinggyPlayerController::ABinggyPlayerController()
 {
@@ -118,6 +123,25 @@ void ABinggyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
+void ABinggyPlayerController::SwitchBuildMode(bool bSwitch, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass)
+{
+	if (bSwitch)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(BuildModeMappingContext, 1);
+		}
+		UUIBlueprintLibrary::PushWidgetToLayerStack(this, TAG_UI_LAYER_GAME, BuildModeWidgetClass);
+	} else
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			Subsystem->RemoveMappingContext(BuildModeMappingContext);
+		}
+		// TODO Deactivate the widget
+	}
+}
+
 void ABinggyPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bIsCriticalHit)
 {
 	if (IsValid(TargetCharacter) && DamageTextComponentClass)
@@ -207,6 +231,7 @@ void ABinggyPlayerController::Move(const FInputActionValue& Value)
 	
 }
 
+// TODO change settings
 void ABinggyPlayerController::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
