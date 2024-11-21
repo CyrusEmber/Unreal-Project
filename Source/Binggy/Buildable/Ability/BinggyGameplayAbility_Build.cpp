@@ -12,6 +12,8 @@ void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHan
                                                    const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	InitializeAbility();
 	// TODO Set it in here, when in battle, not allowed to activate
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
@@ -38,6 +40,13 @@ void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh
 	}
 }
 
+void UBinggyGameplayAbility_Build::InitBuildable(ABinggyWorldBuildable* InBuildable)
+{
+	CurrentBuildable = InBuildable;
+
+	CurrentBuildable->OnConstructionBegin();
+}
+
 void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(const FVector& TargetLocation, const FVector& HitNormal)
 {
 	// Only spawn the buildable in server
@@ -54,13 +63,43 @@ void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(const FVector& Target
 
 void UBinggyGameplayAbility_Build::UpdateMeshRotationAroundNormal(bool bIsRight)
 {
-	if (CurrentBuildable)
+	if (GetOwningActorFromActorInfo()->HasAuthority())
 	{
-		FRotator TargetRotation = RotationAroundNormal;
-		TargetRotation = TargetRotation + (bIsRight ? -1 : 1) * DeltaRotation;
-		
-		RotationAroundNormal = TargetRotation;
+		if (CurrentBuildable)
+		{
+			FRotator TargetRotation = RotationAroundNormal;
+			TargetRotation = TargetRotation + (bIsRight ? -1 : 1) * DeltaRotation;
+	
+			RotationAroundNormal = TargetRotation;
+		}
+	} else
+	{
+		ServerUpdateMeshRotationAroundNormal(bIsRight);
 	}
+
+}
+
+void UBinggyGameplayAbility_Build::PerformSphereOverlap(const FVector& TargetLocation, float Radius)
+{
+	TArray<FOverlapResult> Overlaps;
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(Radius);
+
+	if (GetWorld()->OverlapMultiByChannel(Overlaps, TargetLocation, FQuat::Identity, ECC_WorldDynamic,
+		Sphere))
+	{
+		for (const FOverlapResult& Result : Overlaps)
+		{
+			if (USceneComponent* SnappingPoint = Cast<USceneComponent>(Result.GetComponent()))
+			{
+				// Process the snapping point
+				FVector SnappingLocation = SnappingPoint->GetComponentLocation();
+
+				// Optionally snap to the point
+				FVector ObjectLocation = SnappingLocation;
+			}
+		}
+	}
+	
 }
 
 void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -75,7 +114,19 @@ void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle H
 			CurrentBuildable->OnConstructionCompleted();
 		}
 	}
+	// Reset the buildable
+	CurrentBuildable = nullptr;
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	// Destroy the cached actor
 	// CurrentBuildStaticMeshActor->Destroy();
+}
+
+void UBinggyGameplayAbility_Build::InitializeAbility()
+{
+	RotationAroundNormal = FRotator(0, 0, 0);
+}
+
+void UBinggyGameplayAbility_Build::ServerUpdateMeshRotationAroundNormal_Implementation(bool bIsRight)
+{
+	UpdateMeshRotationAroundNormal(bIsRight);
 }

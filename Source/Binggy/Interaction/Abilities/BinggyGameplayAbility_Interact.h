@@ -11,7 +11,7 @@
 class UWidgetComponent;
 class UUserWidget;
 /**
- *  Lyra used a indicator, the class is a passive ability that scan the surrouding targets.
+ *  Lyra used a indicator, the class is a passive ability that scan the surrounding targets.
  */
 UCLASS()
 class BINGGY_API UBinggyGameplayAbility_Interact : public UBinggyGameplayAbility

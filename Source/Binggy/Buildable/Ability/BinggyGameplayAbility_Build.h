@@ -21,6 +21,9 @@ public:
 	// TODO: separate spawn and update
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation, FHitResult& HitResult);
+
+	UFUNCTION(BlueprintCallable, Category="Build")
+	void InitBuildable(ABinggyWorldBuildable* InBuildable);
 	
 	// Select the correct static mesh from UI
 	/*UFUNCTION(BlueprintCallable, Category="Build")
@@ -33,6 +36,9 @@ public:
 	// Value only being 1 or -1
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void UpdateMeshRotationAroundNormal(bool bIsRight);
+	
+	UFUNCTION(BlueprintCallable, Category="Build")
+	void PerformSphereOverlap(const FVector& TargetLocation, float Radius);
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
@@ -47,6 +53,13 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Binggy|Build", meta=(AllowPrivateAccess=true))
 	TSubclassOf<ABinggyWorldBuildable> BuildableClass;
+
+	// Initialize for the Instanced per Actor ability
+	void InitializeAbility();
+
+	// Not necessarily have network authority, the owning actor
+	UFUNCTION(Server, Reliable)
+	void ServerUpdateMeshRotationAroundNormal(bool bIsRight);
 
 	
 };

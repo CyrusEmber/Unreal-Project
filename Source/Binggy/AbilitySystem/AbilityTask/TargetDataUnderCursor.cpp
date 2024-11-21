@@ -77,13 +77,18 @@ void UTargetDataUnderCursor::SendMouseCursorData()
 	Data->HitResult = TraceHitResult;
 	DataHandle.Add(Data);
 
-	AbilitySystemComponent->ServerSetReplicatedTargetData(
+	// Client send data to server
+	if (!Ability->GetCurrentActorInfo()->IsNetAuthority())
+	{
+		AbilitySystemComponent->ServerSetReplicatedTargetData(
 		GetAbilitySpecHandle(),
 		GetActivationPredictionKey(),
 		DataHandle,
 		FGameplayTag(),
 		AbilitySystemComponent->ScopedPredictionKey);
+	}
 
+	
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{
 		ValidData.Broadcast(DataHandle);

@@ -28,7 +28,11 @@ Set Brush for ``TabButton``.
 
 Store tabs hidden somewhere.
 
-* Reactivate the menu widget create a new widget with tab
+* Reactivate the menu widget create a new widget with tab. Fixed with ``SetInputMode``.
+
+* Focus??
+
+* Play with different focus settings
 
 Workflow:
 =========

@@ -33,6 +33,8 @@ enum class EBuildableSurfaceType : uint8 {
 
 
 /**
+ * Should implement Buildable interface...
+ * TODO: add soft ptr to the mesh when construct the actor
  * 
  */
 UCLASS(Blueprintable)
@@ -41,8 +43,6 @@ class BINGGY_API ABinggyWorldBuildable : public AStaticMeshActor, public IIntera
 	GENERATED_BODY()
 public:
 	ABinggyWorldBuildable();
-	
-
 
 	// Server execute function
 	UFUNCTION(BlueprintCallable, Category="Buildable")
@@ -56,12 +56,15 @@ public:
 
 	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& OptionBuilder) override;
 
-	// TODO update mesh at runtime with animation
+	// Initialize the mesh at runtime.
 	void InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh);
 
 	// Update location and rotation
 	void UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal);
 
+	// TODO: Start IBuildable Interface
+	FVector FindNearestSnappingPoint(FVector TargetPosition);
+	// End IBuildable Interface
 	
 protected:
 	// Turn red when there are overlap
@@ -115,6 +118,16 @@ private:
 	}
 
 	FVector PlacementOffset;
+
+	// Snapping System
+	TArray<TObjectPtr<USceneComponent>> SnappingPoints;
+
+	void InitializeSnappingPoints();
+
+	// TODO: add new snapping point for future snapping
+	void AddSnappingPoint(USceneComponent* SnappingPoint);
+
+	
 
 	// TODO
 	/*// The definition we use to create the item mesh

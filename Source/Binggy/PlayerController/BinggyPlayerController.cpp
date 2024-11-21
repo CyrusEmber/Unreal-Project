@@ -231,7 +231,7 @@ void ABinggyPlayerController::Move(const FInputActionValue& Value)
 	
 }
 
-// TODO change settings
+// TODO change in settings
 void ABinggyPlayerController::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D

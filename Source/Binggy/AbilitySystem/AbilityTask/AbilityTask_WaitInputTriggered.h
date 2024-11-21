@@ -21,7 +21,7 @@ class BINGGY_API UAbilityTask_WaitInputTriggered : public UAbilityTask
 
 public:
 	UFUNCTION(BlueprintCallable, Category="Ability|Tasks", meta = (DisplayName = "WaitForInputTriggered", HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "true"))
-	static UAbilityTask_WaitInputTriggered* WaitInputTriggered(UGameplayAbility* OwningAbility, APlayerController* PC,
+	static UAbilityTask_WaitInputTriggered* WaitInputTriggered(UGameplayAbility* OwningAbility,
 		UInputAction* InputAction, float Interval = 0.5f );
 
 	// 
@@ -35,9 +35,9 @@ private:
 private:
 	// Update the timer at below Interval
 	float Interval;
-	TWeakObjectPtr<APlayerController> PlayerController;
 	TWeakObjectPtr<UInputAction> InputAction;
 	FEnhancedInputActionEventBinding* BindingStart = nullptr;
+	FEnhancedInputActionEventBinding* BindingTrigger = nullptr;
 	FEnhancedInputActionEventBinding* BindingEnd = nullptr;
 
 	FTimerHandle TimerHandle;

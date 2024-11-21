@@ -24,6 +24,8 @@ ABinggyWorldBuildable::ABinggyWorldBuildable()
 	/*bReplicates = true;
 	// SetReplicates(true);
 	SetReplicatingMovement(true);*/
+
+	InitializeSnappingPoints();
 }
 
 void ABinggyWorldBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -41,7 +43,6 @@ void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& In
 void ABinggyWorldBuildable::InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh)
 {
 	GetStaticMeshComponent()->SetStaticMesh(InBuildStaticMesh);
-	PlacementOffset = CalculateOffsetSpawnPoint(this);
 }
 
 void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal)
@@ -56,6 +57,23 @@ void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocat
 	SetActorRotation(NewRotation);
 }
 
+FVector ABinggyWorldBuildable::FindNearestSnappingPoint(FVector TargetPosition)
+{
+	float MinDistance = FLT_MAX;
+	FVector MinPoint;
+	for (auto SnappingPoint : SnappingPoints)
+	{
+		FVector Location = SnappingPoint->GetComponentLocation();
+		float Distance = FVector::Dist(TargetPosition, Location);
+		if (Distance < MinDistance)
+		{
+			MinDistance = Distance;
+			MinPoint = Location;
+		}
+	}
+	return MinPoint;
+}
+
 void ABinggyWorldBuildable::OnConstructionCompleted()
 {
 	SetBuildableState(EBuildableState::Placed);
@@ -64,6 +82,7 @@ void ABinggyWorldBuildable::OnConstructionCompleted()
 void ABinggyWorldBuildable::OnConstructionBegin()
 {
 	SetBuildableState(EBuildableState::Building);
+	PlacementOffset = CalculateOffsetSpawnPoint(this);
 }
 
 FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
@@ -71,24 +90,29 @@ FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
 	FVector ActorOrigin, ActorBoxExtent;
 	CombinedActor->GetActorBounds(true, ActorOrigin, ActorBoxExtent);
 
-	float MinZ = ActorOrigin.Z;
-	
-	for (UActorComponent* Component : CombinedActor->GetComponents())
+	float MinZ = ActorOrigin.Z - ActorBoxExtent.Z;
+
+	// TODO: FIXME
+	/*for (UActorComponent* Component : CombinedActor->GetComponents())
 	{
 		if (UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Component))
 		{
-			FVector Origin, BoxExtent;
-			MeshComponent->GetLocalBounds(Origin, BoxExtent);
-            
-			FVector ComponentBottom = MeshComponent->GetComponentLocation() - FVector(0, 0, BoxExtent.Z);
+			FVector LocalOrigin, LocalBoxExtent;
+			MeshComponent->GetLocalBounds(LocalOrigin, LocalBoxExtent);
 
-			// Track the lowest Z value
-			if (ComponentBottom.Z < MinZ)
+			// Calculate the local-space bottom point
+			FVector LocalBottomPoint = LocalOrigin - FVector(0, 0, LocalBoxExtent.Z);
+
+			// Transform the local bottom point to world space
+			FVector WorldBottomPoint = MeshComponent->GetComponentTransform().TransformPosition(LocalBottomPoint);
+
+			// Update MinZ if this component's bottom is lower
+			if (WorldBottomPoint.Z < MinZ)
 			{
-				MinZ = ComponentBottom.Z;
+				MinZ = WorldBottomPoint.Z;
 			}
 		}
-	}
+	}*/
 
 	return FVector(ActorOrigin.X, ActorOrigin.Y, MinZ);
 }
@@ -123,6 +147,56 @@ FRotator ABinggyWorldBuildable::GetBaseRotation(const FVector& HitNormal, const 
 		}
 	}
 	return PlacementRotation;
+}
+
+void ABinggyWorldBuildable::InitializeSnappingPoints()
+{
+	// Origin is on the middle bottom point
+	FVector Origin;
+	FVector BoxExtent;
+	GetActorBounds(true, Origin, BoxExtent);
+
+	float W = BoxExtent.X;
+	float D = BoxExtent.Y;
+	float H = BoxExtent.Z;
+
+	FVector FrontCenter = Origin + FVector(0, D/2, H/2);
+
+	FVector BackCenter = Origin - FVector(0, -D/2, H/2);
+
+	FVector LeftCenter = Origin + FVector(-W/2, 0, H/2);
+
+	FVector RightCenter = Origin + FVector(W/2, 0, H/2);
+
+	FVector TopCenter = Origin + FVector(0, 0, H);
+
+	FVector BottomCenter = Origin;
+
+	USceneComponent* SnappingpointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent"));
+	SnappingpointComponent->SetupAttachment(RootComponent);
+	SnappingpointComponent->SetRelativeLocation(FrontCenter);
+
+	USceneComponent* SnappingpointComponent1 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent1"));
+	SnappingpointComponent1->SetupAttachment(RootComponent);
+	SnappingpointComponent1->SetRelativeLocation(BackCenter);
+
+	USceneComponent* SnappingpointComponent2 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent2"));
+	SnappingpointComponent2->SetupAttachment(RootComponent);
+	SnappingpointComponent2->SetRelativeLocation(RightCenter);
+
+	USceneComponent* SnappingpointComponent3 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent3"));
+	SnappingpointComponent3->SetupAttachment(RootComponent);
+	SnappingpointComponent3->SetRelativeLocation(LeftCenter);
+
+	
+}
+
+void ABinggyWorldBuildable::AddSnappingPoint(USceneComponent* SnappingPoint)
+{
+	FVector Origin;
+	FVector BoxExtent;
+	GetActorBounds(true, Origin, BoxExtent);
+	
 }
 
 

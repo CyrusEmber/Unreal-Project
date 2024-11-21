@@ -3,14 +3,14 @@
 
 #include "AbilitySystem/AbilityTask/AbilityTask_WaitInputTriggered.h"
 
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 
 
 UAbilityTask_WaitInputTriggered* UAbilityTask_WaitInputTriggered::WaitInputTriggered(UGameplayAbility* OwningAbility,
-	APlayerController* PC, UInputAction* InputAction, float Interval)
+	UInputAction* InputAction, float Interval)
 {
 	UAbilityTask_WaitInputTriggered* MyObj = NewAbilityTask<UAbilityTask_WaitInputTriggered>(OwningAbility);
-	MyObj->PlayerController = PC;
 	MyObj->InputAction = InputAction;
 	MyObj->Interval = Interval;
 	return MyObj;
@@ -19,14 +19,20 @@ UAbilityTask_WaitInputTriggered* UAbilityTask_WaitInputTriggered::WaitInputTrigg
 void UAbilityTask_WaitInputTriggered::OnDestroy(bool AbilityEnded)
 {
 	Super::OnDestroy(AbilityEnded);
-	if (PlayerController.IsValid())
+	if (Ability)
 	{
-		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
+		APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
+		if (PC)
 		{
-			EnhancedInputComponent->RemoveBinding(*BindingStart);
-			EnhancedInputComponent->RemoveBinding(*BindingEnd);
-			BindingStart = nullptr;
-			BindingEnd = nullptr;
+			if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PC->InputComponent))
+			{
+				EnhancedInputComponent->RemoveBinding(*BindingStart);
+				EnhancedInputComponent->RemoveBinding(*BindingTrigger);
+				EnhancedInputComponent->RemoveBinding(*BindingEnd);
+				BindingStart = nullptr;
+				BindingTrigger = nullptr;
+				BindingEnd = nullptr;
+			}
 		}
 	}
 }
@@ -34,17 +40,32 @@ void UAbilityTask_WaitInputTriggered::OnDestroy(bool AbilityEnded)
 void UAbilityTask_WaitInputTriggered::Activate()
 {
 	Super::Activate();
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
+	const bool bIsLocallyControlled = Ability->GetCurrentActorInfo()->IsLocallyControlled();
+	
+	// Only bind input in the local PC
+	/*if (!bIsLocallyControlled)
 	{
-		BindingStart = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Started,
-				this, &UAbilityTask_WaitInputTriggered::InputStartCallback);
+		return;
+	}*/
+	if (bIsLocallyControlled)
+	{
+		APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
+		if (PC)
+		{
+			if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PC->InputComponent))
+			{
+				BindingStart = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Started,
+						this, &UAbilityTask_WaitInputTriggered::InputStartCallback);
 
-		BindingStart = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Triggered,
-		this, &UAbilityTask_WaitInputTriggered::InputTriggeredCallback);
+				BindingTrigger = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Triggered,
+				this, &UAbilityTask_WaitInputTriggered::InputTriggeredCallback);
 
-		BindingEnd = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Completed,
-				this, &UAbilityTask_WaitInputTriggered::InputCompleteCallback);
+				BindingEnd = &EnhancedInputComponent->BindAction(InputAction.Get(), ETriggerEvent::Completed,
+						this, &UAbilityTask_WaitInputTriggered::InputCompleteCallback);
+			}
+		}
 	}
+
 }
 
 void UAbilityTask_WaitInputTriggered::InputStartCallback(const FInputActionValue& Value)
@@ -56,20 +77,16 @@ void UAbilityTask_WaitInputTriggered::InputStartCallback(const FInputActionValue
 	{
 		bRotateRight = false;
 	}
+	
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UAbilityTask_WaitInputTriggered::InputTrigger, Interval, true);
-	// Start broadcast
-	InputTriggered.Broadcast(bRotateRight);
+
+	// Initial broadcast before the timer
+	InputTriggered.Broadcast(bRotateRight); 
 }
 
 void UAbilityTask_WaitInputTriggered::InputTriggeredCallback(const FInputActionValue& Value)
 {
-	if (Value.Get<float>() == 1.f)
-	{
-		bRotateRight = true;
-	} else
-	{
-		bRotateRight = false;
-	}
+	bRotateRight = (Value.Get<float>() == 1.f);
 }
 
 void UAbilityTask_WaitInputTriggered::InputCompleteCallback(const FInputActionValue& Value)
@@ -80,5 +97,5 @@ void UAbilityTask_WaitInputTriggered::InputCompleteCallback(const FInputActionVa
 
 void UAbilityTask_WaitInputTriggered::InputTrigger()
 {
-	InputTriggered.Broadcast(bRotateRight);
+	InputTriggered.Broadcast(bRotateRight); 
 }

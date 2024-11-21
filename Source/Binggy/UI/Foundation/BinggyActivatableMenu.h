@@ -26,5 +26,7 @@ protected:
 	// It generates an event when set the widget controller
 	UFUNCTION(BlueprintImplementableEvent)
 	void WidgetControllerSet();
+
+	
 	
 };

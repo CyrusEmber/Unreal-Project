@@ -4,6 +4,7 @@
 #include "Engine/DataTable.h"
 #include "Buildable.generated.h"
 
+class ABinggyWorldBuildable;
 enum class EBuildableState : uint8;
 // TODO: Combine with item definition
 UENUM(BlueprintType)
@@ -20,25 +21,20 @@ struct FBuildable : public FTableRowBase
 
 	// Unique ID or name for the buildable item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	FName Name;
+	FText DisplayName;
 
-	// Static mesh associated with this buildable item
+	// Check buildable options and surfaces
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	UStaticMesh* BuildableMesh;
+	TSoftClassPtr<ABinggyWorldBuildable> BinggyBuildable;
+ 
+	// Construction cost in resources
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
+	TMap<EResourceType, int32> ConstructionCost;
 
-	// Material or overlay material for this buildable item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	UMaterialInterface* OverlayMaterial;
-
-	// Construction cost in resources (e.g., wood, stone)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	int32 ConstructionCost;
+	TSoftObjectPtr<UTexture2D> Icon;
 
 	// Time required to construct the buildable in seconds
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
 	float ConstructionTime;
-
-	// Status of the buildable item (default should be Pending)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	EBuildableState DefaultStatus;
 };

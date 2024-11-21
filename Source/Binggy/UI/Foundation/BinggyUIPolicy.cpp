@@ -45,7 +45,7 @@ void UBinggyUIPolicy::RequestPrimaryControl(UBinggyPrimaryGameLayout* Layout)
 void UBinggyUIPolicy::AddLayoutToViewport(ULocalPlayer* LocalPlayer, UBinggyPrimaryGameLayout* Layout)
 {
 	Layout->SetPlayerContext(FLocalPlayerContext(LocalPlayer));
-	Layout->AddToPlayerScreen(0);
+	Layout->AddToPlayerScreen(1);
 }
 
 void UBinggyUIPolicy::RemoveLayoutFromViewport(ULocalPlayer* LocalPlayer, UBinggyPrimaryGameLayout* Layout)

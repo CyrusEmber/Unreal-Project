@@ -96,16 +96,10 @@ void ABinggyHUD::InitOverlay(UBinggyAbilitySystemComponent* InASC)
 	if (OverlayWidget && OverlayWidget->IsInViewport())
 	{
 		UUIBlueprintLibrary::RemoveWidgetFromLayer(GetOwningPlayerController(), OverlayWidget);
+		OverlayWidget = nullptr;
 	}
-	/*FInputModeGameOnly InputMode;
-    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockOnCapture);
-    PlayerController->SetInputMode(InputMode);*/
-
 	
 	OverlayWidget = Cast<UBinggyActivatableMenu>(UUIBlueprintLibrary::PushWidgetToLayerStack(GetOwningPlayerController(), TAG_UI_LAYER_GAME, OverlayWidgetClass));
-	// GetOwningPlayerController()->SetInputMode(FInputModeGameOnly());
-	// Otherwise the input could hit the overlay
-	OverlayWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	OverlayWidget->SetWidgetController(GetOverlayWidgetController());
 	
 	
