@@ -11,7 +11,7 @@
 #include "UI/WidgetController/SkillMenuWidgetController.h"
 #include "NativeGameplayTags.h"
 
-UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_UI_LAYER_GAME, "UI.Layer.Game");
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_UI_LAYER_GAME1, "UI.Layer.Game");
 
 
 
@@ -99,7 +99,7 @@ void ABinggyHUD::InitOverlay(UBinggyAbilitySystemComponent* InASC)
 		OverlayWidget = nullptr;
 	}
 	
-	OverlayWidget = Cast<UBinggyActivatableMenu>(UUIBlueprintLibrary::PushWidgetToLayerStack(GetOwningPlayerController(), TAG_UI_LAYER_GAME, OverlayWidgetClass));
+	OverlayWidget = Cast<UBinggyActivatableMenu>(UUIBlueprintLibrary::PushWidgetToLayerStack(GetOwningPlayerController(), TAG_UI_LAYER_GAME1, OverlayWidgetClass));
 	OverlayWidget->SetWidgetController(GetOverlayWidgetController());
 	
 	

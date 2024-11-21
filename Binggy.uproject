@@ -17,7 +17,8 @@
 				"AIModule",
 				"Niagara",
 				"GameplayTasks",
-				"CommonUI"
+				"CommonUI",
+				"ModularGameplay"
 			]
 		}
 	],
