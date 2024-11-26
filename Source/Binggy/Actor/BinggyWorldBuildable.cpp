@@ -3,6 +3,8 @@
 
 #include "BinggyWorldBuildable.h"
 
+#include "Components/SphereComponent.h"
+#include "Rendering/PositionVertexBuffer.h"
 #include "Net/UnrealNetwork.h"
 
 ABinggyWorldBuildable::ABinggyWorldBuildable()
@@ -25,7 +27,19 @@ ABinggyWorldBuildable::ABinggyWorldBuildable()
 	// SetReplicates(true);
 	SetReplicatingMovement(true);*/
 
-	InitializeSnappingPoints();
+	// Add snapping points
+	for (int32 i = 0; i < 6; ++i)
+	{
+		FName ComponentName = FName(*FString::Printf(TEXT("SnappingPoint_%d"), i));
+		USphereComponent* SnappingSphere = CreateDefaultSubobject<USphereComponent>(ComponentName);
+		SnappingSphere->SetupAttachment(RootComponent);
+		SnappingSphere->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+		SnappingSphere->SetGenerateOverlapEvents(true);
+		SnappingSphere->InitSphereRadius(0.f); // Not tamping with the box extent TODO
+		SnappingSpheres.Add(SnappingSphere);
+		SnappingSphere->RegisterComponent();
+	}
+	
 }
 
 void ABinggyWorldBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -63,7 +77,7 @@ FVector ABinggyWorldBuildable::FindNearestSnappingPoint(FVector TargetPosition)
 	FVector MinPoint;
 	for (auto SnappingPoint : SnappingPoints)
 	{
-		FVector Location = SnappingPoint->GetComponentLocation();
+		FVector Location = SnappingPoint;
 		float Distance = FVector::Dist(TargetPosition, Location);
 		if (Distance < MinDistance)
 		{
@@ -89,8 +103,23 @@ FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
 {
 	FVector ActorOrigin, ActorBoxExtent;
 	CombinedActor->GetActorBounds(true, ActorOrigin, ActorBoxExtent);
+	
+	FVector PivotLocation = GetActorLocation();
 
-	float MinZ = ActorOrigin.Z - ActorBoxExtent.Z;
+	// Box Extent is wrong?? TODO
+	float MinZ = 0;
+
+	/*for (UActorComponent* Component : CombinedActor->GetComponents())
+	{
+		if (UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(Component))
+		{
+			FVector LocalOrigin, LocalBoxExtent;
+			MeshComponent->GetLocalBounds(LocalOrigin, LocalBoxExtent);
+
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("LocalBoxExtent: %s"), *LocalBoxExtent.ToString()));
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("LocalOrigin: %s"), *LocalOrigin.ToString()));
+		}
+	}*/
 
 	// TODO: FIXME
 	/*for (UActorComponent* Component : CombinedActor->GetComponents())
@@ -151,44 +180,41 @@ FRotator ABinggyWorldBuildable::GetBaseRotation(const FVector& HitNormal, const 
 
 void ABinggyWorldBuildable::InitializeSnappingPoints()
 {
-	// Origin is on the middle bottom point
+	// Origin is on the actor center
 	FVector Origin;
 	FVector BoxExtent;
+	
 	GetActorBounds(true, Origin, BoxExtent);
 
-	float W = BoxExtent.X;
-	float D = BoxExtent.Y;
-	float H = BoxExtent.Z;
-
-	FVector FrontCenter = Origin + FVector(0, D/2, H/2);
-
-	FVector BackCenter = Origin - FVector(0, -D/2, H/2);
-
-	FVector LeftCenter = Origin + FVector(-W/2, 0, H/2);
-
-	FVector RightCenter = Origin + FVector(W/2, 0, H/2);
-
-	FVector TopCenter = Origin + FVector(0, 0, H);
-
-	FVector BottomCenter = Origin;
-
-	USceneComponent* SnappingpointComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent"));
-	SnappingpointComponent->SetupAttachment(RootComponent);
-	SnappingpointComponent->SetRelativeLocation(FrontCenter);
-
-	USceneComponent* SnappingpointComponent1 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent1"));
-	SnappingpointComponent1->SetupAttachment(RootComponent);
-	SnappingpointComponent1->SetRelativeLocation(BackCenter);
-
-	USceneComponent* SnappingpointComponent2 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent2"));
-	SnappingpointComponent2->SetupAttachment(RootComponent);
-	SnappingpointComponent2->SetRelativeLocation(RightCenter);
-
-	USceneComponent* SnappingpointComponent3 = CreateDefaultSubobject<USceneComponent>(TEXT("MidpointComponent3"));
-	SnappingpointComponent3->SetupAttachment(RootComponent);
-	SnappingpointComponent3->SetRelativeLocation(LeftCenter);
-
+	TArray<FVector> RelativeLocations = {
+	    Origin + FVector(0,  BoxExtent.Y, 0),  // FrontCenter
+	    Origin + FVector(0, -BoxExtent.Y, 0),  // BackCenter
+	    Origin + FVector(-BoxExtent.X, 0, 0),  // LeftCenter
+	    Origin + FVector(BoxExtent.X,  0, 0),  // RightCenter
+	    Origin + FVector(0, 0, BoxExtent.Z),   // TopCenter
+	    Origin + FVector(0, 0, -BoxExtent.Z)   // Bottom Center
+	};
 	
+	for (int32 i = 0; i < RelativeLocations.Num(); ++i)
+	{
+		SnappingSpheres[i]->SetWorldLocation(RelativeLocations[i]);
+		SnappingSpheres[i]->InitSphereRadius(SnappingRadius); // Set the desired radius
+		SnappingPoints.Add(RelativeLocations[i]);
+#if WITH_EDITOR
+		if (Debug)
+		{
+			DrawDebugSphere(
+			GetWorld(),
+			SnappingSpheres[i]->GetComponentLocation(),
+			30.0f,             // Radius
+			12,                // Segments
+			FColor::Green,     // Color
+			true          // Persistent (false means it will disappear after a short time)
+		);
+#endif
+		}
+		
+	}
 }
 
 void ABinggyWorldBuildable::AddSnappingPoint(USceneComponent* SnappingPoint)
@@ -245,6 +271,16 @@ void ABinggyWorldBuildable::BeginPlay()
 	if (HasAuthority())
 	{
 		GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
+	}
+
+	
+
+	InitializeSnappingPoints();
+	for (auto SnappingPoint : SnappingPoints)
+	{
+		FColor PointColor = FColor::Red;
+		float PointSize = 10.0f;
+		DrawDebugPoint(GetWorld(), SnappingPoint, PointSize, PointColor, true);
 	}
 	
 

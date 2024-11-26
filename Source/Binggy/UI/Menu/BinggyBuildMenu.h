@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Buildable/Buildable.h"
+#include "Buildable/IBuildable.h"
 #include "UI/BinggyActivatableWidget.h"
 #include "BinggyBuildMenu.generated.h"
 

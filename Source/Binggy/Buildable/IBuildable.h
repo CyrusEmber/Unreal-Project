@@ -2,7 +2,19 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "Buildable.generated.h"
+#include "IBuildable.generated.h"
+
+class UBinggyInventoryItemDefinition;
+
+USTRUCT(BlueprintType)
+struct FBuildableDef
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UBinggyInventoryItemDefinition> ItemDef;
+};
 
 class ABinggyWorldBuildable;
 enum class EBuildableState : uint8;
@@ -15,7 +27,7 @@ enum class EResourceType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FBuildable : public FTableRowBase
+struct FBuildablePlaceHolder : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -37,4 +49,22 @@ struct FBuildable : public FTableRowBase
 	// Time required to construct the buildable in seconds
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
 	float ConstructionTime;
+};
+
+UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
+class UIBuildable : public UInterface
+{
+	GENERATED_BODY()
+};
+
+/**  */
+class IIBuildable
+{
+	GENERATED_BODY()
+
+public:
+	// Get the private inventory pickup
+	UFUNCTION(BlueprintCallable)
+	virtual FBuildableDef GetBuildableDef() const = 0;
+	
 };

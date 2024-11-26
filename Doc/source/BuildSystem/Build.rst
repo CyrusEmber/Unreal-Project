@@ -6,7 +6,11 @@ Problem
 
 * When set the tracer data under cursor to execute from a timer, the the client cannot shoot properly. Fixed.
 
-* ``CalculateOffsetSpawnPoint``
+* ``CalculateOffsetSpawnPoint`` Box Extent is wrong
+
+* ``LineTrace`` trace response? Need overlapping result?
+
+
 
 Interface
 ---------
@@ -40,7 +44,10 @@ TODO
 
 * The buildable spin in ``WorldBuildable`` now is using server RPC. Should local predict this.
 
+* Create a manager class to handle build?
+
 Bug:
 ----
 * Only the server is capable of rotate buildable
+
 

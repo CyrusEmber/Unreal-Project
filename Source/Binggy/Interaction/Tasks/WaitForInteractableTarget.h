@@ -12,7 +12,6 @@ struct FInteractionOption;
 class UGameplayAbility;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableObjectsChangedEvent, const TArray<FInteractionOption>&, InteractableOptions);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitResultChangedEvent);
 
 /**
  * 
@@ -25,8 +24,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FInteractableObjectsChangedEvent InteractableObjectsChanged;
 
-	UPROPERTY(BlueprintAssignable)
-	FHitResultChangedEvent HitResultChanged;
 
 public:
 	virtual void Activate() override;
@@ -60,6 +57,7 @@ private:
 
 	FCollisionProfileName TraceProfile;
 
+	// TODO
 	TSubclassOf<UInterface> TargetInterfaceClass;
 
 	float InteractionScanRange = 100;

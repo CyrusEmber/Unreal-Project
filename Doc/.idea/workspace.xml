@@ -5,49 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29526421-d47b-4051-91f7-690fca4bddfc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/source/UI/BuildMenu.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Binggy.uproject.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/../Binggy.uproject.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/GA_SpellBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/AbilitySystem/GameplayAbilities/GA_SpellBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Area/BP_FireArea.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/Area/BP_FireArea.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Area/GE_FireArea.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/BP_HealthCristal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/BP_HealthCristal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/BP_HealthPotion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/BP_ManaPotion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/BP_ManaPotion.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/GE_DurationHeal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/GE_HealthPotion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/GE_ManaPotion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/BP_Collectable_Test.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/B_CIP_PhysicalSphere.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/Interactable/B_CIP_PhysicalSphere.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Test/BP_AttrtibutePotion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Actor/Test/BP_AttrtibutePotion.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Actor/Test/GE_AttributePotion.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/BackTexture/BP_BackMeshToTexture.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/BackTexture/BP_BackMeshToTexture.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Build.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/Blueprints/Input/IMC_Build.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/System/Interaction/Abilities/GA_Interact_Scan.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/System/Interaction/Abilities/GA_Interact_Scan.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_BinggyButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_BinggyButton.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_ButtonTab.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_ButtonTab.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Buttons/ButtonStyle-Clear.uasset" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/AbilitySystem/Interaction.rst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/IBuildable.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Interface/Buildable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_BuildMenuButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Foundation/Button/W_BuildMenuButton.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Content/UI/GameMenu/BuildMenu/W_DebugBuildMenu.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/GameMenu/BuildMenu/W_DebugBuildMenu.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/UI/Overlay/WBP_Overlay.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/0/W7/1SNGWHFUS29H8IH3CY5EBN.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/0/W7/1SNGWHFUS29H8IH3CY5EBN.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/7/8A/2X5VOOKT7AXH5UBN5Z6TJR.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Content/__ExternalActors__/Maps/MainScene/8/5G/RWQ86WPFRICCJ9M6097387.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/source/BuildSystem/Build.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/BuildSystem/Build.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/UI/CommonUI.rst" beforeDir="false" afterPath="$PROJECT_DIR$/source/UI/CommonUI.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/AbilityTask_WaitInputTriggered.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/AbilityTask_WaitInputTriggered.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/AbilityTask_WaitInputTriggered.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/AbilityTask_WaitInputTriggered.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/TargetDataUnderCursor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/AbilitySystem/AbilityTask/TargetDataUnderCursor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldBuildable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Ability/BinggyGameplayAbility_Build.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Buildable.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Buildable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Buildable.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Abilities/BinggyGameplayAbility_Interact.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/PlayerController/BinggyPlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyActivatableMenu.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyActivatableMenu.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Foundation/BinggyUIPolicy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/HUD/BinggyHUD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Actor/BinggyWorldCollectable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Buildable.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Interface/IBuildable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/IBuildable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/Interface/IBuildable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/Interface/Buildable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Buildable/InventoryFragment_BuildableItem.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Buildable/InventoryFragment_BuildableItem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Equipment/BinggyEquipmentDefinition.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Equipment/BinggyEquipmentDefinition.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Interaction/Tasks/WaitForInteractableTarget.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/Pickupable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/IPickupable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/Inventory/Pickupable.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/Inventory/IPickupable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyBuildMenuButtonBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Common/BinggyBuildMenuButtonBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Source/Binggy/UI/Menu/BinggyBuildMenu.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Source/Binggy/UI/Menu/BinggyBuildMenu.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

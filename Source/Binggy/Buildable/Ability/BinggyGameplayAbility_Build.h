@@ -20,7 +20,7 @@ public:
 
 	// TODO: separate spawn and update
 	UFUNCTION(BlueprintCallable, Category="Build")
-	void SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation, FHitResult& HitResult);
+	ABinggyWorldBuildable* SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void InitBuildable(ABinggyWorldBuildable* InBuildable);
@@ -36,14 +36,17 @@ public:
 	// Value only being 1 or -1
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void UpdateMeshRotationAroundNormal(bool bIsRight);
-	
+
 	UFUNCTION(BlueprintCallable, Category="Build")
-	void PerformSphereOverlap(const FVector& TargetLocation, float Radius);
+	void ProcessCurrentHitResults(const FHitResult& HitResult);
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	UPROPERTY(BlueprintReadWrite, Category="Build")
+	TObjectPtr<ABinggyWorldBuildable> CurrentBuildable;
 	
 private:
-	TObjectPtr<ABinggyWorldBuildable> CurrentBuildable;
+	
 
 	FRotator DeltaRotation = FRotator(0, 15, 0);
 
@@ -60,6 +63,9 @@ private:
 	// Not necessarily have network authority, the owning actor
 	UFUNCTION(Server, Reliable)
 	void ServerUpdateMeshRotationAroundNormal(bool bIsRight);
+
+	// Helper function for snapping
+	static FVector GetSymmetricPoint(FVector Point, FVector PlanePoint, FVector PlaneNormal);
 
 	
 };

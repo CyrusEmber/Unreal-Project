@@ -220,7 +220,8 @@ void UWaitForInteractableTarget::PerformTrace()
 	ActorsToIgnore.Add(AvatarActor);
 
 	const bool bTraceComplex = false;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(UAbilityTask_WaitForInteractableTargets_SingleLineTrace), bTraceComplex);
+	// TODO?
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(UAbilityTask_WaitForInteractableTargets), bTraceComplex);
 	Params.AddIgnoredActors(ActorsToIgnore);
 
 	// TODO instead of StartLocation I track avatar actor
@@ -240,7 +241,6 @@ void UWaitForInteractableTarget::PerformTrace()
 	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
 	Data->HitResult = OutHitResult;
 	DataHandle.Add(Data);*/
-	HitResultChanged.Broadcast();
 	
 	UpdateInteractableOptions(InteractionQuery, InteractableTargets);
 	

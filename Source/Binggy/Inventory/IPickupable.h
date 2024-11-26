@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "UObject/Interface.h"
-#include "Pickupable.generated.h"
+#include "IPickupable.generated.h"
 
 class UBinggyInventoryComponent;
 class UBinggyInventoryItemDefinition;
@@ -46,13 +46,13 @@ public:
 };
 
 UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
-class UPickupable : public UInterface
+class UIPickupable : public UInterface
 {
 	GENERATED_BODY()
 };
 
 /**  */
-class IPickupable
+class IIPickupable
 {
 	GENERATED_BODY()
 
@@ -72,9 +72,9 @@ class UPickupableStatics : public UBlueprintFunctionLibrary
 public:
 	// Get first pickupable, if the actor is pickupable, return the actor. TODO:
 	UFUNCTION(BlueprintPure)
-	static TScriptInterface<IPickupable> GetFirstPickupableFromActor(AActor* Actor);
+	static TScriptInterface<IIPickupable> GetFirstPickupableFromActor(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, meta = (WorldContext = "Ability"))
-	static void AddPickupToInventory(UBinggyInventoryComponent* InventoryComponent, TScriptInterface<IPickupable> Pickup);
+	static void AddPickupToInventory(UBinggyInventoryComponent* InventoryComponent, TScriptInterface<IIPickupable> Pickup);
 };
 

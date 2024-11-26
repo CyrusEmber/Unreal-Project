@@ -1,17 +1,17 @@
 ﻿#pragma once
 #include "UObject/Interface.h"
-#include "IBuildable.generated.h"
+#include "Buildable.generated.h"
 
 enum class EBuildableState : uint8;
 
 UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
-class UIBuildable : public UInterface
+class UBuildable : public UInterface
 {
 	GENERATED_BODY()
 };
 
 /**  */
-class IIBuildable
+class IBuildable
 {
 	GENERATED_BODY()
 

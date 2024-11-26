@@ -4,14 +4,14 @@
 
 #include "Interaction/InteractableTarget.h"
 #include "Interaction/InteractionOption.h"
-#include "Inventory/Pickupable.h"
+#include "Inventory/IPickupable.h"
 #include "GameFramework/Actor.h"
 #include "BinggyWorldCollectable.generated.h"
 
 class UWidgetComponent;
 
 UCLASS(Abstract, Blueprintable)
-class BINGGY_API ABinggyWorldCollectable : public AActor, public IInteractableTarget, public IPickupable
+class BINGGY_API ABinggyWorldCollectable : public AActor, public IInteractableTarget, public IIPickupable
 {
 	GENERATED_BODY()
 	
@@ -21,7 +21,7 @@ public:
 	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& OptionBuilder) override;
 	virtual FInventoryPickup GetPickupInventory() const override;
 
-	// Widget Component to hold the 2D UI
+	// Widget Component to hold the 2D UI, Not used? TODO
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	UWidgetComponent* WidgetComponent;
 

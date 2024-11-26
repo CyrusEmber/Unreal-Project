@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Interaction/InteractableTarget.h"
+#include "Buildable/BuildableDefinition.h"
 #include "Engine/StaticMeshActor.h"
 #include "BinggyWorldBuildable.generated.h"
 
+class USphereComponent;
 /**
  *
  *	Defines current state of buildable actor.
@@ -20,21 +22,9 @@ enum class EBuildableState : uint8 {
 	Placed UMETA(DisplayName = "Completed")   // the buildable completes placing in the world
 };
 
-/**
- *	Defines the blocks it can attach to.
- */
-UENUM(BlueprintType)
-enum class EBuildableSurfaceType : uint8 {
-	Floor,
-	Wall,
-	Ceiling,
-	NonEvenSurface
-};
-
 
 /**
  * Should implement Buildable interface...
- * TODO: add soft ptr to the mesh when construct the actor
  * 
  */
 UCLASS(Blueprintable)
@@ -120,12 +110,20 @@ private:
 	FVector PlacementOffset;
 
 	// Snapping System
-	TArray<TObjectPtr<USceneComponent>> SnappingPoints;
+	TArray<FVector> SnappingPoints;
 
 	void InitializeSnappingPoints();
 
 	// TODO: add new snapping point for future snapping
 	void AddSnappingPoint(USceneComponent* SnappingPoint);
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Buildable|Snapping", meta = (AllowPrivateAccess = "true"))
+	float SnappingRadius = 20.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Buildable|Debug", meta = (AllowPrivateAccess = "true"))
+	bool Debug = true;
+
+	TArray<USphereComponent*> SnappingSpheres;
 
 	
 

@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Buildable/Buildable.h"
+#include "Buildable/IBuildable.h"
 #include "UI/Foundation/BinggyButtonBase.h"
 #include "BinggyBuildMenuButtonBase.generated.h"
 
+struct FBuildablePlaceHolder;
 /**
  * 
  */
@@ -19,7 +20,7 @@ public:
 	UBinggyBuildMenuButtonBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Default", meta = (ExposeOnSpawn = "true"))
-	FBuildable BuildableTable;
+	FBuildablePlaceHolder BuildableTable;
 
 protected:
 	// Blueprint implemented event

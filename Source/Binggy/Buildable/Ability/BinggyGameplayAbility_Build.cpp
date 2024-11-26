@@ -5,6 +5,7 @@
 
 
 #include "Actor/BinggyWorldBuildable.h"
+#include "Components/SphereComponent.h"
 
 void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                    const FGameplayAbilityActorInfo* ActorInfo,
@@ -18,12 +19,12 @@ void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHan
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
 
-void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation, FHitResult& HitResult)
+ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation)
 {
 	// Only spawn the buildable in server
 	if (!GetOwningActorFromActorInfo()->HasAuthority())
 	{
-		return;
+		return nullptr;
 	}
 	if (!CurrentBuildable)
 	{
@@ -38,6 +39,7 @@ void UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh
 			CurrentBuildable->InitializeMeshAndOffset(InBuildStaticMesh);
 		}
 	}
+	return CurrentBuildable;
 }
 
 void UBinggyGameplayAbility_Build::InitBuildable(ABinggyWorldBuildable* InBuildable)
@@ -79,27 +81,10 @@ void UBinggyGameplayAbility_Build::UpdateMeshRotationAroundNormal(bool bIsRight)
 
 }
 
-void UBinggyGameplayAbility_Build::PerformSphereOverlap(const FVector& TargetLocation, float Radius)
+void UBinggyGameplayAbility_Build::ProcessCurrentHitResults(const FHitResult& HitResult)
 {
-	TArray<FOverlapResult> Overlaps;
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(Radius);
-
-	if (GetWorld()->OverlapMultiByChannel(Overlaps, TargetLocation, FQuat::Identity, ECC_WorldDynamic,
-		Sphere))
-	{
-		for (const FOverlapResult& Result : Overlaps)
-		{
-			if (USceneComponent* SnappingPoint = Cast<USceneComponent>(Result.GetComponent()))
-			{
-				// Process the snapping point
-				FVector SnappingLocation = SnappingPoint->GetComponentLocation();
-
-				// Optionally snap to the point
-				FVector ObjectLocation = SnappingLocation;
-			}
-		}
-	}
-	
+	// The last HitResults is either a valid HitResult or fixed HitResult 
+	UpdateBuildMeshLocation(HitResult.ImpactPoint, HitResult.Normal);
 }
 
 void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -124,6 +109,23 @@ void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle H
 void UBinggyGameplayAbility_Build::InitializeAbility()
 {
 	RotationAroundNormal = FRotator(0, 0, 0);
+}
+
+FVector UBinggyGameplayAbility_Build::GetSymmetricPoint(FVector Point, FVector PlanePoint, FVector PlaneNormal)
+{
+	// Normalize the normal vector of the plane
+	FVector NormalizedNormal = PlaneNormal.GetSafeNormal();
+
+	// Vector from the point to the plane
+	FVector V = Point - PlanePoint;
+
+	// Project the vector onto the plane normal
+	FVector VProj = FVector::DotProduct(V, NormalizedNormal) * NormalizedNormal;
+
+	// Calculate the symmetric point
+	FVector SymmetricPoint = Point - 2 * VProj;
+
+	return SymmetricPoint;
 }
 
 void UBinggyGameplayAbility_Build::ServerUpdateMeshRotationAroundNormal_Implementation(bool bIsRight)
