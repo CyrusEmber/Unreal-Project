@@ -26,10 +26,6 @@ public:
 	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Attribute")
-	int32 MaximumStack;
-
-	// TODO DebugOnly
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Debug|Pickup|Mesh")
-	TObjectPtr<UStaticMesh> DebugDisplayMesh;
+	int32 MaximumStack = 1;
 	
 };

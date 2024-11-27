@@ -18,10 +18,9 @@ public:
 };
 
 /**
- * 
+ * Basic item definition containing fragments
  */
-// TODO UCLASS(Blueprintable, Const, Abstract)
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, Const, Abstract)
 class BINGGY_API UBinggyInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()

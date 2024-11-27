@@ -15,7 +15,7 @@ class BINGGY_API UInventoryFragment_PickupItem : public UBinggyInventoryItemFrag
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
-	TObjectPtr<USkeletalMesh> SkeletalMesh;
+	TSoftObjectPtr<USkeletalMesh> SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fragment|Appearance")
 	FText DisplayName;

@@ -18,8 +18,8 @@ class BINGGY_API UBinggyGameplayAbility_Build : public UBinggyGameplayAbility
 public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	// TODO: separate spawn and update
-	UFUNCTION(BlueprintCallable, Category="Build")
+	// Only execute in the server.
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="Build")
 	ABinggyWorldBuildable* SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Build")
@@ -40,14 +40,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Build")
 	void ProcessCurrentHitResults(const FHitResult& HitResult);
 
+	// Change the state of buildable
+	UFUNCTION(BlueprintCallable, Category="Build")
+	void OnSnappingBegin();
+
+	// Hide preview when end the ability
+	UFUNCTION(BlueprintCallable, Category="Build")
+	void HidePreview();
+
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 
-	UPROPERTY(BlueprintReadWrite, Category="Build")
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_CurrentBuildable, Category="Build")
 	TObjectPtr<ABinggyWorldBuildable> CurrentBuildable;
-	
-private:
-	
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void LocalUpdatePreview(AActor* Actor);
+
+	UFUNCTION()
+	void OnRep_CurrentBuildable();
+private:
 	FRotator DeltaRotation = FRotator(0, 15, 0);
 
 	float LerpSpeed = 120.f;
@@ -64,8 +75,7 @@ private:
 	UFUNCTION(Server, Reliable)
 	void ServerUpdateMeshRotationAroundNormal(bool bIsRight);
 
-	// Helper function for snapping
-	static FVector GetSymmetricPoint(FVector Point, FVector PlanePoint, FVector PlaneNormal);
+
 
 	
 };

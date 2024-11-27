@@ -3,13 +3,13 @@
 
 #include "BinggyWorldBuildable.h"
 
-#include "Components/SphereComponent.h"
-#include "Rendering/PositionVertexBuffer.h"
+#include "Engine/StreamableManager.h"
+#include "Engine/AssetManager.h"
 #include "Net/UnrealNetwork.h"
 
 ABinggyWorldBuildable::ABinggyWorldBuildable()
 {
-	// TODO: Change this when the build is done.
+	// TODO: Change this when the build is done. This is not necessary gone for dynamic buildable.
 	PrimaryActorTick.bCanEverTick = true;
 	// Spawn on the server and replicate to the client
 	bReplicates = true;
@@ -18,27 +18,11 @@ ABinggyWorldBuildable::ABinggyWorldBuildable()
 	// Ready for overlap
 	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
-	
-	// SetMobility(EComponentMobility::Static);
-	// GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	GetStaticMeshComponent()->SetIsReplicated(true);
-	/*bReplicates = true;
-	// SetReplicates(true);
-	SetReplicatingMovement(true);*/
 
-	// Add snapping points
-	for (int32 i = 0; i < 6; ++i)
-	{
-		FName ComponentName = FName(*FString::Printf(TEXT("SnappingPoint_%d"), i));
-		USphereComponent* SnappingSphere = CreateDefaultSubobject<USphereComponent>(ComponentName);
-		SnappingSphere->SetupAttachment(RootComponent);
-		SnappingSphere->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-		SnappingSphere->SetGenerateOverlapEvents(true);
-		SnappingSphere->InitSphereRadius(0.f); // Not tamping with the box extent TODO
-		SnappingSpheres.Add(SnappingSphere);
-		SnappingSphere->RegisterComponent();
-	}
+	/*SetReplicates(true);
+	SetReplicatingMovement(true);*/
 	
 }
 
@@ -46,6 +30,7 @@ void ABinggyWorldBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABinggyWorldBuildable, BuildableState);
+	DOREPLIFETIME(ABinggyWorldBuildable, TargetLocation);
 }
 
 void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& InteractQuery,
@@ -54,16 +39,16 @@ void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& In
 	OptionBuilder.AddInteractionOption(Option);
 }
 
-void ABinggyWorldBuildable::InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh)
+void ABinggyWorldBuildable::InitializeMesh(UStaticMesh* InBuildStaticMesh)
 {
 	GetStaticMeshComponent()->SetStaticMesh(InBuildStaticMesh);
 }
 
-void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal)
+void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& NewLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal)
 {
 	
 	FVector ForwardVector = -HitNormal * PlacementOffset.Z;
-	SetActorLocation(TargetLocation + ForwardVector);
+	TargetLocation = NewLocation + ForwardVector;
 
 	FRotator Rotation =  GetBaseRotation(HitNormal);
 	FQuat NewQuat = FQuat(HitNormal, FMath::DegreesToRadians(RotationAroundNormal.Yaw));
@@ -71,21 +56,9 @@ void ABinggyWorldBuildable::UpdatePreviewMeshPosition(const FVector& TargetLocat
 	SetActorRotation(NewRotation);
 }
 
-FVector ABinggyWorldBuildable::FindNearestSnappingPoint(FVector TargetPosition)
+TSubclassOf<UBuildableDefinition> ABinggyWorldBuildable::GetBuildableDef() const
 {
-	float MinDistance = FLT_MAX;
-	FVector MinPoint;
-	for (auto SnappingPoint : SnappingPoints)
-	{
-		FVector Location = SnappingPoint;
-		float Distance = FVector::Dist(TargetPosition, Location);
-		if (Distance < MinDistance)
-		{
-			MinDistance = Distance;
-			MinPoint = Location;
-		}
-	}
-	return MinPoint;
+	return BuildableDef;
 }
 
 void ABinggyWorldBuildable::OnConstructionCompleted()
@@ -97,6 +70,11 @@ void ABinggyWorldBuildable::OnConstructionBegin()
 {
 	SetBuildableState(EBuildableState::Building);
 	PlacementOffset = CalculateOffsetSpawnPoint(this);
+}
+
+void ABinggyWorldBuildable::OnSnappingBegin()
+{
+	SetBuildableState(EBuildableState::Snapping);
 }
 
 FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
@@ -178,54 +156,6 @@ FRotator ABinggyWorldBuildable::GetBaseRotation(const FVector& HitNormal, const 
 	return PlacementRotation;
 }
 
-void ABinggyWorldBuildable::InitializeSnappingPoints()
-{
-	// Origin is on the actor center
-	FVector Origin;
-	FVector BoxExtent;
-	
-	GetActorBounds(true, Origin, BoxExtent);
-
-	TArray<FVector> RelativeLocations = {
-	    Origin + FVector(0,  BoxExtent.Y, 0),  // FrontCenter
-	    Origin + FVector(0, -BoxExtent.Y, 0),  // BackCenter
-	    Origin + FVector(-BoxExtent.X, 0, 0),  // LeftCenter
-	    Origin + FVector(BoxExtent.X,  0, 0),  // RightCenter
-	    Origin + FVector(0, 0, BoxExtent.Z),   // TopCenter
-	    Origin + FVector(0, 0, -BoxExtent.Z)   // Bottom Center
-	};
-	
-	for (int32 i = 0; i < RelativeLocations.Num(); ++i)
-	{
-		SnappingSpheres[i]->SetWorldLocation(RelativeLocations[i]);
-		SnappingSpheres[i]->InitSphereRadius(SnappingRadius); // Set the desired radius
-		SnappingPoints.Add(RelativeLocations[i]);
-#if WITH_EDITOR
-		if (Debug)
-		{
-			DrawDebugSphere(
-			GetWorld(),
-			SnappingSpheres[i]->GetComponentLocation(),
-			30.0f,             // Radius
-			12,                // Segments
-			FColor::Green,     // Color
-			true          // Persistent (false means it will disappear after a short time)
-		);
-#endif
-		}
-		
-	}
-}
-
-void ABinggyWorldBuildable::AddSnappingPoint(USceneComponent* SnappingPoint)
-{
-	FVector Origin;
-	FVector BoxExtent;
-	GetActorBounds(true, Origin, BoxExtent);
-	
-}
-
-
 void ABinggyWorldBuildable::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
@@ -267,22 +197,44 @@ void ABinggyWorldBuildable::NotifyActorEndOverlap(AActor* OtherActor)
 void ABinggyWorldBuildable::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+	
 	// Generate overlap events only for server
 	if (HasAuthority())
 	{
+		// Async Load
+		FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
+		TSoftObjectPtr<UStaticMesh> SoftMesh = GetDefault<UBuildableDefinition>(BuildableDef)->BuildableMesh;
+		// Request asynchronous load
+		Streamable.RequestAsyncLoad(SoftMesh.ToSoftObjectPath(),
+			FStreamableDelegate::CreateLambda([this, SoftMesh]()
+			{
+				if (UStaticMesh* Mesh = SoftMesh.Get())
+				{
+					GetStaticMeshComponent()->SetStaticMesh(Mesh);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("Failed to load mesh"));
+				}
+			}));
+		
 		GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
 	}
+}
 
-	
+void ABinggyWorldBuildable::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 
-	InitializeSnappingPoints();
-	for (auto SnappingPoint : SnappingPoints)
+	// Update the mesh location
+	if ((BuildableState != EBuildableState::Snapping && BuildableState != EBuildableState::Placed)
+		&& GetActorLocation() != TargetLocation)
 	{
-		FColor PointColor = FColor::Red;
-		float PointSize = 10.0f;
-		DrawDebugPoint(GetWorld(), SnappingPoint, PointSize, PointColor, true);
+		FVector SmoothedLocation = FMath::VInterpTo(GetActorLocation(), TargetLocation, DeltaSeconds, 10.0f);
+		SetActorLocation(SmoothedLocation);
 	}
-	
 
 }
 

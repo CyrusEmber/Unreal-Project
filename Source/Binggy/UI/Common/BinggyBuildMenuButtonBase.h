@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Buildable/BuildableDefinition.h"
 #include "Buildable/IBuildable.h"
 #include "UI/Foundation/BinggyButtonBase.h"
 #include "BinggyBuildMenuButtonBase.generated.h"
@@ -20,17 +21,12 @@ public:
 	UBinggyBuildMenuButtonBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Default", meta = (ExposeOnSpawn = "true"))
-	FBuildablePlaceHolder BuildableTable;
+	UBuildableDefinition* BuildableDef;
 
 protected:
 	// Blueprint implemented event
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateButtonIcon(const UTexture2D* InTexture);
-
-	// Helper function
-	UFUNCTION(BlueprintCallable)
-	UObject* ClassToInstagator(TSubclassOf<ABinggyWorldBuildable> BuildableClass);
-
 	
 	
 };

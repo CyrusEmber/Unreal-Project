@@ -4,6 +4,7 @@
 #include "Engine/DataTable.h"
 #include "IBuildable.generated.h"
 
+class UBuildableDefinition;
 class UBinggyInventoryItemDefinition;
 
 USTRUCT(BlueprintType)
@@ -65,6 +66,20 @@ class IIBuildable
 public:
 	// Get the private inventory pickup
 	UFUNCTION(BlueprintCallable)
-	virtual FBuildableDef GetBuildableDef() const = 0;
+	virtual TSubclassOf<UBuildableDefinition> GetBuildableDef() const = 0;
 	
+};
+
+/**  */
+UCLASS()
+class UBuildableStatics : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+
+public:
+	// Get first pickupable, if the actor is pickupable, return the actor.
+	UFUNCTION(BlueprintPure)
+	static TScriptInterface<IIBuildable> GetFirstBuildableFromActor(AActor* Actor);
+
+	// TODO: return a batch of buildable attached actor
 };

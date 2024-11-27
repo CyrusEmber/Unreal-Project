@@ -8,8 +8,3 @@
 UBinggyBuildMenuButtonBase::UBinggyBuildMenuButtonBase()
 {
 }
-
-UObject* UBinggyBuildMenuButtonBase::ClassToInstagator(TSubclassOf<ABinggyWorldBuildable> BuildableClass)
-{
-	return (UObject*)BuildableClass;
-}

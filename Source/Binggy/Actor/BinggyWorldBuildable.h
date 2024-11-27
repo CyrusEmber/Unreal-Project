@@ -19,6 +19,7 @@ enum class EBuildableState : uint8 {
 	Building UMETA(DisplayName = "Under Construction"),
 	Clear UMETA(DisplayName = "Not Overlapping, ready to be placed"),
 	Blocked UMETA(DisplayName = "Overlapping With Others"),
+	Snapping UMETA(DisplayName = "Snapping"),
 	Placed UMETA(DisplayName = "Completed")   // the buildable completes placing in the world
 };
 
@@ -28,7 +29,7 @@ enum class EBuildableState : uint8 {
  * 
  */
 UCLASS(Blueprintable)
-class BINGGY_API ABinggyWorldBuildable : public AStaticMeshActor, public IInteractableTarget
+class BINGGY_API ABinggyWorldBuildable : public AStaticMeshActor, public IInteractableTarget, public IIBuildable
 {
 	GENERATED_BODY()
 public:
@@ -38,22 +39,33 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Buildable")
 	void OnConstructionCompleted();
 
-	// Server execute function
 	UFUNCTION(BlueprintCallable, Category="Buildable")
 	void OnConstructionBegin();
 
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void OnSnappingBegin();
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	// Begin of IInteractble interface
 	virtual void GatherInteractionOptions(const FInteractionQuery& InteractQuery, FInteractionOptionBuilder& OptionBuilder) override;
-
+	// End of IInteractble interface.
+	
+	void InitializeMesh(UStaticMesh* InBuildStaticMesh);
+	
 	// Initialize the mesh at runtime.
-	void InitializeMeshAndOffset(UStaticMesh* InBuildStaticMesh);
+	void SetAttachableSurfaces(const TSet<EBuildableSurfaceType>& InAttachableSurfaces) { AttachableSurfaces = InAttachableSurfaces; };
+	
+	/**
+	 * Update target location and rotation
+	 * @param NewLocation The new target location
+	 * @param HitNormal The new hit result normal indicating which surface we want to place the mesh.
+	 * @param RotationAroundNormal The only rotation allowed when creating the mesh
+	 */
+	void UpdatePreviewMeshPosition(const FVector& NewLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal);
 
-	// Update location and rotation
-	void UpdatePreviewMeshPosition(const FVector& TargetLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal);
-
-	// TODO: Start IBuildable Interface
-	FVector FindNearestSnappingPoint(FVector TargetPosition);
+	// Start IBuildable Interface
+	virtual TSubclassOf<UBuildableDefinition> GetBuildableDef() const override;
 	// End IBuildable Interface
 	
 protected:
@@ -63,7 +75,15 @@ protected:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 	virtual void BeginPlay() override;
-	
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	UPROPERTY(EditAnywhere, Category = "Buildable")
+	FInteractionOption Option;
+
+	UPROPERTY(EditAnywhere, Category = "Buildable")
+	TSubclassOf<UBuildableDefinition> BuildableDef;
+
 	// Client updates
 	UFUNCTION()
 	virtual void OnRep_BuildableState(EBuildableState OldBuildableState);
@@ -73,9 +93,6 @@ protected:
 
 	
 private:
-	UPROPERTY(EditAnywhere, Category = "Buildable")
-	FInteractionOption Option;
-
 	// Properties
 	// Define a set of surfaces this buildable can attach to
 	UPROPERTY(EditDefaultsOnly, Category = "Buildable")
@@ -108,22 +125,12 @@ private:
 	}
 
 	FVector PlacementOffset;
-
-	// Snapping System
-	TArray<FVector> SnappingPoints;
-
-	void InitializeSnappingPoints();
-
-	// TODO: add new snapping point for future snapping
-	void AddSnappingPoint(USceneComponent* SnappingPoint);
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Buildable|Snapping", meta = (AllowPrivateAccess = "true"))
-	float SnappingRadius = 20.f;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Buildable|Debug", meta = (AllowPrivateAccess = "true"))
 	bool Debug = true;
 
-	TArray<USphereComponent*> SnappingSpheres;
+	UPROPERTY(Replicated)
+	FVector TargetLocation;
 
 	
 

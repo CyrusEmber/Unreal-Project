@@ -6,6 +6,7 @@
 
 #include "Actor/BinggyWorldBuildable.h"
 #include "Components/SphereComponent.h"
+#include "Net/UnrealNetwork.h"
 
 void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                    const FGameplayAbilityActorInfo* ActorInfo,
@@ -19,13 +20,14 @@ void UBinggyGameplayAbility_Build::ActivateAbility(const FGameplayAbilitySpecHan
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
 
+void UBinggyGameplayAbility_Build::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(UBinggyGameplayAbility_Build, CurrentBuildable, COND_OwnerOnly);
+}
+
 ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation)
 {
-	// Only spawn the buildable in server
-	if (!GetOwningActorFromActorInfo()->HasAuthority())
-	{
-		return nullptr;
-	}
 	if (!CurrentBuildable)
 	{
 		UWorld* World = GetWorld();
@@ -36,9 +38,16 @@ ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh*
 
 			CurrentBuildable = World->SpawnActor<ABinggyWorldBuildable>(BuildableClass, FVector::ZeroVector, Rotation);
 			CurrentBuildable->OnConstructionBegin();
-			CurrentBuildable->InitializeMeshAndOffset(InBuildStaticMesh);
+			CurrentBuildable->InitializeMesh(InBuildStaticMesh);
 		}
 	}
+
+	// Server update
+	if (IsLocallyControlled())
+	{
+		OnRep_CurrentBuildable();
+	}
+	
 	return CurrentBuildable;
 }
 
@@ -83,8 +92,12 @@ void UBinggyGameplayAbility_Build::UpdateMeshRotationAroundNormal(bool bIsRight)
 
 void UBinggyGameplayAbility_Build::ProcessCurrentHitResults(const FHitResult& HitResult)
 {
-	// The last HitResults is either a valid HitResult or fixed HitResult 
 	UpdateBuildMeshLocation(HitResult.ImpactPoint, HitResult.Normal);
+}
+
+void UBinggyGameplayAbility_Build::OnSnappingBegin()
+{
+	CurrentBuildable->OnSnappingBegin();
 }
 
 void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -99,33 +112,31 @@ void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle H
 			CurrentBuildable->OnConstructionCompleted();
 		}
 	}
-	// Reset the buildable
 	CurrentBuildable = nullptr;
+	// Reset the buildable for instanced per actor ability
+	HidePreview();
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	// Destroy the cached actor
-	// CurrentBuildStaticMeshActor->Destroy();
 }
+
+void UBinggyGameplayAbility_Build::HidePreview()
+{
+	CurrentBuildable = nullptr;
+	// Server controlled logic
+	if (IsLocallyControlled())
+	{
+		OnRep_CurrentBuildable();
+	}
+}
+
+void UBinggyGameplayAbility_Build::OnRep_CurrentBuildable()
+{
+	LocalUpdatePreview(CurrentBuildable);
+}
+
 
 void UBinggyGameplayAbility_Build::InitializeAbility()
 {
 	RotationAroundNormal = FRotator(0, 0, 0);
-}
-
-FVector UBinggyGameplayAbility_Build::GetSymmetricPoint(FVector Point, FVector PlanePoint, FVector PlaneNormal)
-{
-	// Normalize the normal vector of the plane
-	FVector NormalizedNormal = PlaneNormal.GetSafeNormal();
-
-	// Vector from the point to the plane
-	FVector V = Point - PlanePoint;
-
-	// Project the vector onto the plane normal
-	FVector VProj = FVector::DotProduct(V, NormalizedNormal) * NormalizedNormal;
-
-	// Calculate the symmetric point
-	FVector SymmetricPoint = Point - 2 * VProj;
-
-	return SymmetricPoint;
 }
 
 void UBinggyGameplayAbility_Build::ServerUpdateMeshRotationAroundNormal_Implementation(bool bIsRight)

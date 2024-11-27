@@ -52,6 +52,11 @@ private:
 
 	void InputTrigger();
 
+	UFUNCTION()
+	void OnPressCallback();
+		
+	FDelegateHandle DelegateHandle;
+
 	
 	
 };

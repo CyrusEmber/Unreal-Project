@@ -32,17 +32,14 @@ public:
 	// Class to spawn
 	UPROPERTY(EditDefaultsOnly, Category = "Buildable")
 	TSoftClassPtr<UBuildableInstance> InstanceType;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Buildable")
-	EBuildableSurfaceType AttachableSurfaces;
 
 	// Unique ID or name for the buildable item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
 	FText DisplayName;
 
-	// Check buildable options and surfaces
+	// The static mesh buildable uses
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
-	TSoftClassPtr<ABinggyWorldBuildable> BinggyBuildable;
+	TSoftObjectPtr<UStaticMesh> BuildableMesh;
  
 	// Construction cost in resources
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")

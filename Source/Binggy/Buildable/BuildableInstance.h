@@ -6,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "BuildableInstance.generated.h"
 
+class UBuildableDefinition;
 enum class EBuildableSurfaceType : uint8;
 class ABinggyWorldBuildable;
 /**
@@ -18,6 +19,11 @@ class BINGGY_API UBuildableInstance : public UObject
 
 public:
 	UBuildableInstance();
+
+	TSubclassOf<UBuildableDefinition> GetItemDef() const
+	{
+		return BuildableDef;
+	}
 	
 	//~UObject interface
 	virtual bool IsSupportedForNetworking() const override { return true; }
@@ -30,7 +36,8 @@ public:
 	void SetOwner(UObject* InOwner) { Owner = InOwner; }
 
 	// Buildable actor
-	void SpawnBuildableActor(EBuildableSurfaceType AttachableSurfaces, FVector SpawnLocation);
+	void SpawnBuildableActor(TSubclassOf<ABinggyWorldBuildable> BuildableClass,
+		UStaticMesh* InBuildStaticMesh, TSet<EBuildableSurfaceType> AttachableSurfaces, FVector SpawnLocation);
 
 	void DestroyBuildableActor();
 
@@ -39,11 +46,16 @@ private:
 	UFUNCTION()
 	void OnRep_Owner();
 
+	// TODO: need ownership?
 	UPROPERTY(ReplicatedUsing = OnRep_Owner)
 	TObjectPtr<UObject> Owner;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TObjectPtr<ABinggyWorldBuildable> Buildable;
+
+	// The item definition
+	UPROPERTY(Replicated)
+	TSubclassOf<UBuildableDefinition> BuildableDef;
 
 	
 	

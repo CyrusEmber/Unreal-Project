@@ -10,7 +10,25 @@ Problem
 
 * ``LineTrace`` trace response? Need overlapping result?
 
+* Not always ``bCanEverTick``.
 
+* ``bBuildablePlaced`` connects with status Fixed.
+
+* Two players using the build mode at the same time.
+
+* For world buildable actor. Single-Time Initialization: If the asset is always required immediately upon actor creation, there’s no need for the complexity of soft pointers.
+
+* ``BuildableDef`` soft object ptr not loading. Fixed
+
+.. _state-figure:
+
+.. figure:: State.png
+   :class: with-border
+
+   This is the caption.
+
+
+* fix it with state :ref:`state-figure`
 
 Interface
 ---------
