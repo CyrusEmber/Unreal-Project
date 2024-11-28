@@ -71,7 +71,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable)
-	void SwitchBuildMode(bool bSwitch, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass);
+	void SwitchBuildMode(bool bIsBuildMode, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass);
 
 	// Is it the good position to place it?
 	UFUNCTION(Client, Reliable)

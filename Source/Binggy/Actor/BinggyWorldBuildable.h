@@ -132,6 +132,9 @@ private:
 	UPROPERTY(Replicated)
 	FVector TargetLocation;
 
+	UPROPERTY(Replicated)
+	UBuildableInstance* BuildableInstance;
+
 	
 
 	// TODO

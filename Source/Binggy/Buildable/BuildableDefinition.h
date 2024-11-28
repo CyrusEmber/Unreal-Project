@@ -40,6 +40,10 @@ public:
 	// The static mesh buildable uses
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
 	TSoftObjectPtr<UStaticMesh> BuildableMesh;
+
+	// The class buildable uses
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")
+	TSoftClassPtr<ABinggyWorldBuildable> BuildableClass;
  
 	// Construction cost in resources
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildable")

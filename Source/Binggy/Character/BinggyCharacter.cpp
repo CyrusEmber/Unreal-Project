@@ -18,6 +18,7 @@
 #include "PlayerState/BinggyPlayerState.h"
 #include "AbilitySystemComponent.h"
 #include "UtilityLibrary.h"
+#include "Buildable/BinggyBuildableManagerComponent.h"
 #include "Inventory/BinggyInventoryComponent.h"
 #include "Component/BinggyUIComponent.h"
 #include "Component/ExperienceComponent.h"
@@ -94,8 +95,8 @@ ABinggyCharacter::ABinggyCharacter()
 	UIComponent = CreateDefaultSubobject<UBinggyUIComponent>(TEXT("UIComponent"));
 
 	// TODO: Only the server has an inventory component.
-
 	InventoryComponent = CreateDefaultSubobject<UBinggyInventoryComponent>(TEXT("InventoryComponent"));
+	BuildableManagerComponent = CreateDefaultSubobject<UBinggyBuildableManagerComponent>(TEXT("BuildableManagerComponent"));
 	
 	
 }

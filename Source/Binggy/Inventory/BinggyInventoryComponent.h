@@ -166,6 +166,11 @@ struct TStructOpsTypeTraits<FBinggyInventoryList> : public TStructOpsTypeTraitsB
 	enum { WithNetDeltaSerializer = true };
 };
 
+
+
+/**
+ * The server part calculates the variables and the client part listens for the replicated change.
+ */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryChange, FInventoryChange, InventoryChange);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

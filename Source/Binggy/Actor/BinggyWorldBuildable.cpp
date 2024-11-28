@@ -198,7 +198,8 @@ void ABinggyWorldBuildable::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	// TODO: initial states
+	TargetLocation = GetActorLocation();
 	
 	// Generate overlap events only for server
 	if (HasAuthority())
@@ -227,7 +228,7 @@ void ABinggyWorldBuildable::BeginPlay()
 void ABinggyWorldBuildable::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
+	
 	// Update the mesh location
 	if ((BuildableState != EBuildableState::Snapping && BuildableState != EBuildableState::Placed)
 		&& GetActorLocation() != TargetLocation)

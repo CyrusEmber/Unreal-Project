@@ -1,6 +1,18 @@
 Build
 ================
 
+Design
+------
+
+* Definition: A Definition serves as a blueprint or template outlining the attributes and behaviors of a particular object type.
+
+* Instance: An Instance is a concrete manifestation of a Definition within the game world.
+
+* A World Buildable refers to an object that can be constructed or placed within the game environment by players or game mechanics.
+
+* So Manager component will handle all the instances, while a buildable will have a reference to the instance.
+And a instance will have a reference to the buildable, so when the buildable is destroyed, the instance could still be there.
+
 Problem
 -------
 
@@ -19,6 +31,8 @@ Problem
 * For world buildable actor. Single-Time Initialization: If the asset is always required immediately upon actor creation, there’s no need for the complexity of soft pointers.
 
 * ``BuildableDef`` soft object ptr not loading. Fixed
+
+* Create a buildable manager component for the player controller.
 
 .. _state-figure:
 

@@ -20,9 +20,9 @@ public:
 
 	// Only execute in the server.
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="Build")
-	ABinggyWorldBuildable* SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation);
+	ABinggyWorldBuildable* SpawnBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass, FVector TargetLocation);
 
-	UFUNCTION(BlueprintCallable, Category="Build")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category="Build")
 	void InitBuildable(ABinggyWorldBuildable* InBuildable);
 	
 	// Select the correct static mesh from UI
@@ -66,7 +66,7 @@ private:
 	FRotator RotationAroundNormal = FRotator(0, 0, 0);
 	
 	UPROPERTY(EditDefaultsOnly, Category="Binggy|Build", meta=(AllowPrivateAccess=true))
-	TSubclassOf<ABinggyWorldBuildable> BuildableClass;
+	TSubclassOf<ABinggyWorldBuildable> DebugBuildableClass;
 
 	// Initialize for the Instanced per Actor ability
 	void InitializeAbility();

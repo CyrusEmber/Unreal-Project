@@ -10,7 +10,8 @@ class UBuildableDefinition;
 enum class EBuildableSurfaceType : uint8;
 class ABinggyWorldBuildable;
 /**
- * The buildable spawned and owned by a pawn. Should handle initialization. It could be in the inventory
+ * The buildable spawned and owned by a pawn. Should handle initialization. It could be in the inventory.
+ * It should only be in the server. Also, it handles a group of worldbuildables as attached actors.
  */
 UCLASS(BlueprintType, Blueprintable)
 class BINGGY_API UBuildableInstance : public UObject
@@ -41,6 +42,10 @@ public:
 
 	void DestroyBuildableActor();
 
+	void SetBuildable(ABinggyWorldBuildable* InBuildable);
+
+	void SetBuildableDef(const TSubclassOf<UBuildableDefinition>& InBuildableDef) { BuildableDef = InBuildableDef; }
+
 	
 private:
 	UFUNCTION()
@@ -50,7 +55,7 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_Owner)
 	TObjectPtr<UObject> Owner;
 
-	UPROPERTY(Replicated)
+	/*UPROPERTY(Replicated) TODO*/
 	TObjectPtr<ABinggyWorldBuildable> Buildable;
 
 	// The item definition

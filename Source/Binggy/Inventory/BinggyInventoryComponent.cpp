@@ -384,6 +384,7 @@ void FBinggyInventoryList::UpdateNextAvailableSlotIndex(int32 Index)
 	}
 }
 
+
 //////////////////////////////////////////////////////////////////////
 // ULyraInventoryManagerComponent
 

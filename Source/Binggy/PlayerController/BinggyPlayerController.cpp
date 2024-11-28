@@ -123,14 +123,15 @@ void ABinggyPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
-void ABinggyPlayerController::SwitchBuildMode(bool bSwitch, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass)
+void ABinggyPlayerController::SwitchBuildMode(bool bIsBuildMode, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass)
 {
-	if (bSwitch)
+	if (bIsBuildMode)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(BuildModeMappingContext, 1);
 		}
+		// TODO: set the UI for build mode
 		UUIBlueprintLibrary::PushWidgetToLayerStack(this, TAG_UI_LAYER_GAME, BuildModeWidgetClass);
 	} else
 	{

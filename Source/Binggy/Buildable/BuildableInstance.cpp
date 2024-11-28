@@ -40,6 +40,11 @@ void UBuildableInstance::DestroyBuildableActor()
 	}
 }
 
+void UBuildableInstance::SetBuildable(ABinggyWorldBuildable* InBuildable)
+{
+	Buildable = InBuildable;
+}
+
 void UBuildableInstance::OnRep_Owner()
 {
 }

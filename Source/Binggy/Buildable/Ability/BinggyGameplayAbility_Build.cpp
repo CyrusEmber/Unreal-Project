@@ -26,7 +26,7 @@ void UBinggyGameplayAbility_Build::GetLifetimeReplicatedProps(TArray<FLifetimePr
 	DOREPLIFETIME_CONDITION(UBinggyGameplayAbility_Build, CurrentBuildable, COND_OwnerOnly);
 }
 
-ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh* InBuildStaticMesh, FVector TargetLocation)
+ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass, FVector TargetLocation)
 {
 	if (!CurrentBuildable)
 	{
@@ -34,11 +34,9 @@ ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh*
 		if (World)
 		{
 			// TODO the rotation should be facing the character first
-			FRotator Rotation(0.0f, 0.0f, 0.0f); // Set the desired rotation
-
-			CurrentBuildable = World->SpawnActor<ABinggyWorldBuildable>(BuildableClass, FVector::ZeroVector, Rotation);
+			FRotator Rotation(0.0f, 0.0f, 0.0f);
+			CurrentBuildable = World->SpawnActor<ABinggyWorldBuildable>(BuildableClass, GetAvatarActorFromActorInfo()->GetActorLocation(), Rotation);
 			CurrentBuildable->OnConstructionBegin();
-			CurrentBuildable->InitializeMesh(InBuildStaticMesh);
 		}
 	}
 
@@ -54,8 +52,11 @@ ABinggyWorldBuildable* UBinggyGameplayAbility_Build::SpawnBuildable(UStaticMesh*
 void UBinggyGameplayAbility_Build::InitBuildable(ABinggyWorldBuildable* InBuildable)
 {
 	CurrentBuildable = InBuildable;
-
-	CurrentBuildable->OnConstructionBegin();
+	// Server update
+	if (IsLocallyControlled())
+	{
+		OnRep_CurrentBuildable();
+	}
 }
 
 void UBinggyGameplayAbility_Build::UpdateBuildMeshLocation(const FVector& TargetLocation, const FVector& HitNormal)
@@ -120,7 +121,6 @@ void UBinggyGameplayAbility_Build::EndAbility(const FGameplayAbilitySpecHandle H
 
 void UBinggyGameplayAbility_Build::HidePreview()
 {
-	CurrentBuildable = nullptr;
 	// Server controlled logic
 	if (IsLocallyControlled())
 	{

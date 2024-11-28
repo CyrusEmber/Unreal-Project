@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Buildable/BuildableDefinition.h"
-#include "Buildable/IBuildable.h"
+
 #include "UI/Foundation/BinggyButtonBase.h"
 #include "BinggyBuildMenuButtonBase.generated.h"
 
+class UBuildableDefinition;
+class ABinggyWorldBuildable;
 struct FBuildablePlaceHolder;
 /**
  * 
@@ -19,9 +20,9 @@ class BINGGY_API UBinggyBuildMenuButtonBase : public UBinggyButtonBase
 
 public:
 	UBinggyBuildMenuButtonBase();
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Default", meta = (ExposeOnSpawn = "true"))
-	UBuildableDefinition* BuildableDef;
+	TSubclassOf<UBuildableDefinition> BuildableDef;
 
 protected:
 	// Blueprint implemented event

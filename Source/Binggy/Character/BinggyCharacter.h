@@ -7,6 +7,7 @@
 #include "BinggyCharacter.generated.h"
 
 
+class UBinggyBuildableManagerComponent;
 class UBinggyInventoryComponent;
 class UBinggyUIComponent;
 class AWeapon;
@@ -81,6 +82,9 @@ protected:
  
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBinggyInventoryComponent> InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBinggyBuildableManagerComponent> BuildableManagerComponent;
 
 
 private:
