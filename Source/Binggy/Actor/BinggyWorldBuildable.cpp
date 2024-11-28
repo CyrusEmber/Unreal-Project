@@ -204,7 +204,7 @@ void ABinggyWorldBuildable::BeginPlay()
 	// Generate overlap events only for server
 	if (HasAuthority())
 	{
-		// Async Load
+		/*// Async Load
 		FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
 		TSoftObjectPtr<UStaticMesh> SoftMesh = GetDefault<UBuildableDefinition>(BuildableDef)->BuildableMesh;
 		// Request asynchronous load
@@ -219,7 +219,7 @@ void ABinggyWorldBuildable::BeginPlay()
 				{
 					UE_LOG(LogTemp, Error, TEXT("Failed to load mesh"));
 				}
-			}));
+			}));*/
 		
 		GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
 	}
