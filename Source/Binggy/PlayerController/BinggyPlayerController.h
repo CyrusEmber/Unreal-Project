@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
+#include "Buildable/Pawn/VehiclePawn.h"
 #include "GameFramework/PlayerController.h"
 #include "BinggyPlayerController.generated.h"
 
@@ -51,12 +52,24 @@ public:
 	UInputAction* DebugAction;
 
 	// Build mode context
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* BuildModeMappingContext;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
 	UInputAction* SpinAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
 	UInputAction* ZoomAction;
+
+	// TODO: make it soft ptr?
+	// Vehicle mode context
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Vehicle", meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* VehicleModeMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
+	UInputAction* SteerAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
+	UInputAction* ThrottleAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Build", meta = (AllowPrivateAccess = "true"))
+	UInputAction* BreakAction;
+
 
 public:
 	ABinggyPlayerController();
@@ -72,6 +85,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SwitchBuildMode(bool bIsBuildMode, TSubclassOf<UCommonActivatableWidget> BuildModeWidgetClass);
+
+	// Possess only execute in the server, but input context binding only execute locally.
+	UFUNCTION(BlueprintCallable)
+	void SwitchVehicleMode(bool bIsVehicleMode, AVehiclePawn* Vehicle);
 
 	// Is it the good position to place it?
 	UFUNCTION(Client, Reliable)

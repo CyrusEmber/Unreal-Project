@@ -5,44 +5,81 @@
 
 #include "Actor/BinggyWorldBuildable.h"
 #include "Net/UnrealNetwork.h"
+#include "PhysicsEngine/PhysicsConstraintActor.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 UBuildableInstance::UBuildableInstance()
 {
 }
 
-void UBuildableInstance::SpawnBuildableActor(TSubclassOf<ABinggyWorldBuildable> BuildableClass,
-	UStaticMesh* InBuildStaticMesh, TSet<EBuildableSurfaceType> AttachableSurfaces, FVector SpawnLocation)
-{
-	// Only spawn the buildable in server
-	if (!Buildable)
-	{
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			// TODO the rotation should be facing the character first
-			FRotator Rotation(0.0f, 0.0f, 0.0f); // Set the desired rotation
-
-			Buildable = World->SpawnActor<ABinggyWorldBuildable>(BuildableClass, FVector::ZeroVector, Rotation);
-			Buildable->OnConstructionBegin();
-			Buildable->SetAttachableSurfaces(AttachableSurfaces);
-			Buildable->InitializeMesh(InBuildStaticMesh);
-		}
-	}
-	
-}
-
-void UBuildableInstance::DestroyBuildableActor()
+void UBuildableInstance::AddBuildable(ABinggyWorldBuildable* Buildable)
 {
 	if (Buildable)
 	{
-		Buildable->Destroy();
-		Buildable = nullptr;
+		Buildable->SetBuildableInstance(this);
+		Buildables.Add(Buildable);
 	}
 }
 
-void UBuildableInstance::SetBuildable(ABinggyWorldBuildable* InBuildable)
+void UBuildableInstance::RemoveBuildable(ABinggyWorldBuildable* Buildable)
 {
-	Buildable = InBuildable;
+	if (Buildable)
+	{
+		// TODO Set new buildable instance
+	}
+}
+
+
+void UBuildableInstance::DestroyBuildableActor()
+{
+}
+
+void UBuildableInstance::AddConstraintBetweenBuildables(ABinggyWorldBuildable* Buildable1,
+	ABinggyWorldBuildable* Buildable2)
+{
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+	
+	FBuildablePair Pair(Buildable1, Buildable2);
+
+	// The constraint exists
+	if (Constraints.Contains(Pair))
+	{
+		return;
+	}
+
+	// Spawn the Physics Constraint Actor
+	APhysicsConstraintActor* ConstraintActor = World->SpawnActor<APhysicsConstraintActor>();
+	if (ConstraintActor)
+	{
+		UPhysicsConstraintComponent* ConstraintComponent = ConstraintActor->GetConstraintComp();
+
+		// Set the constrained components
+		ConstraintComponent->SetConstrainedComponents(
+			Buildable1->GetStaticMeshComponent(),
+			NAME_None,
+			Buildable2->GetStaticMeshComponent(),
+			NAME_None
+		);
+
+		// Configure the constraint
+		ConstraintComponent->SetLinearXLimit(ELinearConstraintMotion::LCM_Limited, 0.0f);
+		ConstraintComponent->SetLinearYLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
+		ConstraintComponent->SetLinearZLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
+
+		ConstraintComponent->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
+		ConstraintComponent->SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
+		ConstraintComponent->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Free, 0.0f);
+
+		// Disable collision between constrained objects
+		ConstraintComponent->SetDisableCollision(true);
+	}
+	// Add it to the TMap
+	Constraints.Add(Pair, ConstraintActor);
+
 }
 
 void UBuildableInstance::OnRep_Owner()

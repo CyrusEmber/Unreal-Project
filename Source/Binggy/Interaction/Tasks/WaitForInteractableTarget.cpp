@@ -234,7 +234,12 @@ void UWaitForInteractableTarget::PerformTrace()
 	LineTrace(OutHitResult, World, TraceStart, TraceEnd, TraceProfile.Name, Params);
 	TArray<TScriptInterface<IInteractableTarget>> InteractableTargets;
 	// TODO Possible multiple hits?
-	UInteractionBlueprintLibrary::AppendInteractableTargetsFromHitResult(OutHitResult, InteractableTargets);
+	if (OutHitResult.IsValidBlockingHit())
+	{
+		UInteractionBlueprintLibrary::AppendInteractableTargetsFromHitResult(OutHitResult, InteractableTargets);
+		UpdateInteractableOptions(InteractionQuery, InteractableTargets);
+	}
+	
 
 	// Possible of broadcast empty hit result
 	/*FGameplayAbilityTargetDataHandle DataHandle;
@@ -242,7 +247,7 @@ void UWaitForInteractableTarget::PerformTrace()
 	Data->HitResult = OutHitResult;
 	DataHandle.Add(Data);*/
 	
-	UpdateInteractableOptions(InteractionQuery, InteractableTargets);
+	
 	
 #if WITH_EDITOR
 	if (bShowDebug)

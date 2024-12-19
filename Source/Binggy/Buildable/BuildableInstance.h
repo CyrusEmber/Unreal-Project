@@ -6,11 +6,35 @@
 #include "UObject/NoExportTypes.h"
 #include "BuildableInstance.generated.h"
 
+class ABinggyWorldBuildable;
+struct FBuildablePair
+{
+	ABinggyWorldBuildable* BuildableA;
+	ABinggyWorldBuildable* BuildableB;
+
+	FBuildablePair(ABinggyWorldBuildable* InA = nullptr, ABinggyWorldBuildable* InB = nullptr)
+		: BuildableA(InA), BuildableB(InB) {}
+
+	// Override equality operator
+	bool operator==(const FBuildablePair& Other) const
+	{
+		return (BuildableA == Other.BuildableA && BuildableB == Other.BuildableB) ||
+			   (BuildableA == Other.BuildableB && BuildableB == Other.BuildableA); // Handle unordered pair
+	}
+};
+
+// Hash function for TMap
+FORCEINLINE uint32 GetTypeHash(const FBuildablePair& Pair)
+{
+	// XOR the hash of both pointers to create a unique hash for the pair
+	return HashCombine(GetTypeHash(Pair.BuildableA), GetTypeHash(Pair.BuildableB));
+}
+
+class APhysicsConstraintActor;
 class UBuildableDefinition;
 enum class EBuildableSurfaceType : uint8;
-class ABinggyWorldBuildable;
 /**
- * The buildable spawned and owned by a pawn. Should handle initialization. It could be in the inventory.
+ * The buildable spawned and owned by a pawn. Should handle initialization. It could be in the inventory? TODO?
  * It should only be in the server. Also, it handles a group of worldbuildables as attached actors.
  */
 UCLASS(BlueprintType, Blueprintable)
@@ -21,10 +45,13 @@ class BINGGY_API UBuildableInstance : public UObject
 public:
 	UBuildableInstance();
 
-	TSubclassOf<UBuildableDefinition> GetItemDef() const
-	{
-		return BuildableDef;
-	}
+	/** Add a buildable to this instance */
+	UFUNCTION(BlueprintCallable, Category = "Buildable")
+	void AddBuildable(ABinggyWorldBuildable* Buildable);
+
+	/** Remove a buildable from this instance */
+	UFUNCTION(BlueprintCallable, Category = "Buildable")
+	void RemoveBuildable(ABinggyWorldBuildable* Buildable);
 	
 	//~UObject interface
 	virtual bool IsSupportedForNetworking() const override { return true; }
@@ -36,16 +63,11 @@ public:
 
 	void SetOwner(UObject* InOwner) { Owner = InOwner; }
 
-	// Buildable actor
-	void SpawnBuildableActor(TSubclassOf<ABinggyWorldBuildable> BuildableClass,
-		UStaticMesh* InBuildStaticMesh, TSet<EBuildableSurfaceType> AttachableSurfaces, FVector SpawnLocation);
-
 	void DestroyBuildableActor();
 
-	void SetBuildable(ABinggyWorldBuildable* InBuildable);
-
-	void SetBuildableDef(const TSubclassOf<UBuildableDefinition>& InBuildableDef) { BuildableDef = InBuildableDef; }
-
+	UFUNCTION(BlueprintCallable, Category = "Buildable")
+	void AddConstraintBetweenBuildables(ABinggyWorldBuildable* Buildable1, ABinggyWorldBuildable* Buildable2);
+	
 	
 private:
 	UFUNCTION()
@@ -55,12 +77,9 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_Owner)
 	TObjectPtr<UObject> Owner;
 
-	/*UPROPERTY(Replicated) TODO*/
-	TObjectPtr<ABinggyWorldBuildable> Buildable;
+	TArray<ABinggyWorldBuildable*> Buildables;
 
-	// The item definition
-	UPROPERTY(Replicated)
-	TSubclassOf<UBuildableDefinition> BuildableDef;
+	TMap<FBuildablePair, APhysicsConstraintActor*> Constraints;
 
 	
 	

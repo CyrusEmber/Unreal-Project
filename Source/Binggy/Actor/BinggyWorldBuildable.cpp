@@ -3,9 +3,12 @@
 
 #include "BinggyWorldBuildable.h"
 
+#include "Buildable/BuildableInstance.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 #include "Net/UnrealNetwork.h"
+#include "PhysicsEngine/PhysicsConstraintActor.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 ABinggyWorldBuildable::ABinggyWorldBuildable()
 {
@@ -13,14 +16,19 @@ ABinggyWorldBuildable::ABinggyWorldBuildable()
 	PrimaryActorTick.bCanEverTick = true;
 	// Spawn on the server and replicate to the client
 	bReplicates = true;
-	
+
+	// Default Settings
 	SetMobility(EComponentMobility::Movable);
-	// Ready for overlap
-	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
+	GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	
+	/*GetStaticMeshComponent()->SetIsReplicated(true);
+	// TODO set correct channel
+	GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Block);*/
 
-	GetStaticMeshComponent()->SetIsReplicated(true);
-
+	// Setup Physics Constraint
+	PhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
+	PhysicsConstraint->SetupAttachment(RootComponent);
+	
 	/*SetReplicates(true);
 	SetReplicatingMovement(true);*/
 	
@@ -30,7 +38,9 @@ void ABinggyWorldBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABinggyWorldBuildable, BuildableState);
+	// TODO set owner only
 	DOREPLIFETIME(ABinggyWorldBuildable, TargetLocation);
+	DOREPLIFETIME(ABinggyWorldBuildable, Neighbors);
 }
 
 void ABinggyWorldBuildable::GatherInteractionOptions(const FInteractionQuery& InteractQuery,
@@ -63,18 +73,28 @@ TSubclassOf<UBuildableDefinition> ABinggyWorldBuildable::GetBuildableDef() const
 
 void ABinggyWorldBuildable::OnConstructionCompleted()
 {
-	SetBuildableState(EBuildableState::Placed);
+	if (HasAuthority())
+	{
+		SetBuildableState(EBuildableState::Placed);
+	}
+	
 }
 
 void ABinggyWorldBuildable::OnConstructionBegin()
 {
-	SetBuildableState(EBuildableState::Building);
-	PlacementOffset = CalculateOffsetSpawnPoint(this);
+	if (HasAuthority())
+	{
+		SetBuildableState(EBuildableState::Building);
+		PlacementOffset = CalculateOffsetSpawnPoint(this);
+	}
 }
 
 void ABinggyWorldBuildable::OnSnappingBegin()
 {
-	SetBuildableState(EBuildableState::Snapping);
+	if (HasAuthority())
+	{
+		SetBuildableState(EBuildableState::Snapping);
+	}
 }
 
 FVector ABinggyWorldBuildable::CalculateOffsetSpawnPoint(AActor* CombinedActor)
@@ -156,6 +176,63 @@ FRotator ABinggyWorldBuildable::GetBaseRotation(const FVector& HitNormal, const 
 	return PlacementRotation;
 }
 
+void ABinggyWorldBuildable::SetupConstraint(ABinggyWorldBuildable* Neighbor)
+{
+	UPhysicsConstraintComponent* ConstraintComp = NewObject<UPhysicsConstraintComponent>(this);
+	if (ConstraintComp)
+	{
+		// Attach to the root component or any desired component of the actor
+		ConstraintComp->SetupAttachment(GetRootComponent());
+
+		// Register the component so it becomes part of the actor's hierarchy
+		ConstraintComp->RegisterComponent();
+
+		// Optional: Name the component for debugging purposes
+		// ConstraintComp->Rename(TEXT("DynamicPhysicsConstraint"));
+	}
+	
+	if (!ConstraintComp || !Neighbor)
+	{
+		return;
+	}
+
+	// Set the constraint components
+	ConstraintComp->SetConstrainedComponents(
+		GetStaticMeshComponent(),   // This buildable's mesh
+		NAME_None,                  // No specific bone
+		Neighbor->GetStaticMeshComponent(), // Neighbor's mesh
+		NAME_None                   // No specific bone
+	);
+
+	// Example configuration of the constraint
+	ConstraintComp->SetLinearXLimit(LCM_Locked, 0.0f);
+	ConstraintComp->SetLinearYLimit(LCM_Locked, 0.0f);
+	ConstraintComp->SetLinearZLimit(LCM_Locked, 0.0f);
+
+	ConstraintComp->SetAngularSwing1Limit(ACM_Locked, 0.0f);
+	ConstraintComp->SetAngularSwing2Limit(ACM_Locked, 0.0f);
+	ConstraintComp->SetAngularTwistLimit(ACM_Locked, 0.0f);
+}
+
+void ABinggyWorldBuildable::AddNeighbor(ABinggyWorldBuildable* Neighbor)
+{
+	if (Neighbor && Neighbor != this && !Neighbors.Contains(Neighbor))
+	{
+		Neighbors.Add(Neighbor);
+		// Neighbor->AddNeighbor(this); // Ensure bidirectional relationship TODO
+	}
+	SetupConstraint(Neighbor);
+}
+
+void ABinggyWorldBuildable::RemoveNeighbor(ABinggyWorldBuildable* Neighbor)
+{
+	if (Neighbor)
+	{
+		Neighbors.Remove(Neighbor);
+		Neighbor->Neighbors.Remove(this);
+	}
+}
+
 void ABinggyWorldBuildable::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
@@ -204,6 +281,8 @@ void ABinggyWorldBuildable::BeginPlay()
 	// Generate overlap events only for server
 	if (HasAuthority())
 	{
+		// Initial setup
+		SetBuildableState(EBuildableState::Placed);
 		/*// Async Load
 		FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
 		TSoftObjectPtr<UStaticMesh> SoftMesh = GetDefault<UBuildableDefinition>(BuildableDef)->BuildableMesh;
@@ -225,6 +304,21 @@ void ABinggyWorldBuildable::BeginPlay()
 	}
 }
 
+void ABinggyWorldBuildable::BeginDestroy()
+{
+	Super::BeginDestroy();
+	
+	for (ABinggyWorldBuildable* Neighbor : Neighbors)
+	{
+		if (Neighbor)
+		{
+			Neighbor->RemoveNeighbor(this);
+		}
+	}
+
+	Neighbors.Empty();
+}
+
 void ABinggyWorldBuildable::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -240,12 +334,7 @@ void ABinggyWorldBuildable::Tick(float DeltaSeconds)
 }
 
 void ABinggyWorldBuildable::OnRep_BuildableState(EBuildableState OldBuildableState)
-{
-	if (BuildableState == OldBuildableState)
-	{
-		return;
-	}
-	
+{	
 	SetBuildableState(BuildableState);
 }
 
@@ -256,8 +345,8 @@ void ABinggyWorldBuildable::SetBuildableState(EBuildableState NewBuildableState)
 	{
 		case (EBuildableState::Building):
 			SetMeshOverlayMaterial(GreenOverlayMaterial);
-			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Overlap);
+			GetStaticMeshComponent()->SetSimulatePhysics(false);
 			if (HasAuthority())
 			{
 				GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
@@ -273,12 +362,16 @@ void ABinggyWorldBuildable::SetBuildableState(EBuildableState NewBuildableState)
 			SetMeshOverlayMaterial(RedOverlayMaterial);
 			break;
 
+		case (EBuildableState::Snapping):
+			// TODO: set the snapping
+			break;
+
 		// Should not respond overlap events
 		case (EBuildableState::Placed):
-			GetStaticMeshComponent()->SetOverlayMaterial(nullptr);
-			GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			GetStaticMeshComponent()->SetOverlayMaterial(nullptr);			
 			// TODO set correct channel
-			GetStaticMeshComponent()->SetCollisionResponseToAllChannels(ECR_Block);
+			GetStaticMeshComponent()->SetCollisionProfileName("BlockAll");
+			GetStaticMeshComponent()->SetSimulatePhysics(true);
 			if (HasAuthority())
 			{
 				GetStaticMeshComponent()->SetGenerateOverlapEvents(false);

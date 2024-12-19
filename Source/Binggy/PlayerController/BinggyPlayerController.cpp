@@ -18,6 +18,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/Subsystem/BinggyUIManagerSubsystem.h"
 #include "NativeGameplayTags.h"
+#include "Buildable/Pawn/VehiclePawn.h"
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_UI_LAYER_GAME, "UI.Layer.Game");
 
@@ -64,7 +65,7 @@ void ABinggyPlayerController::OnPossess(APawn* InPawn)
 		BinggyHUD = Cast<ABinggyHUD>(GetHUD());
 	}
 	
-	if (IsLocalController() && IsValid(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent()))
+	if (IsLocalController() && IsValid(Cast<ABinggyCharacterBase>(this->GetPawn())))
 	{
 		BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
 	}
@@ -75,9 +76,14 @@ void ABinggyPlayerController::AcknowledgePossession(class APawn* P)
 	Super::AcknowledgePossession(P);
 	if (IsLocalController())
 	{
-		// Initialize HUD for client
+		// Initialize HUD for client, TODO vehicle HUD
 		if (BinggyHUD) {
-			BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
+			// Make sure the player character is character, not vehicle.
+			if (Cast<ABinggyCharacterBase>(this->GetPawn()))
+			{
+				BinggyHUD->InitOverlay(Cast<ABinggyCharacterBase>(this->GetPawn())->GetBinggyAbilitySystemComponent());
+			}
+			
 		}
 	}
 }
@@ -140,6 +146,41 @@ void ABinggyPlayerController::SwitchBuildMode(bool bIsBuildMode, TSubclassOf<UCo
 			Subsystem->RemoveMappingContext(BuildModeMappingContext);
 		}
 		// TODO Deactivate the widget
+	}
+}
+
+void ABinggyPlayerController::SwitchVehicleMode(bool bIsVehicleMode,
+	AVehiclePawn* Vehicle)
+{
+	if (bIsVehicleMode)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			if (DefaultMappingContext)
+			{
+				Subsystem->RemoveMappingContext(DefaultMappingContext);
+			}
+			Subsystem->AddMappingContext(BuildModeMappingContext, 0);
+		}
+		GetCharacter()->AttachToActor(Vehicle, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		// TODO check if the vehicle has owner.
+		Vehicle->SetOwner(this->GetPawn());
+		Possess(Vehicle);
+	} else
+	{ // Return to the original mapping.
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			if (DefaultMappingContext)
+			{
+				Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			}
+			Subsystem->RemoveMappingContext(BuildModeMappingContext);
+		}
+		// TODO: Make sure the owner is pawn.
+		Vehicle->GetOwner()->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+		Possess(Cast<APawn>(Vehicle->GetOwner()));
+		Vehicle->SetOwner(nullptr);
 	}
 }
 
@@ -242,6 +283,13 @@ void ABinggyPlayerController::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		ControlledCharacter->AddControllerYawInput(0.2 * LookAxisVector.X);
 		ControlledCharacter->AddControllerPitchInput(0.2 * LookAxisVector.Y);
+	}
+
+	else if (AVehiclePawn* ControlledVehicle = Cast<AVehiclePawn>(GetPawn()))
+	{
+		// add yaw and pitch input to controller
+		Cast<ABinggyCharacter>(ControlledVehicle->GetOwner())->AddControllerYawInput(0.2 * LookAxisVector.X);
+		Cast<ABinggyCharacter>(ControlledVehicle->GetOwner())->AddControllerPitchInput(0.2 * LookAxisVector.Y);
 	}
 }
 

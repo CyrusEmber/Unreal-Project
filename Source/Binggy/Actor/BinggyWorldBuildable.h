@@ -8,6 +8,8 @@
 #include "Engine/StaticMeshActor.h"
 #include "BinggyWorldBuildable.generated.h"
 
+class APhysicsConstraintActor;
+class UPhysicsConstraintComponent;
 class USphereComponent;
 /**
  *
@@ -39,9 +41,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Buildable")
 	void OnConstructionCompleted();
 
+	// Server execute function
 	UFUNCTION(BlueprintCallable, Category="Buildable")
 	void OnConstructionBegin();
-
+	
+	// Server execute function
 	UFUNCTION(BlueprintCallable, Category="Buildable")
 	void OnSnappingBegin();
 
@@ -64,6 +68,13 @@ public:
 	 */
 	void UpdatePreviewMeshPosition(const FVector& NewLocation, const FVector& HitNormal, const FRotator& RotationAroundNormal);
 
+	// Update neighbors
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void AddNeighbor(ABinggyWorldBuildable* Neighbor);
+	
+	UFUNCTION(BlueprintCallable, Category="Buildable")
+	void RemoveNeighbor(ABinggyWorldBuildable* Neighbor);
+
 	// Start IBuildable Interface
 	virtual TSubclassOf<UBuildableDefinition> GetBuildableDef() const override;
 	// End IBuildable Interface
@@ -75,6 +86,9 @@ protected:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 	virtual void BeginPlay() override;
+
+	// Remove references in neighbors
+	virtual void BeginDestroy() override;
 
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -90,6 +104,9 @@ protected:
 
 	// Respond to different states change.
 	void SetBuildableState(EBuildableState NewBuildableState);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Physics")
+	UPhysicsConstraintComponent* PhysicsConstraint;
 
 	
 private:
@@ -135,10 +152,24 @@ private:
 	UPROPERTY(Replicated)
 	UBuildableInstance* BuildableInstance;
 
+	// Use fast array replication?
+	UPROPERTY(Replicated)
+	TArray<ABinggyWorldBuildable*> Neighbors;
+
+	UPROPERTY()
+	TArray<APhysicsConstraintActor*> ConstraintActors;
+
+	void SetupConstraint(ABinggyWorldBuildable* Neighbor);
+	
 	
 
 	// TODO
 	/*// The definition we use to create the item mesh
 	UPROPERTY(EditAnywhere, Category = "Default")
 	FBuildItemDefinition BuildItemDef;*/
+
+public:
+	void SetBuildableInstance(UBuildableInstance* InBuildableInstance) { BuildableInstance = InBuildableInstance; }
+
+	UBuildableInstance* GetBuildableInstance() { return BuildableInstance; }
 };

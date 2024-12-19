@@ -22,10 +22,18 @@ public:
 	// Spawn buildable in the server TODO buildable instance multiple attached buildable
 	// Spawned buildable at the owner location, then send the gameplay event BuildActive to the owner
 	UFUNCTION(BlueprintCallable)
-	void CreateAndActivateBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass, AActor* PlayerCharacter);
+	void CreateAndActivateBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass);
 
 	UFUNCTION(Server, Reliable)
-	void ServerCreateAndActivateBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass, AActor* PlayerCharacter);
+	void ServerCreateAndActivateBuildable(TSubclassOf<ABinggyWorldBuildable> BuildableClass);
+
+	// Server only function, assume child is a single block
+	UFUNCTION(BlueprintCallable)
+	void ConnectTwoBuildables(ABinggyWorldBuildable* Parent, ABinggyWorldBuildable* Child);
+
+	void AttachTwoBuildables(ABinggyWorldBuildable* Parent, ABinggyWorldBuildable* Child);
+	
+	void AddConstraintBetweenBuildables(ABinggyWorldBuildable* Parent, ABinggyWorldBuildable* Child);
 
 protected:
 	// Called when the game starts
